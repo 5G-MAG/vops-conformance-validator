@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
+           xmlns="urn:mpeg:mpeg21:example:HEVC"
+           targetNamespace="urn:mpeg:mpeg21:example:HEVC"
+elementFormDefault="qualified">
+
+  <!-- VideoParameterSetType definition -->
+  <xs:complexType name="VideoParameterSetType">
+    <xs:sequence>
+      <xs:element name="vps_video_parameter_set_id" type="xs:integer"/>
+      <xs:element name="vps_base_layer_internal_flag" type="xs:integer"/>
+      <xs:element name="vps_base_layer_available_flag" type="xs:integer"/>
+      <xs:element name="vps_max_layers_minus1" type="xs:integer"/>
+      <xs:element name="vps_max_sub_layers_minus1" type="xs:integer"/>
+      <xs:element name="vps_temporal_id_nesting_flag" type="xs:integer"/>
+      <xs:element name="vps_reserved_0xffff_16bits" type="xs:integer"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- NALUnit definition -->
+  <xs:element name="NALUnit">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element name="startCode" type="xs:string"/>
+        <xs:element name="forbidden_zero_bit" type="xs:integer"/>
+        <xs:element name="nal_unit_type" type="xs:integer"/>
+        <xs:element name="nuh_layer_id" type="xs:integer"/>
+        <xs:element name="nuh_temporal_id_plus1" type="xs:integer"/>
+        <xs:element name="payload" type="xs:string"/>
+        <xs:element name="VideoParameterSet" type="VideoParameterSetType" minOccurs="0"/>
+      </xs:sequence>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>
