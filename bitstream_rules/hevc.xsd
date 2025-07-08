@@ -1,8 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns="urn:mpeg:mpeg21:example:HEVC"
-           targetNamespace="urn:mpeg:mpeg21:example:HEVC"
-elementFormDefault="qualified">
+           elementFormDefault="qualified">
 
   <!-- VideoParameterSetType definition -->
   <xs:complexType name="VideoParameterSetType">
@@ -18,18 +16,19 @@ elementFormDefault="qualified">
   </xs:complexType>
 
   <!-- NALUnit definition -->
-  <xs:element name="NALUnit">
-    <xs:complexType>
-      <xs:sequence>
-        <xs:element name="startCode" type="xs:string"/>
-        <xs:element name="forbidden_zero_bit" type="xs:integer"/>
-        <xs:element name="nal_unit_type" type="xs:integer"/>
-        <xs:element name="nuh_layer_id" type="xs:integer"/>
-        <xs:element name="nuh_temporal_id_plus1" type="xs:integer"/>
-        <xs:element name="payload" type="xs:string"/>
-        <xs:element name="VideoParameterSet" type="VideoParameterSetType" minOccurs="0"/>
-      </xs:sequence>
-    </xs:complexType>
-  </xs:element>
+  <xs:element name="NALUnit" type="NALUnitType"/>
+  <xs:complexType name="NALUnitType">
+    <xs:sequence>
+      <xs:element name="startCode" type="xs:string"/>
+      <xs:element name="forbidden_zero_bit" type="xs:integer"/>
+      <xs:element name="nal_unit_type" type="xs:integer"/>
+      <xs:element name="nuh_layer_id" type="xs:integer"/>
+      <xs:element name="nuh_temporal_id_plus1" type="xs:integer"/>
+      <xs:element name="payload" type="xs:string"/>
+      <xs:choice minOccurs="0">
+        <xs:element name="VideoParameterSet" type="VideoParameterSetType"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
 
 </xs:schema>

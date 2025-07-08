@@ -1,5 +1,5 @@
 """
-    HEVC parsing functions.
+    Parsers of media bitstreams.
 """
 
 import binascii
@@ -13,12 +13,13 @@ from sa4_bitstream_validator.tools import find_start_codes
 from sa4_bitstream_validator.tools import remove_emulation_prevention
 
 class BaseParser(abc.ABC):
+    """Base class of all the parsers."""
     @abc.abstractmethod
     def bitstream_to_xml(self, bitstream, description):
         "Parse a bitstream and generate its XML description."
 
 class HEVCParser(BaseParser):
-    """Parser of HEVC bitstreams and HEVC XML description."""
+    """Parser of HEVC bitstreams."""
     def bitstream_to_xml(self, bitstream, description):
         "Parse a HEVC bitstream"
         data = bitstream.read()
@@ -28,10 +29,8 @@ class HEVCParser(BaseParser):
             return
 
         # Create XML root element with namespaces
-        root = Element('HEVCBitstream')
-        root.set('xmlns', 'urn:mpeg:mpeg21:example:HEVC')
-        root.set('xmlns:bs1', 'urn:mpeg:mpeg21:2003:01-DIA-BSDL1-NS')
-        root.set('bs1:bitstreamURI', bitstream.name)
+        root = Element("HEVCBitstream")
+        root.set("uri", bitstream.name)
 
         for i in range(len(start_codes)):
             start_pos, start_len = start_codes[i]
@@ -62,21 +61,21 @@ class HEVCParser(BaseParser):
             payload_length = end_pos - payload_start
 
             # Create XML elements
-            nal_unit = SubElement(root, 'NALUnit')
+            nal_unit = SubElement(root, "NALUnit")
 
-            sc = SubElement(nal_unit, 'startCode')
+            sc = SubElement(nal_unit, "startCode")
             sc.text = start_code_hex
 
-            SubElement(nal_unit, 'forbidden_zero_bit').text = str(fzb)
-            SubElement(nal_unit, 'nal_unit_type').text = str(nut)
-            SubElement(nal_unit, 'nuh_layer_id').text = str(nli)
-            SubElement(nal_unit, 'nuh_temporal_id_plus1').text = str(tid)
+            SubElement(nal_unit, "forbidden_zero_bit").text = str(fzb)
+            SubElement(nal_unit, "nal_unit_type").text = str(nut)
+            SubElement(nal_unit, "nuh_layer_id").text = str(nli)
+            SubElement(nal_unit, "nuh_temporal_id_plus1").text = str(tid)
 
-            payload = SubElement(nal_unit, 'payload')
+            payload = SubElement(nal_unit, "payload")
             payload.text = f"{payload_start} {payload_length}"
 
-            # Add VPS parsing for NAL type 32
-            if nut == 32:
+            # Parse specific NAL units
+            if nut == 32: # VPS
                 payload_data = data[payload_start:end_pos]
                 vps_info = self.parse_vps(payload_data)
                 if vps_info:
@@ -88,6 +87,19 @@ class HEVCParser(BaseParser):
         # Generate formatted XML
         xml_str = minidom.parseString(tostring(root)).toprettyxml(indent="  ")
         description.write(xml_str)
+
+    def parse_profile_tier_level(self, profile_present_flag: bool, max_num_sub_layers_minus1: int, reader):
+        """Parse profile tier level strucuture in the current bitstream"""
+        ptl = {}
+        if profile_present_flag:
+            profile = {
+                "general_profile_space": reader.read_bits(2),
+                "general_tier_flag": reader.read_bit(),
+                "general_profile_idc": reader.read_bits(5),
+            }
+            ptl = {**ptl, **profile}
+        return ptl
+
 
     def parse_vps(self, payload_data):
         """Parse Video Parameter Set from payload bytes"""
@@ -109,6 +121,8 @@ class HEVCParser(BaseParser):
                 'vps_temporal_id_nesting_flag': reader.read_bit(),
                 'vps_reserved_0xffff_16bits': reader.read_bits(16)
             }
+            vps = {**vps, **self.parse_profile_tier_level(True, vps["vps_max_sub_layers_minus1"], reader)}
+
 
             return {k: v for k, v in vps.items() if v is not None}
 

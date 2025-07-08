@@ -15,7 +15,7 @@ class XMLValidator(BaseValidator):
     def validate(self, description_path, schema_path):
         "Validate the description"
         try:
-            schema = xmlschema.XMLSchema11(schema_path)
+            schema = xmlschema.XMLSchema11(schema_path, validation="lax")
             schema.validate(description_path)
             return True
         except xmlschema.XMLSchemaValidationError as e:

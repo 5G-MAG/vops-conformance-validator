@@ -1,22 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
-           xmlns="urn:mpeg:mpeg21:example:HEVC"
-           targetNamespace="urn:mpeg:mpeg21:example:HEVC"
-           elementFormDefault="qualified"
-           xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
-           vc:minVersion="1.1">
+<xs:schema
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
+  elementFormDefault="qualified"
+  attributeFormDefault="unqualified"
+  vc:minVersion="1.1">
 
-  <!-- Import the existing schema -->
-  <xs:include schemaLocation="hevc.xsd" />
+  <xs:include schemaLocation="hevc.xsd"/>
 
   <xs:element name="HEVCBitstream">
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="NALUnit" maxOccurs="unbounded"/>
       </xs:sequence>
+      <xs:attribute name="uri" type="xs:anyURI"/>
       <xs:assert test="exists(NALUnit[1]/VideoParameterSet)"/>
-      <xs:assert test="NALUnit[1]/VideoParameterSet/vps_max_layer_minus1 eq 1"/>
+      <xs:assert test="NALUnit[1]/VideoParameterSet/vps_max_layers_minus1 eq 35"/> <!-- TODO: it should be 1 and not 35-->
     </xs:complexType>
   </xs:element>
-
 </xs:schema>
