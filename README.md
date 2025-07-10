@@ -16,11 +16,9 @@ python -m pip install -r requirements.txt
 ## Usage
 
 ```shell
-
 $ python -m sa4_bitstream_validator dump bitstream_path description.xml
 
-$ python -m sa4_bitstream_validator validate description.xml bitstream_rules/a_vops_operation_point.xsd
-
+$ python -m sa4_bitstream_validator validate description.xml bitstream_rules/operation_point.xsd
 ```
 
 ## Help
