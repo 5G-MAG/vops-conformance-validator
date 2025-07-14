@@ -6,7 +6,12 @@
   attributeFormDefault="unqualified"
   vc:minVersion="1.1">
 
+  <!-- Require HEVC bitstream schema -->
   <xs:include schemaLocation="hevc.xsd"/>
+  
+  <!-- Require 3GPP Sterescopic format: TODO -->
+  
+  <!-- Require MV-HEVC-UHD: TODO -->
 
   <xs:element name="HEVCBitstream">
     <xs:complexType>

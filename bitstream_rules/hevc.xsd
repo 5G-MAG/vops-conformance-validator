@@ -2,19 +2,39 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
            elementFormDefault="qualified">
 
+  <!-- ProfileTierLeve definition -->
+  <xs:group name="ProfileTierLeveStructure">
+    <xs:sequence>
+      <xs:element name="general_profile_space" type="xs:integer"/>
+      <xs:element name="general_tier_flag" type="xs:boolean"/>
+      <xs:element name="general_profile_idc" type="xs:integer"/>
+    </xs:sequence>
+  </xs:group>
+
   <!-- VideoParameterSetType definition -->
   <xs:complexType name="VideoParameterSetType">
     <xs:sequence>
       <xs:element name="vps_video_parameter_set_id" type="xs:integer"/>
       <xs:element name="vps_base_layer_internal_flag" type="xs:integer"/>
-      <xs:element name="vps_base_layer_available_flag" type="xs:integer"/>
+      <xs:element name="vps_base_layer_available_flag" type="xs:boolean"/>
       <xs:element name="vps_max_layers_minus1" type="xs:integer"/>
       <xs:element name="vps_max_sub_layers_minus1" type="xs:integer"/>
       <xs:element name="vps_temporal_id_nesting_flag" type="xs:integer"/>
       <xs:element name="vps_reserved_0xffff_16bits" type="xs:integer"/>
+      <xs:group ref="ProfileTierLevelStructure"/>
     </xs:sequence>
   </xs:complexType>
 
+  <!-- SequenceParameterSetType definition -->
+  <xs:complexType name="SequenceParameterSetType">
+    <xs:sequence>
+      <xs:element name="sps_video_parameter_set_id" type="xs:integer"/>
+      <xs:element name="sps_max_sub_layers_minus1" type="xs:integer"/>
+      <xs:element name="sps_temporal_id_nesting_flag" type="xs:boolean"/>
+      <xs:group ref="ProfileTierLevelStructure"/>
+    </xs:sequence>
+  </xs:complexType>
+  
   <!-- NALUnit definition -->
   <xs:element name="NALUnit" type="NALUnitType"/>
   <xs:complexType name="NALUnitType">
@@ -27,6 +47,7 @@
       <xs:element name="payload" type="xs:string"/>
       <xs:choice minOccurs="0">
         <xs:element name="VideoParameterSet" type="VideoParameterSetType"/>
+        <xs:element name="SequenceParameterSet" type="SequenceParameterSetType"/>
       </xs:choice>
     </xs:sequence>
   </xs:complexType>

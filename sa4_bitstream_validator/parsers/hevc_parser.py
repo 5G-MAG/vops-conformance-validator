@@ -1,22 +1,16 @@
 """
-    Parsers of media bitstreams.
+    Parsers of HEVC bitstreams.
 """
 
+import re
 import binascii
 from xml.etree.ElementTree import Element, SubElement, tostring
 from xml.dom import minidom
 
-import abc
-
-from sa4_bitstream_validator.bit_reader import BitReader
+from sa4_bitstream_validator.parsers.base_parser import BaseParser
+from sa4_bitstream_validator.parsers.hevc import parse_sps
+from sa4_bitstream_validator.parsers.hevc import parse_vps
 from sa4_bitstream_validator.tools import find_start_codes
-from sa4_bitstream_validator.tools import remove_emulation_prevention
-
-class BaseParser(abc.ABC):
-    """Base class of all the parsers."""
-    @abc.abstractmethod
-    def bitstream_to_xml(self, bitstream, description):
-        "Parse a bitstream and generate its XML description."
 
 class HEVCParser(BaseParser):
     """Parser of HEVC bitstreams."""
@@ -77,59 +71,24 @@ class HEVCParser(BaseParser):
             # Parse specific NAL units
             if nut == 32: # VPS
                 payload_data = data[payload_start:end_pos]
-                vps_info = self.parse_vps(payload_data)
+                vps_info = parse_vps(payload_data)
                 if vps_info:
-                    vps_elem = SubElement(nal_unit, 'VideoParameterSet')
+                    vps_elem = SubElement(nal_unit, "VideoParameterSet")
                     for key, value in vps_info.items():
-                        elem = SubElement(vps_elem, key)
+                        elem = SubElement(vps_elem, re.sub(r"\[\d+\]$", "", key))
+                        elem.text = str(value)
+            elif nut == 33: # SPS
+                payload_data = data[payload_start:end_pos]
+                sps_info = parse_sps(payload_data)
+                if sps_info:
+                    sps_elem = SubElement(nal_unit, "SequenceParameterSet")
+                    for key, value in sps_info.items():
+                        elem = SubElement(sps_elem, re.sub(r"\[\d+\]$", "", key))
                         elem.text = str(value)
 
         # Generate formatted XML
         xml_str = minidom.parseString(tostring(root)).toprettyxml(indent="  ")
         description.write(xml_str)
-
-    def parse_profile_tier_level(self, profile_present_flag: bool, max_num_sub_layers_minus1: int, reader):
-        """Parse profile tier level strucuture in the current bitstream"""
-        ptl = {}
-        if profile_present_flag:
-            profile = {
-                "general_profile_space": reader.read_bits(2),
-                "general_tier_flag": reader.read_bit(),
-                "general_profile_idc": reader.read_bits(5),
-            }
-            ptl = {**ptl, **profile}
-        return ptl
-
-
-    def parse_vps(self, payload_data):
-        """Parse Video Parameter Set from payload bytes"""
-        try:
-            # Remove emulation prevention bytes
-            clean_data = remove_emulation_prevention(payload_data)
-            if not clean_data:
-                return None
-
-            reader = BitReader(clean_data)
-
-            # Parse basic VPS parameters
-            vps = {
-                'vps_video_parameter_set_id': reader.read_ue(),
-                'vps_base_layer_internal_flag': reader.read_bit(),
-                'vps_base_layer_available_flag': reader.read_bit(),
-                'vps_max_layers_minus1': reader.read_bits(6),
-                'vps_max_sub_layers_minus1': reader.read_bits(3),
-                'vps_temporal_id_nesting_flag': reader.read_bit(),
-                'vps_reserved_0xffff_16bits': reader.read_bits(16)
-            }
-            vps = {**vps, **self.parse_profile_tier_level(True, vps["vps_max_sub_layers_minus1"], reader)}
-
-
-            return {k: v for k, v in vps.items() if v is not None}
-
-        except Exception as e:
-            print(f"VPS parsing error: {str(e)}")
-            return None
-
 
     def parse_nal_header(self, header_bytes):
         """Parse HEVC NAL unit header from two bytes"""

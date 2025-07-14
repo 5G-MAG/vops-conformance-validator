@@ -9,7 +9,7 @@ __email__  = "thomase@xiaomi.com"
 
 import click
 
-from sa4_bitstream_validator.parsers import HEVCParser
+from sa4_bitstream_validator.parsers.hevc_parser import HEVCParser
 from sa4_bitstream_validator.validators import XMLValidator
 
 @click.group()
