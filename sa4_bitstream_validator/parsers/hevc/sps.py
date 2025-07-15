@@ -22,7 +22,30 @@ def parse_sps(payload_data):
             "sps_max_sub_layers_minus1": reader.read_bits(3),
             "sps_temporal_id_nesting_flag": reader.read_bit(),
         }
-        sps = {**sps, **parse_profile_tier_level(True, sps["sps_max_sub_layers_minus1"], reader)}
+
+        sps = {
+                **sps,
+                **parse_profile_tier_level(True, sps["sps_max_sub_layers_minus1"], reader)
+        }
+
+        sps["sps_seq_parameter_set_id"] = reader.read_ue()
+        sps["chroma_format_idc"] = reader.read_ue()
+
+        if sps["chroma_format_idc"] == 2:
+            sps["separate_colour_plane_flag"] = reader.read_bit()
+
+        sps["pic_width_in_luma_samples"] = reader.read_ue()
+        sps["pic_height_in_luma_samples"] = reader.read_ue()
+        sps["conformance_window_flag"] = reader.read_bit()
+
+        if sps["conformance_window_flag"]:
+            sps["conf_win_left_offset"] = reader.read_ue()
+            sps["conf_win_right_offset"] = reader.read_ue()
+            sps["conf_win_top_offset"] = reader.read_ue()
+            sps["conf_win_bottom_offset"] = reader.read_ue()
+
+        sps["bit_depth_luma_minus8"] = reader.read_ue()
+        sps["bit_depth_chroma_minus8"] = reader.read_ue()
 
         return {k: v for k, v in sps.items() if v is not None}
 
