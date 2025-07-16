@@ -79,7 +79,7 @@ class HEVCParser(BaseParser):
                         elem.text = str(value)
             elif nut == 33: # SPS
                 payload_data = data[payload_start:end_pos]
-                sps_info = parse_sps(payload_data)
+                sps_info = parse_sps(payload_data, nli)
                 if sps_info:
                     sps_elem = SubElement(nal_unit, "SequenceParameterSet")
                     for key, value in sps_info.items():

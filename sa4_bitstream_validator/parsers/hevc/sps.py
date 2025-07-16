@@ -2,11 +2,11 @@
     Parsing of HEVC SPS.
 """
 
-from .ptl import parse_profile_tier_level
 from sa4_bitstream_validator.bit_reader import BitReader
 from sa4_bitstream_validator.tools import remove_emulation_prevention
+from .ptl import parse_profile_tier_level
 
-def parse_sps(payload_data):
+def parse_sps(payload_data, nuh_layer_id):
     """Parse Sequence Parameter Set from payload bytes"""
     try:
         # Remove emulation prevention bytes
@@ -15,37 +15,46 @@ def parse_sps(payload_data):
             return None
 
         reader = BitReader(clean_data)
+        sps = {}
+        sps["sps_video_parameter_set_id"] = reader.read_bits(4)
+        if nuh_layer_id == 0:
+            sps["sps_max_sub_layers_minus1"] = reader.read_bits(3)
+        else:
+            sps["sps_ext_or_max_sub_layers_minus1"] = reader.read_bits(3)
 
-        # Parse basic SPS parameters
-        sps = {
-            "sps_video_parameter_set_id": reader.read_bits(4),
-            "sps_max_sub_layers_minus1": reader.read_bits(3),
-            "sps_temporal_id_nesting_flag": reader.read_bit(),
-        }
+        multi_layer_ext_sps_flag = (nuh_layer_id != 0
+                                    and sps["sps_ext_or_max_sub_layers_minus1"] == 7)
+        if not multi_layer_ext_sps_flag:
+            sps["sps_temporal_id_nesting_flag"] = reader.read_bit()
 
-        sps = {
-                **sps,
-                **parse_profile_tier_level(True, sps["sps_max_sub_layers_minus1"], reader)
-        }
+            sps = {
+                    **sps,
+                    **parse_profile_tier_level(True, sps["sps_max_sub_layers_minus1"], reader)
+            }
 
         sps["sps_seq_parameter_set_id"] = reader.read_ue()
-        sps["chroma_format_idc"] = reader.read_ue()
+        if multi_layer_ext_sps_flag:
+            sps["update_rep_format_flag"] = reader.read_bit()
+            if sps["update_rep_format_flag"]:
+                sps["sps_rep_format_idx"] = reader.read_bits(8)
+        else:
+            sps["chroma_format_idc"] = reader.read_ue()
 
-        if sps["chroma_format_idc"] == 2:
-            sps["separate_colour_plane_flag"] = reader.read_bit()
+            if sps["chroma_format_idc"] == 2:
+                sps["separate_colour_plane_flag"] = reader.read_bit()
 
-        sps["pic_width_in_luma_samples"] = reader.read_ue()
-        sps["pic_height_in_luma_samples"] = reader.read_ue()
-        sps["conformance_window_flag"] = reader.read_bit()
+            sps["pic_width_in_luma_samples"] = reader.read_ue()
+            sps["pic_height_in_luma_samples"] = reader.read_ue()
+            sps["conformance_window_flag"] = reader.read_bit()
 
-        if sps["conformance_window_flag"]:
-            sps["conf_win_left_offset"] = reader.read_ue()
-            sps["conf_win_right_offset"] = reader.read_ue()
-            sps["conf_win_top_offset"] = reader.read_ue()
-            sps["conf_win_bottom_offset"] = reader.read_ue()
+            if sps["conformance_window_flag"]:
+                sps["conf_win_left_offset"] = reader.read_ue()
+                sps["conf_win_right_offset"] = reader.read_ue()
+                sps["conf_win_top_offset"] = reader.read_ue()
+                sps["conf_win_bottom_offset"] = reader.read_ue()
 
-        sps["bit_depth_luma_minus8"] = reader.read_ue()
-        sps["bit_depth_chroma_minus8"] = reader.read_ue()
+            sps["bit_depth_luma_minus8"] = reader.read_ue()
+            sps["bit_depth_chroma_minus8"] = reader.read_ue()
 
         return {k: v for k, v in sps.items() if v is not None}
 

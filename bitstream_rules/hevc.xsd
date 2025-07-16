@@ -29,9 +29,39 @@
   <xs:complexType name="SequenceParameterSetType">
     <xs:sequence>
       <xs:element name="sps_video_parameter_set_id" type="xs:integer"/>
-      <xs:element name="sps_max_sub_layers_minus1" type="xs:integer"/>
-      <xs:element name="sps_temporal_id_nesting_flag" type="xs:boolean"/>
-      <xs:group ref="ProfileTierLevelStructure"/>
+      <xs:choice>
+        <!-- if nuh_layer_id == 0 -->
+        <xs:element name="sps_max_sub_layers_minus1" type="xs:integer"/>
+        <!-- else -->
+        <xs:element name="sps_ext_or_max_sub_layers_minus1" type="xs:integer"/>
+      </xs:choice>
+      <xs:sequence minOccurs="0">
+        <xs:element name="sps_temporal_id_nesting_flag" type="xs:boolean"/>
+        <xs:group ref="ProfileTierLevelStructure"/>
+      </xs:sequence>
+      <xs:element name="sps_seq_parameter_set_id" type="xs:integer"/>
+      <xs:choice>
+        <!-- if multi layer ext sps -->
+        <xs:sequence>
+          <xs:element name="update_rep_format_flag" type="xs:boolean"/>
+          <xs:element name="sps_rep_format_idx" type="xs:boolean" minOccurs="0" />
+        </xs:sequence>
+        <!-- else -->
+        <xs:sequence>
+          <xs:element name="chroma_format_idc" type="xs:integer"/>
+          <xs:element name="pic_width_in_luma_samples" type="xs:integer"/>
+          <xs:element name="pic_height_in_luma_samples" type="xs:integer"/>
+          <xs:element name="conformance_window_flag" type="xs:boolean"/>
+          <xs:sequence minOccurs="0">
+            <xs:element name="conf_win_left_offset" type="xs:integer"/>
+            <xs:element name="conf_win_right_offset" type="xs:integer"/>
+            <xs:element name="conf_win_top_offset" type="xs:integer"/>
+            <xs:element name="conf_win_bottom_offset" type="xs:integer"/>
+          </xs:sequence>
+          <xs:element name="bit_depth_luma_minus8" type="xs:integer"/>
+          <xs:element name="bit_depth_chroma_minus8" type="xs:integer"/>
+        </xs:sequence>
+      </xs:choice>
     </xs:sequence>
   </xs:complexType>
   
