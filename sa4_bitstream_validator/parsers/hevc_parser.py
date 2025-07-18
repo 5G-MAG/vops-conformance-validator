@@ -83,7 +83,7 @@ class HEVCParser(BaseParser):
                 if sps_info:
                     sps_elem = SubElement(nal_unit, "SequenceParameterSet")
                     for key, value in sps_info.items():
-                        elem = SubElement(sps_elem, re.sub(r"\[\d+\]$", "", key))
+                        elem = SubElement(sps_elem, re.sub(r"(\[\d+\])+$", "", key))
                         elem.text = str(value)
 
         # Generate formatted XML

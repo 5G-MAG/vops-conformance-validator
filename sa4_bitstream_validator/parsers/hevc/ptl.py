@@ -2,6 +2,8 @@
     Parsing of HEVC profile, tier and level structure.
 """
 
+from bitstring import Error
+
 def parse_profile_tier_level(profile_present_flag: bool, max_num_sub_layers_minus1: int, reader):
     """Parse profile tier level strucuture in the current bitstream"""
     ptl = {}
@@ -31,7 +33,7 @@ def parse_profile_tier_level(profile_present_flag: bool, max_num_sub_layers_minu
             # End of level parameters
             ptl = {**ptl, **level}
 
-    except Exception as e:
+    except Error as e:
         print(f"PTL parsing error: {str(e)}")
         return None
 

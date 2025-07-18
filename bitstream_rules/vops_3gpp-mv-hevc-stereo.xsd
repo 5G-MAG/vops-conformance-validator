@@ -12,7 +12,6 @@
   <!-- Require 3GPP Sterescopic format: TODO -->
 
   <!-- Require MV-HEVC-Dual-layers-UHD420-Dec -->
-  <xs:include schemaLocation="vops_mv-hevc-dual-layers-uhd420-dec.xsd"/>
   
   <xs:element name="HEVCBitstream">
     <xs:complexType>
@@ -20,9 +19,11 @@
         <xs:element ref="NALUnit" maxOccurs="unbounded"/>
       </xs:sequence>
       <xs:attribute name="uri" type="xs:anyURI"/>
+      <xs:include schemaLocation="vops_mv-hevc-dual-layers-uhd420-dec.xsd"/>
       <xs:assert test="exists(NALUnit/VideoParameterSet)"/>
       <xs:assert test="NALUnit/VideoParameterSet/vps_max_layers_minus1 = 1"/>
       <xs:assert test="NALUnit/SequenceParameterSet/chroma_format_idc = 1"/>
     </xs:complexType>
   </xs:element>
+
 </xs:schema>

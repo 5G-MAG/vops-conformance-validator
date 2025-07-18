@@ -2,6 +2,8 @@
     Parsing of HEVC VPS.
 """
 
+from bitstring import Error
+
 from sa4_bitstream_validator.bit_reader import BitReader
 from sa4_bitstream_validator.tools import remove_emulation_prevention
 from .ptl import parse_profile_tier_level
@@ -33,6 +35,6 @@ def parse_vps(payload_data):
 
         return {k: v for k, v in vps.items() if v is not None}
 
-    except Exception as e:
+    except Error as e:
         print(f"VPS parsing error: {str(e)}")
         return None

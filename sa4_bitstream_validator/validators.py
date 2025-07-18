@@ -1,6 +1,6 @@
 """
     Classes to perform validation rules.
-""" 
+"""
 
 import abc
 
