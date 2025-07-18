@@ -8,6 +8,7 @@ from sa4_bitstream_validator.bit_reader import BitReader
 from sa4_bitstream_validator.tools import remove_emulation_prevention
 from .ptl import parse_profile_tier_level
 from .st_ref_pic_set import parse_st_ref_pic_sets
+from .vui import parse_vui_parameters
 
 def parse_sps(payload_data, nuh_layer_id):
     """Parse Sequence Parameter Set from payload bytes"""
@@ -96,6 +97,23 @@ def parse_sps(payload_data, nuh_layer_id):
                 **sps,
                 **parse_st_ref_pic_sets(sps["num_short_term_ref_pic_sets"], False, reader)
         }
+
+        sps["long_term_ref_pics_present_flag"] = reader.read_bit()
+        if sps["long_term_ref_pics_present_flag"]:
+            sps["num_long_term_ref_pics_sps"] = reader.read_ue()
+            lt_ref_pic_length = sps["log2_max_pic_order_cnt_lsb_minus4"] + 4
+            for i in range(0, sps["num_long_term_ref_pics_sps"]):
+                sps[f"lt_ref_pic_poc_lsb_sps[{i}]"] = reader.read_bits(lt_ref_pic_length)
+                sps[f"used_by_curr_pic_lt_sps_flag[{i}]"] = reader.read_bit()
+
+        sps["sps_temporal_mvp_enabled_flag"] = reader.read_bit()
+        sps["strong_intra_smoothing_enabled_flag"] = reader.read_bit()
+        sps["vui_parameters_present_flag"] = reader.read_bit()
+        if sps["vui_parameters_present_flag"]:
+            sps = {
+                    **sps,
+                    **parse_vui_parameters(reader)
+            }
 
         return {k: v for k, v in sps.items() if v is not None}
 
