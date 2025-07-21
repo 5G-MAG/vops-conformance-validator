@@ -2,15 +2,130 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema"
            elementFormDefault="qualified">
 
-  <!-- ProfileTierLeve definition -->
-  <xs:group name="ProfileTierLeveStructure">
+  <!-- Group definitions -->
+  <!-- VuiParameters definition -->
+  <xs:group name="VuiParametersStructure">
+    <xs:sequence>
+      <xs:element name="aspect_ratio_info_present_flag" type="xs:boolean"/>
+
+      <!-- if aspect_ratio_info_present_flag -->
+      <xs:sequence minOccurs="0">
+        <xs:element name="aspect_ratio_idc" type="xs:integer"/>
+        <xs:sequence minOccurs="0">
+          <xs:element name="sar_width" type="xs:integer"/>
+          <xs:element name="sar_height" type="xs:integer"/>
+        </xs:sequence>
+      </xs:sequence>
+
+      <xs:element name="aspect_ratio_info_present_flag" type="xs:boolean"/>
+      <xs:element name="overscan_appropriate_flag" type="xs:boolean" minOccurs="0"/>
+      <xs:element name="video_signal_type_present_flag" type="xs:boolean"/>
+
+      <!-- if video_signal_type_present_flag -->
+      <xs:sequence minOccurs="0">
+        <xs:element name="video_format" type="xs:integer"/>
+        <xs:element name="video_full_range_flag" type="xs:boolean"/>
+        <xs:element name="colour_description_present_flag" type="xs:boolean"/>
+
+        <!-- if colour_description_present_flag -->
+        <xs:sequence minOccurs="0">
+          <xs:element name="colour_primaries" type="xs:integer"/>
+          <xs:element name="transfer_characteristics" type="xs:integer"/>
+          <xs:element name="matrix_coeffs" type="xs:integer"/>
+        </xs:sequence>
+      </xs:sequence>
+
+      <xs:element name="chroma_loc_info_present_flag" type="xs:boolean"/>
+      
+      <!-- if chroma_loc_info_present_flag -->
+      <xs:sequence minOccurs="0">
+        <xs:element name="chroma_sample_loc_type_top_field" type="xs:integer"/>
+        <xs:element name="chroma_sample_loc_type_bottom_field" type="xs:integer"/>
+      </xs:sequence>
+      
+      <xs:element name="neutral_chroma_indication_flag" type="xs:boolean"/>
+      <xs:element name="field_seq_flag" type="xs:boolean"/>
+      <xs:element name="frame_field_info_present_flag" type="xs:boolean"/>
+      <xs:element name="default_display_window_flag" type="xs:boolean"/>
+      
+      <!-- if default_display_window_flag -->
+      <xs:sequence minOccurs="0">
+        <xs:element name="def_disp_win_left_offset" type="xs:integer"/>
+        <xs:element name="def_disp_win_right_offset" type="xs:integer"/>
+        <xs:element name="def_disp_win_top_offset" type="xs:integer"/>
+        <xs:element name="def_disp_win_bottom_offset" type="xs:integer"/>
+      </xs:sequence>
+      
+      <xs:element name="vui_timing_info_present_flag" type="xs:boolean"/>
+      
+      <!-- if vui_timing_info_present_flag -->
+      <xs:sequence minOccurs="0">
+        <xs:element name="vui_num_units_in_tick" type="xs:integer"/>
+        <xs:element name="vui_time_scale" type="xs:integer"/>
+        <xs:element name="vui_poc_proportional_to_timing_flag" type="xs:boolean"/>
+        <xs:element name="vui_num_ticks_poc_diff_one_minus1" type="xs:integer" minOccurs="0"/>
+        <xs:element name="vui_hrd_parameters_present_flag" type="xs:boolean"/>
+        <!-- NOTE: HRD parameters here but not yet implemented -->
+      </xs:sequence>
+
+      <xs:element name="bitstream_restriction_flag" type="xs:boolean"/>
+      
+      <!-- if bitstream_restriction_flag -->
+      <xs:sequence minOccurs="0">
+        <xs:element name="tiles_fixed_structure_flag" type="xs:boolean"/>
+        <xs:element name="motion_vectors_over_pic_boundaries_flag" type="xs:boolean"/>
+        <xs:element name="restricted_ref_pic_lists_flag" type="xs:boolean"/>
+        <xs:element name="min_spatial_segmentation_idc" type="xs:integer"/>
+        <xs:element name="max_bytes_per_pic_denom" type="xs:integer"/>
+        <xs:element name="max_bits_per_min_cu_denom" type="xs:integer"/>
+        <xs:element name="log2_max_mv_length_horizontal" type="xs:integer"/>
+        <xs:element name="log2_max_mv_length_vertical" type="xs:integer"/>
+      </xs:sequence>
+    </xs:sequence>
+  </xs:group>
+
+  <!-- ProfileTierLevel definition -->
+  <xs:group name="ProfileTierLevelStructure">
     <xs:sequence>
       <xs:element name="general_profile_space" type="xs:integer"/>
       <xs:element name="general_tier_flag" type="xs:boolean"/>
       <xs:element name="general_profile_idc" type="xs:integer"/>
     </xs:sequence>
   </xs:group>
+  
+  <!-- StRefPicSet definition -->
+  <xs:group name="StRefPicSetStructure">
+    <xs:sequence>
+      <xs:element name="inter_ref_pic_set_prediction_flag" type="xs:integer" minOccurs="0"/>
+      <xs:element name="delta_idx_minus1" type="xs:integer" minOccurs="0"/>
+      <xs:choice>
+        <!-- if inter_ref_pic_set_prediction_flag -->
+        <xs:sequence>
+          <xs:element name="delta_rps_sign" type="xs:boolean"/>
+          <xs:element name="abs_delta_rps_minus1" type="xs:integer"/>
+          <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="used_by_curr_pic_flag" type="xs:boolean"/>
+            <xs:element name="use_delta_flag" type="xs:boolean" minOccurs="0"/>
+          </xs:sequence>
+        </xs:sequence>
+        <!-- else -->
+        <xs:sequence>
+          <xs:element name="num_negative_pics" type="xs:integer"/>
+          <xs:element name="num_positive_pics" type="xs:integer"/>
+          <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="delta_poc_s0_minus1" type="xs:integer"/>
+            <xs:element name="used_by_curr_pic_s0_flag" type="xs:boolean"/>
+          </xs:sequence>
+          <xs:sequence minOccurs="0" maxOccurs="unbounded">
+            <xs:element name="delta_poc_s1_minus1" type="xs:integer"/>
+            <xs:element name="used_by_curr_pic_s1_flag" type="xs:boolean"/>
+          </xs:sequence>
+        </xs:sequence>
+      </xs:choice>
+    </xs:sequence>
+  </xs:group>
 
+  <!-- Type definitions -->
   <!-- VideoParameterSetType definition -->
   <xs:complexType name="VideoParameterSetType">
     <xs:sequence>
@@ -29,6 +144,7 @@
   <xs:complexType name="SequenceParameterSetType">
     <xs:sequence>
       <xs:element name="sps_video_parameter_set_id" type="xs:integer"/>
+      
       <xs:choice>
         <!-- if nuh_layer_id == 0 -->
         <xs:element name="sps_max_sub_layers_minus1" type="xs:integer"/>
@@ -40,6 +156,7 @@
         <xs:group ref="ProfileTierLevelStructure"/>
       </xs:sequence>
       <xs:element name="sps_seq_parameter_set_id" type="xs:integer"/>
+      
       <xs:choice>
         <!-- if multi layer ext sps -->
         <xs:sequence>
@@ -62,6 +179,58 @@
           <xs:element name="bit_depth_chroma_minus8" type="xs:integer"/>
         </xs:sequence>
       </xs:choice>
+      <xs:element name="log2_max_pic_order_cnt_lsb_minus4" type="xs:integer"/>
+      
+      <!-- if not multi layer ext sps -->
+      <xs:sequence minOccurs="0">
+        <xs:element name="sps_sub_layer_ordering_info_present_flag" type="xs:boolean"/>
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+          <xs:element name="sps_max_dec_pic_buffering_minus1" type="xs:integer"/>
+          <xs:element name="sps_max_num_reorder_pics" type="xs:integer"/>
+          <xs:element name="sps_max_latency_increase_plus1" type="xs:integer"/>
+        </xs:sequence>
+      </xs:sequence>
+      
+      <xs:element name="log2_min_luma_coding_block_size_minus3" type="xs:integer"/>
+      <xs:element name="log2_diff_max_min_luma_coding_block_size" type="xs:integer"/>
+      <xs:element name="log2_min_luma_transform_block_size_minus2" type="xs:integer"/>
+      <xs:element name="log2_diff_max_min_luma_transform_block_size" type="xs:integer"/>
+      <xs:element name="max_transform_hierarchy_depth_inter" type="xs:integer"/>
+      <xs:element name="max_transform_hierarchy_depth_intra" type="xs:integer"/>
+      <xs:element name="scaling_list_enabled_flag" type="xs:boolean"/>
+      <!-- NOTE: for not scaling list not implemented -->
+      <xs:element name="amp_enabled_flag" type="xs:boolean"/>
+      <xs:element name="sample_adaptive_offset_enabled_flag" type="xs:boolean"/>
+      <xs:element name="pcm_enabled_flag" type="xs:boolean"/>
+      
+      <!-- if pcm_enabled_flag -->
+      <xs:sequence minOccurs="0">
+        <xs:element name="pcm_sample_bit_depth_luma_minus1" type="xs:integer"/>
+        <xs:element name="pcm_sample_bit_depth_chroma_minus1" type="xs:integer"/>
+        <xs:element name="log2_min_pcm_luma_coding_block_size_minus3" type="xs:integer"/>
+        <xs:element name="log2_diff_max_min_pcm_luma_coding_block_size" type="xs:integer"/>
+        <xs:element name="pcm_loop_filter_disabled_flag" type="xs:boolean"/>
+      </xs:sequence>
+      
+      <xs:element name="num_short_term_ref_pic_sets" type="xs:integer"/>
+      <xs:group ref="StRefPicSetStructure" maxOccurs="unbounded"/>
+      <xs:element name="long_term_ref_pics_present_flag" type="xs:boolean"/>
+
+      <!-- if long_term_ref_pics_present_flag -->
+      <xs:sequence minOccurs="0">
+        <xs:element name="num_long_term_ref_pics_sps" type="xs:integer"/>
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+          <xs:element name="lt_ref_pic_poc_lsb_sps" type="xs:integer"/>
+          <xs:element name="used_by_curr_pic_lt_sps_flag" type="xs:boolean"/>
+        </xs:sequence>
+      </xs:sequence>
+      
+      <xs:element name="sps_temporal_mvp_enabled_flag" type="xs:boolean"/>
+      <xs:element name="strong_intra_smoothing_enabled_flag" type="xs:boolean"/>
+      <xs:element name="vui_parameters_present_flag" type="xs:boolean"/>
+
+      <xs:group ref="VuiParametersStructure" minOccurs="0"/>
+      <!-- NOTE: To implement the remainder -->
     </xs:sequence>
   </xs:complexType>
   

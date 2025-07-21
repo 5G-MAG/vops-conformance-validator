@@ -9,20 +9,28 @@
   <!-- Require HEVC bitstream schema -->
   <xs:include schemaLocation="hevc.xsd"/>
   
-  <!-- Require 3GPP Sterescopic format: TODO -->
-
-  <!-- Require MV-HEVC-Dual-layers-UHD420-Dec -->
-  
   <xs:element name="HEVCBitstream">
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="NALUnit" maxOccurs="unbounded"/>
       </xs:sequence>
       <xs:attribute name="uri" type="xs:anyURI"/>
-      <xs:include schemaLocation="vops_mv-hevc-dual-layers-uhd420-dec.xsd"/>
+      <!-- TODO: 3GPP Stereoscopic format -->
+
+      <!-- MV-HEVC-Dual-layers-UHD420-Dec -->
+      <!-- HEVC Progressive constraints -->
+      <xs:assert test="NALUnit/SequenceParameterSet/general_progressive_source_flag = 1"/>
+      <xs:assert test="NALUnit/SequenceParameterSet/general_interlaced_source_flag = 0"/>
+      <xs:assert test="NALUnit/SequenceParameterSet/general_non_packed_constraint_flag = 1"/>
+      <xs:assert test="NALUnit/SequenceParameterSet/general_frame_only_constraint_flag = 1"/>
+      <!-- TODO:HEVC VUI constraints -->
+
+      <!-- Remainder of MV-HEVC Stereo Operation Point -->
       <xs:assert test="exists(NALUnit/VideoParameterSet)"/>
       <xs:assert test="NALUnit/VideoParameterSet/vps_max_layers_minus1 = 1"/>
       <xs:assert test="NALUnit/SequenceParameterSet/chroma_format_idc = 1"/>
+      <xs:assert test="NALUnit/SequenceParameterSet/aspect_ratio_idc = 1"/>
+      <!-- TODO: More todos -->
     </xs:complexType>
   </xs:element>
 
