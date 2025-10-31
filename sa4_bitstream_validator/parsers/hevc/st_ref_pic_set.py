@@ -7,6 +7,11 @@ from bitstring import Error
 def parse_st_ref_pic_sets(num_short_term_ref_pic_sets: int, is_slice_header: bool, reader):
     """Parse all short-term reference picture set structure"""
     st_ref_pic_sets = {}
+    
+    # If there are no reference picture sets, return empty dict
+    if num_short_term_ref_pic_sets == 0:
+        return st_ref_pic_sets
+    
     num_negative_pics = [None] * num_short_term_ref_pic_sets
     num_positive_pics = [None] * num_short_term_ref_pic_sets
 
@@ -112,7 +117,8 @@ def parse_st_ref_pic_sets(num_short_term_ref_pic_sets: int, is_slice_header: boo
 
         except Error as e:
             print(f"Short-term reference picture set parsing error: {e}")
-            return None
+            # Return empty dict instead of None to avoid breaking the SPS parser
+            return {}
 
         st_ref_pic_sets = {
             **st_ref_pic_sets,

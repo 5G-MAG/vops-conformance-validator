@@ -159,7 +159,8 @@ def parse_vui_parameters(reader):
                 vui["log2_max_mv_length_vertical"] = reader.read_ue()
 
     except Error as e:
-        print(f"Short-term reference picture set parsing error: {e}")
-        return None
+        print(f"VUI parameters parsing error: {e}")
+        # Return empty dict instead of None to avoid breaking the SPS parser
+        return {}
 
     return vui
