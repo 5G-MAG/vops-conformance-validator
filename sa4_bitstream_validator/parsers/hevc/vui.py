@@ -53,42 +53,42 @@ def parse_hrd_parameters(common_inf_present_flag, max_num_sub_layers_minus1, rea
     
     for i in range(max_num_sub_layers_minus1 + 1):
         if hrd.get("nal_hrd_parameters_present_flag", False):
-            hrd[f"fixed_pic_rate_general_flag[{i}]"] = reader.read_bit()
-            if not hrd[f"fixed_pic_rate_general_flag[{i}]"]:
-                hrd[f"fixed_pic_rate_within_cvs_flag[{i}]"] = reader.read_bit()
-                if hrd[f"fixed_pic_rate_within_cvs_flag[{i}]"]:
-                    hrd[f"elemental_duration_in_tc_minus1[{i}]"] = reader.read_ue()
+            hrd[f"fixed_pic_rate_general_flag[i={i}]"] = reader.read_bit()
+            if not hrd[f"fixed_pic_rate_general_flag[i={i}]"]:
+                hrd[f"fixed_pic_rate_within_cvs_flag[i={i}]"] = reader.read_bit()
+                if hrd[f"fixed_pic_rate_within_cvs_flag[i={i}]"]:
+                    hrd[f"elemental_duration_in_tc_minus1[i={i}]"] = reader.read_ue()
                 else:
-                    hrd[f"low_delay_hrd_flag[{i}]"] = reader.read_bit()
+                    hrd[f"low_delay_hrd_flag[i={i}]"] = reader.read_bit()
             if not hrd.get("low_delay_hrd_flag", [False])[i] if i < len(hrd.get("low_delay_hrd_flag", [])) else True:
-                hrd[f"cpb_cnt_minus1[{i}]"] = reader.read_ue()
+                hrd[f"cpb_cnt_minus1[i={i}]"] = reader.read_ue()
             if hrd["nal_hrd_parameters_present_flag"]:
-                for j in range(hrd.get(f"cpb_cnt_minus1[{i}]", 0) + 1):
-                    hrd[f"bit_rate_value_minus1[{i}][{j}]"] = reader.read_ue()
-                    hrd[f"cpb_size_value_minus1[{i}][{j}]"] = reader.read_ue()
+                for j in range(hrd.get(f"cpb_cnt_minus1[i={i}]", 0) + 1):
+                    hrd[f"bit_rate_value_minus1[i={i}][j={j}]"] = reader.read_ue()
+                    hrd[f"cpb_size_value_minus1[i={i}][j={j}]"] = reader.read_ue()
                     if hrd.get("sub_pic_hrd_params_present_flag", False):
-                        hrd[f"cpb_size_du_value_minus1[{i}][{j}]"] = reader.read_ue()
-                        hrd[f"bit_rate_du_value_minus1[{i}][{j}]"] = reader.read_ue()
-                    hrd[f"cbr_flag[{i}][{j}]"] = reader.read_bit()
+                        hrd[f"cpb_size_du_value_minus1[i={i}][j={j}]"] = reader.read_ue()
+                        hrd[f"bit_rate_du_value_minus1[i={i}][j={j}]"] = reader.read_ue()
+                    hrd[f"cbr_flag[i={i}][j={j}]"] = reader.read_bit()
         
         if hrd.get("vcl_hrd_parameters_present_flag", False):
-            hrd[f"fixed_pic_rate_general_flag[{i}]"] = reader.read_bit()
-            if not hrd[f"fixed_pic_rate_general_flag[{i}]"]:
-                hrd[f"fixed_pic_rate_within_cvs_flag[{i}]"] = reader.read_bit()
-                if hrd[f"fixed_pic_rate_within_cvs_flag[{i}]"]:
-                    hrd[f"elemental_duration_in_tc_minus1[{i}]"] = reader.read_ue()
+            hrd[f"fixed_pic_rate_general_flag[i={i}]"] = reader.read_bit()
+            if not hrd[f"fixed_pic_rate_general_flag[i={i}]"]:
+                hrd[f"fixed_pic_rate_within_cvs_flag[i={i}]"] = reader.read_bit()
+                if hrd[f"fixed_pic_rate_within_cvs_flag[i={i}]"]:
+                    hrd[f"elemental_duration_in_tc_minus1[i={i}]"] = reader.read_ue()
                 else:
-                    hrd[f"low_delay_hrd_flag[{i}]"] = reader.read_bit()
+                    hrd[f"low_delay_hrd_flag[i={i}]"] = reader.read_bit()
             if not hrd.get("low_delay_hrd_flag", [False])[i] if i < len(hrd.get("low_delay_hrd_flag", [])) else True:
-                hrd[f"cpb_cnt_minus1[{i}]"] = reader.read_ue()
+                hrd[f"cpb_cnt_minus1[i={i}]"] = reader.read_ue()
             if hrd["vcl_hrd_parameters_present_flag"]:
-                for j in range(hrd.get(f"cpb_cnt_minus1[{i}]", 0) + 1):
-                    hrd[f"bit_rate_value_minus1[{i}][{j}]"] = reader.read_ue()
-                    hrd[f"cpb_size_value_minus1[{i}][{j}]"] = reader.read_ue()
+                for j in range(hrd.get(f"cpb_cnt_minus1[i={i}]", 0) + 1):
+                    hrd[f"bit_rate_value_minus1[i={i}][j={j}]"] = reader.read_ue()
+                    hrd[f"cpb_size_value_minus1[i={i}][j={j}]"] = reader.read_ue()
                     if hrd.get("sub_pic_hrd_params_present_flag", False):
-                        hrd[f"cpb_size_du_value_minus1[{i}][{j}]"] = reader.read_ue()
-                        hrd[f"bit_rate_du_value_minus1[{i}][{j}]"] = reader.read_ue()
-                    hrd[f"cbr_flag[{i}][{j}]"] = reader.read_bit()
+                        hrd[f"cpb_size_du_value_minus1[i={i}][j={j}]"] = reader.read_ue()
+                        hrd[f"bit_rate_du_value_minus1[i={i}][j={j}]"] = reader.read_ue()
+                    hrd[f"cbr_flag[i={i}][j={j}]"] = reader.read_bit()
     
     return hrd
 
@@ -160,7 +160,6 @@ def parse_vui_parameters(reader):
 
     except Error as e:
         print(f"VUI parameters parsing error: {e}")
-        # Return empty dict instead of None to avoid breaking the SPS parser
         return {}
 
     return vui

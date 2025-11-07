@@ -75,16 +75,52 @@ class HEVCParser(BaseParser):
                 if vps_info:
                     vps_elem = SubElement(nal_unit, "VideoParameterSet")
                     for key, value in vps_info.items():
-                        elem = SubElement(vps_elem, re.sub(r"\[\d+\]$", "", key))
-                        elem.text = str(value)
+                        # Handle indexed parameters by extracting variable names and values from encoded keys
+                        # New format: field[k={k}][j={j}] -> extract variable names 'k', 'j' and their values
+                        
+                        # Pattern to match: field[name1=value1][name2=value2]...
+                        match_new_format = re.match(r"^([^\[]+?)((?:\[[^=]+=\d+\])+)$", key)
+                        if match_new_format:
+                            base_key = match_new_format.group(1)
+                            index_parts = match_new_format.group(2)
+                            
+                            # Extract all variable=value pairs
+                            var_value_pairs = re.findall(r"\[([^=]+)=(\d+)\]", index_parts)
+                            
+                            elem = SubElement(vps_elem, base_key)
+                            for var_name, var_value in var_value_pairs:
+                                elem.set(var_name, var_value)
+                            elem.text = str(value)
+                        else:
+                            # Regular parameter without index
+                            elem = SubElement(vps_elem, key)
+                            elem.text = str(value)
             elif nut == 33: # SPS
                 payload_data = data[payload_start:end_pos]
                 sps_info = parse_sps(payload_data, nli)
                 if sps_info:
                     sps_elem = SubElement(nal_unit, "SequenceParameterSet")
                     for key, value in sps_info.items():
-                        elem = SubElement(sps_elem, re.sub(r"(\[\d+\])+$", "", key))
-                        elem.text = str(value)
+                        # Handle indexed parameters by extracting variable names and values from encoded keys
+                        # Format: field[k={k}][j={j}] -> extract variable names 'k', 'j' and their values
+                        
+                        # Pattern to match: field[name1=value1][name2=value2]...
+                        match_new_format = re.match(r"^([^\[]+?)((?:\[[^=]+=\d+\])+)$", key)
+                        if match_new_format:
+                            base_key = match_new_format.group(1)
+                            index_parts = match_new_format.group(2)
+                            
+                            # Extract all variable=value pairs
+                            var_value_pairs = re.findall(r"\[([^=]+)=(\d+)\]", index_parts)
+                            
+                            elem = SubElement(sps_elem, base_key)
+                            for var_name, var_value in var_value_pairs:
+                                elem.set(var_name, var_value)
+                            elem.text = str(value)
+                        else:
+                            # Regular parameter without index
+                            elem = SubElement(sps_elem, key)
+                            elem.text = str(value)
 
         # Generate formatted XML
         xml_str = minidom.parseString(tostring(root)).toprettyxml(indent="  ")

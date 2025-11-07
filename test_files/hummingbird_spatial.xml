@@ -1,5 +1,5 @@
 <?xml version="1.0" ?>
-<HEVCBitstream uri="C:\Users\emman\tmp\hummingbird_spatial.265">
+<HEVCBitstream uri=".\test_files\hummingbird_spatial.265">
   <NALUnit>
     <startCode>00000001</startCode>
     <forbidden_zero_bit>0</forbidden_zero_bit>
@@ -41,9 +41,9 @@
       <bit_depth_chroma_minus8>0</bit_depth_chroma_minus8>
       <log2_max_pic_order_cnt_lsb_minus4>7</log2_max_pic_order_cnt_lsb_minus4>
       <sps_sub_layer_ordering_info_present_flag>0</sps_sub_layer_ordering_info_present_flag>
-      <sps_max_dec_pic_buffering_minus1>4</sps_max_dec_pic_buffering_minus1>
-      <sps_max_num_reorder_pics>2</sps_max_num_reorder_pics>
-      <sps_max_latency_increase_plus1>0</sps_max_latency_increase_plus1>
+      <sps_max_dec_pic_buffering_minus1 i="0">4</sps_max_dec_pic_buffering_minus1>
+      <sps_max_num_reorder_pics i="0">2</sps_max_num_reorder_pics>
+      <sps_max_latency_increase_plus1 i="0">0</sps_max_latency_increase_plus1>
       <log2_min_luma_coding_block_size_minus3>0</log2_min_luma_coding_block_size_minus3>
       <log2_diff_max_min_luma_coding_block_size>2</log2_diff_max_min_luma_coding_block_size>
       <log2_min_luma_transform_block_size_minus2>0</log2_min_luma_transform_block_size_minus2>
@@ -91,30 +91,23 @@
       <sps_ext_or_max_sub_layers_minus1>7</sps_ext_or_max_sub_layers_minus1>
       <sps_seq_parameter_set_id>1</sps_seq_parameter_set_id>
       <update_rep_format_flag>0</update_rep_format_flag>
-      <log2_max_pic_order_cnt_lsb_minus4>7</log2_max_pic_order_cnt_lsb_minus4>
-      <log2_min_luma_coding_block_size_minus3>0</log2_min_luma_coding_block_size_minus3>
-      <log2_diff_max_min_luma_coding_block_size>2</log2_diff_max_min_luma_coding_block_size>
-      <log2_min_luma_transform_block_size_minus2>0</log2_min_luma_transform_block_size_minus2>
-      <log2_diff_max_min_luma_transform_block_size>3</log2_diff_max_min_luma_transform_block_size>
-      <max_transform_hierarchy_depth_inter>1</max_transform_hierarchy_depth_inter>
+      <log2_max_pic_order_cnt_lsb_minus4>0</log2_max_pic_order_cnt_lsb_minus4>
+      <log2_min_luma_coding_block_size_minus3>2</log2_min_luma_coding_block_size_minus3>
+      <log2_diff_max_min_luma_coding_block_size>0</log2_diff_max_min_luma_coding_block_size>
+      <log2_min_luma_transform_block_size_minus2>3</log2_min_luma_transform_block_size_minus2>
+      <log2_diff_max_min_luma_transform_block_size>1</log2_diff_max_min_luma_transform_block_size>
+      <max_transform_hierarchy_depth_inter>0</max_transform_hierarchy_depth_inter>
       <max_transform_hierarchy_depth_intra>0</max_transform_hierarchy_depth_intra>
-      <scaling_list_enabled_flag>1</scaling_list_enabled_flag>
-      <sps_infer_scaling_list_flag>0</sps_infer_scaling_list_flag>
-      <sps_scaling_list_data_present_flag>0</sps_scaling_list_data_present_flag>
+      <scaling_list_enabled_flag>0</scaling_list_enabled_flag>
       <amp_enabled_flag>0</amp_enabled_flag>
-      <sample_adaptive_offset_enabled_flag>1</sample_adaptive_offset_enabled_flag>
+      <sample_adaptive_offset_enabled_flag>0</sample_adaptive_offset_enabled_flag>
       <pcm_enabled_flag>0</pcm_enabled_flag>
       <num_short_term_ref_pic_sets>0</num_short_term_ref_pic_sets>
       <long_term_ref_pics_present_flag>0</long_term_ref_pics_present_flag>
-      <sps_temporal_mvp_enabled_flag>1</sps_temporal_mvp_enabled_flag>
+      <sps_temporal_mvp_enabled_flag>0</sps_temporal_mvp_enabled_flag>
       <strong_intra_smoothing_enabled_flag>0</strong_intra_smoothing_enabled_flag>
       <vui_parameters_present_flag>0</vui_parameters_present_flag>
-      <sps_extension_present_flag>1</sps_extension_present_flag>
-      <sps_range_extension_flag>0</sps_range_extension_flag>
-      <sps_multilayer_extension_flag>1</sps_multilayer_extension_flag>
-      <sps_extension_1bit>0</sps_extension_1bit>
-      <sps_scc_extension_flag>0</sps_scc_extension_flag>
-      <inter_view_mv_vert_constraint_flag>0</inter_view_mv_vert_constraint_flag>
+      <sps_extension_present_flag>0</sps_extension_present_flag>
     </SequenceParameterSet>
   </NALUnit>
   <NALUnit>
