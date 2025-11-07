@@ -15,6 +15,50 @@
       <vps_max_sub_layers_minus1>0</vps_max_sub_layers_minus1>
       <vps_temporal_id_nesting_flag>1</vps_temporal_id_nesting_flag>
       <vps_reserved_0xffff_16bits>65535</vps_reserved_0xffff_16bits>
+      <general_profile_space>0</general_profile_space>
+      <general_tier_flag>0</general_tier_flag>
+      <general_profile_idc>1</general_profile_idc>
+      <general_profile_compatibility_flag j="0">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="1">1</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="2">1</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="3">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="4">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="5">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="6">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="7">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="8">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="9">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="10">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="11">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="12">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="13">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="14">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="15">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="16">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="17">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="18">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="19">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="20">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="21">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="22">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="23">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="24">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="25">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="26">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="27">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="28">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="29">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="30">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="31">0</general_profile_compatibility_flag>
+      <general_progressive_source_flag>1</general_progressive_source_flag>
+      <general_interlaced_source_flag>0</general_interlaced_source_flag>
+      <general_non_packed_constraint_flag>1</general_non_packed_constraint_flag>
+      <general_frame_only_constraint_flag>1</general_frame_only_constraint_flag>
+      <general_reserved_zero_7bits>0</general_reserved_zero_7bits>
+      <general_one_picture_only_constraint_flag>0</general_one_picture_only_constraint_flag>
+      <general_reserved_zero_35bits>0</general_reserved_zero_35bits>
+      <general_inbld_flag>0</general_inbld_flag>
+      <general_level_idc>120</general_level_idc>
     </VideoParameterSet>
   </NALUnit>
   <NALUnit>
@@ -28,6 +72,50 @@
       <sps_video_parameter_set_id>0</sps_video_parameter_set_id>
       <sps_max_sub_layers_minus1>0</sps_max_sub_layers_minus1>
       <sps_temporal_id_nesting_flag>1</sps_temporal_id_nesting_flag>
+      <general_profile_space>0</general_profile_space>
+      <general_tier_flag>0</general_tier_flag>
+      <general_profile_idc>1</general_profile_idc>
+      <general_profile_compatibility_flag j="0">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="1">1</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="2">1</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="3">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="4">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="5">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="6">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="7">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="8">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="9">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="10">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="11">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="12">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="13">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="14">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="15">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="16">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="17">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="18">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="19">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="20">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="21">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="22">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="23">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="24">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="25">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="26">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="27">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="28">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="29">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="30">0</general_profile_compatibility_flag>
+      <general_profile_compatibility_flag j="31">0</general_profile_compatibility_flag>
+      <general_progressive_source_flag>1</general_progressive_source_flag>
+      <general_interlaced_source_flag>0</general_interlaced_source_flag>
+      <general_non_packed_constraint_flag>1</general_non_packed_constraint_flag>
+      <general_frame_only_constraint_flag>1</general_frame_only_constraint_flag>
+      <general_reserved_zero_7bits>0</general_reserved_zero_7bits>
+      <general_one_picture_only_constraint_flag>0</general_one_picture_only_constraint_flag>
+      <general_reserved_zero_35bits>0</general_reserved_zero_35bits>
+      <general_inbld_flag>0</general_inbld_flag>
+      <general_level_idc>120</general_level_idc>
       <sps_seq_parameter_set_id>0</sps_seq_parameter_set_id>
       <chroma_format_idc>1</chroma_format_idc>
       <pic_width_in_luma_samples>1920</pic_width_in_luma_samples>
