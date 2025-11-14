@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
+  elementFormDefault="qualified"
+  attributeFormDefault="unqualified"
+  vc:minVersion="1.1">
+
+  <!-- Require HEVC bitstream schema -->
+  <xs:include schemaLocation="hevc_common.xsd"/>
+  
+  <xs:element name="HEVCBitstream">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="NALUnit" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="uri" type="xs:anyURI"/>
+
+      <xs:assert test="exists(NALUnit/SequenceParameterSet/general_progressive_source_flag)"/>
+      <xs:assert test="string(NALUnit/SequenceParameterSet/general_progressive_source_flag) = '1'"/>
+      <xs:assert test="exists(NALUnit/SequenceParameterSet/general_interlaced_source_flag)"/>
+      <xs:assert test="string(NALUnit/SequenceParameterSet/general_interlaced_source_flag) = '0'"/>
+      <xs:assert test="exists(NALUnit/SequenceParameterSet/general_non_packed_constraint_flag)"/>
+      <xs:assert test="string(NALUnit/SequenceParameterSet/general_non_packed_constraint_flag) = '1'"/>
+      <xs:assert test="exists(NALUnit/SequenceParameterSet/general_frame_only_constraint_flag)"/>
+      <xs:assert test="string(NALUnit/SequenceParameterSet/general_frame_only_constraint_flag) = '1'"/>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

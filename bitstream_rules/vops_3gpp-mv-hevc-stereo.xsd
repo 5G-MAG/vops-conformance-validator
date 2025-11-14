@@ -15,21 +15,7 @@
         <xs:element ref="NALUnit" maxOccurs="unbounded"/>
       </xs:sequence>
       <xs:attribute name="uri" type="xs:anyURI"/>
-      <!-- TODO: 3GPP Stereoscopic format -->
 
-      <!-- MV-HEVC-Dual-layers-UHD420-Dec -->
-      <!-- HEVC Progressive constraints -->
-      <xs:assert test="exists(NALUnit/SequenceParameterSet/general_progressive_source_flag)"/>
-      <xs:assert test="string(NALUnit/SequenceParameterSet/general_progressive_source_flag) = '1'"/>
-      <xs:assert test="exists(NALUnit/SequenceParameterSet/general_interlaced_source_flag)"/>
-      <xs:assert test="string(NALUnit/SequenceParameterSet/general_interlaced_source_flag) = '0'"/>
-      <xs:assert test="exists(NALUnit/SequenceParameterSet/general_non_packed_constraint_flag)"/>
-      <xs:assert test="string(NALUnit/SequenceParameterSet/general_non_packed_constraint_flag) = '1'"/>
-      <xs:assert test="exists(NALUnit/SequenceParameterSet/general_frame_only_constraint_flag)"/>
-      <xs:assert test="string(NALUnit/SequenceParameterSet/general_frame_only_constraint_flag) = '1'"/>
-      <!-- TODO:HEVC VUI constraints -->
-
-      <!-- Remainder of MV-HEVC Stereo Operation Point -->
       <xs:assert test="exists(NALUnit/VideoParameterSet)"/>
       <xs:assert test="exists(NALUnit/VideoParameterSet/vps_max_layers_minus1)"/>
       <xs:assert test="NALUnit/VideoParameterSet/vps_max_layers_minus1 = 1"/>

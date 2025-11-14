@@ -28,12 +28,16 @@ def dump(bitstream, description):
 
 @cli.command()
 @click.argument("description", type=click.Path(exists=True))
-@click.argument("op", type=click.Path(exists=True))
-def validate(description, op):
-    """Validate BITSTREAM against the OP."""
-    click.echo(f"Start validation of {description} against {op}")
+@click.argument("xsds", type=click.Path(exists=True), nargs=-1)
+def validate(description, xsds):
+    """Validate DESCRIPTION against one or more XSD schemas."""
+    if not xsds:
+        click.echo("Error: At least one XSD schema must be provided")
+        return
+        
+    click.echo(f"Start validation of {description} against {len(xsds)} schema(s)")
     validator = XMLValidator()
-    validator.validate(description, op)
+    validator.validate_multiple(description, xsds)
 
 if __name__ == "__main__":
     cli()
