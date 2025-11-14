@@ -147,16 +147,16 @@ def parse_vui_parameters(reader):
                 hrd_params = parse_hrd_parameters(True, 0, reader)
                 vui.update({f"hrd_{k}": v for k, v in hrd_params.items()})
 
-            vui["bitstream_restriction_flag"] = reader.read_bit()
-            if vui["bitstream_restriction_flag"]:
-                vui["tiles_fixed_structure_flag"] = reader.read_bit()
-                vui["motion_vectors_over_pic_boundaries_flag"] = reader.read_bit()
-                vui["restricted_ref_pic_lists_flag"] = reader.read_bit()
-                vui["min_spatial_segmentation_idc"] = reader.read_ue()
-                vui["max_bytes_per_pic_denom"] = reader.read_ue()
-                vui["max_bits_per_min_cu_denom"] = reader.read_ue()
-                vui["log2_max_mv_length_horizontal"] = reader.read_ue()
-                vui["log2_max_mv_length_vertical"] = reader.read_ue()
+        vui["bitstream_restriction_flag"] = reader.read_bit()
+        if vui["bitstream_restriction_flag"]:
+            vui["tiles_fixed_structure_flag"] = reader.read_bit()
+            vui["motion_vectors_over_pic_boundaries_flag"] = reader.read_bit()
+            vui["restricted_ref_pic_lists_flag"] = reader.read_bit()
+            vui["min_spatial_segmentation_idc"] = reader.read_ue()
+            vui["max_bytes_per_pic_denom"] = reader.read_ue()
+            vui["max_bits_per_min_cu_denom"] = reader.read_ue()
+            vui["log2_max_mv_length_horizontal"] = reader.read_ue()
+            vui["log2_max_mv_length_vertical"] = reader.read_ue()
 
     except Error as e:
         print(f"VUI parameters parsing error: {e}")
