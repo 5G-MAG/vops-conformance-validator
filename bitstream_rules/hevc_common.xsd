@@ -388,7 +388,10 @@
           <xs:element name="dimension_id" type="IndexedIntegerType"/>
         </xs:sequence>
       </xs:sequence>
-       <xs:element name="view_id_len" type="xs:integer"/>
+      <xs:element name="view_id_len" type="xs:integer"/>
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="view_id_val" type="IndexedIntegerType"/>
+      </xs:sequence>
 
       <!-- VPS extension 2-->
       <xs:element name="vps_extension2_flag" type="xs:boolean"/>

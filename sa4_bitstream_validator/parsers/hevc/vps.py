@@ -7,6 +7,7 @@ from bitstring import Error
 from sa4_bitstream_validator.bit_reader import BitReader
 from sa4_bitstream_validator.tools import remove_emulation_prevention
 from .ptl import parse_profile_tier_level
+from .hrd_parameters import parse_hrd_parameters
 
 def parse_vps(payload_data):
     """Parse Video Parameter Set from payload bytes"""
@@ -80,7 +81,7 @@ def parse_vps(payload_data):
                 max_sub_layers_minus1 = vps["vps_max_sub_layers_minus1"]
                 
                 # Parse HRD parameters and flatten them into the main VPS object
-                hrd_params = parse_vps_hrd_parameters(
+                hrd_params = parse_hrd_parameters(
                     cprms_present, max_sub_layers_minus1, reader
                 )
 
@@ -134,20 +135,55 @@ def parse_vps_extensions(reader, vps):
     vps["vps_nuh_layer_id_present_flag"] = reader.read_bit()
     
     max_layers_minus1 = min(62, vps["vps_max_layers_minus1"])
+    
+    # Arrays to store scalability information
+    layer_id_in_nuh = [0] * (max_layers_minus1 + 1)
+    scalability_id = [[0] * 16 for _ in range(max_layers_minus1 + 1)]
+    view_order_idx = [0] * (max_layers_minus1 + 1)
+    
     for i in range(1, max_layers_minus1 + 1):
         if vps["vps_nuh_layer_id_present_flag"]:
-            vps[f"layer_id_in_nuh[i={i}]"] = reader.read_bits(6)
+            layer_id = reader.read_bits(6)
+            vps[f"layer_id_in_nuh[i={i}]"] = layer_id
+            layer_id_in_nuh[i] = layer_id
+        else:
+            layer_id_in_nuh[i] = i
         
         if not vps["splitting_flag"]:
-            for j in range(num_scalability_types):
-                vps[f"dimension_id[i={i}][j={j}]"] = reader.read_bits(vps[f"dimension_id_len_minus1[j={j}]"]+1)
+            j_index = 0
+            for smIdx in range(16):
+                if vps.get(f"scalability_mask_flag[i={smIdx}]", 0):
+                    dimension_id_val = reader.read_bits(vps[f"dimension_id_len_minus1[j={j_index}]"]+1)
+                    vps[f"dimension_id[i={i}][j={j_index}]"] = dimension_id_val
+                    scalability_id[i][smIdx] = dimension_id_val
+                    j_index += 1
+                else:
+                    scalability_id[i][smIdx] = 0
+            
+            # Extract view order index (scalability_id[i][1])
+            view_order_idx[layer_id_in_nuh[i]] = scalability_id[i][1]
     
+    # Calculate num_views according to HEVC specification
+    num_views = 1  # Base view
+    
+    if max_layers_minus1 > 0:
+        for i in range(1, max_layers_minus1 + 1):
+            lId = layer_id_in_nuh[i]
+            new_view_flag = 1
+            
+            # Check if this view order index already exists
+            for j in range(1, i):
+                if view_order_idx[lId] == view_order_idx[layer_id_in_nuh[j]]:
+                    new_view_flag = 0
+                    break
+            
+            num_views += new_view_flag
+
     vps["view_id_len"] = reader.read_bits(4)
     
-    # Parse view ID values
-    num_views = 0  # This should be derived from other parameters
+    # Parse view ID values using the calculated num_views
     if vps["view_id_len"] > 0:
         for i in range(num_views):
-            vps["view_id_val[i={i}]"] = reader.read_bits(vps["view_id_len"])
+            vps[f"view_id_val[i={i}]"] = reader.read_bits(vps["view_id_len"])
         
     return vps

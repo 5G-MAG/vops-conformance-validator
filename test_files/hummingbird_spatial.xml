@@ -91,7 +91,10 @@
       <layer_id_in_nuh i="1">1</layer_id_in_nuh>
       <dimension_id i="1" j="0">1</dimension_id>
       <view_id_len>1</view_id_len>
-      <vps_extension2_flag>0</vps_extension2_flag>
+      <view_id_val i="0">0</view_id_val>
+      <view_id_val i="1">1</view_id_val>
+      <vps_extension2_flag>1</vps_extension2_flag>
+      <vps_extension_data_flag>0</vps_extension_data_flag>
     </VideoParameterSet>
   </NALUnit>
   <NALUnit>
