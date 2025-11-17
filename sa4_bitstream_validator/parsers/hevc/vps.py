@@ -7,7 +7,6 @@ from bitstring import Error
 from sa4_bitstream_validator.bit_reader import BitReader
 from sa4_bitstream_validator.tools import remove_emulation_prevention
 from .ptl import parse_profile_tier_level
-from .hrd_parameters import parse_vps_hrd_parameters
 
 def parse_vps(payload_data):
     """Parse Video Parameter Set from payload bytes"""

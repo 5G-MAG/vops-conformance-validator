@@ -279,7 +279,7 @@ def parse_sps(payload_data, nuh_layer_id):
         # Non-multi-layer specific VUI handling
         sps["vui_parameters_present_flag"] = reader.read_bit()
         if sps["vui_parameters_present_flag"]:
-            sps.update(parse_vui_parameters(reader))
+            sps.update(parse_vui_parameters(sps["sps_max_sub_layers_minus1"], reader))
 
         # Parse extensions for non-multi-layer SPS
         sps = parse_sps_extensions(reader, sps)

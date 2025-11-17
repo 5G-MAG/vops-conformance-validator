@@ -5,7 +5,7 @@
 from enum import Enum
 
 from bitstring import Error
-from .hrd_parameters import parse_vui_hrd_parameters
+from .hrd_parameters import parse_hrd_parameters
 
 class AspectRatioIdc(Enum):
     """Aspect ratio indicator values"""
@@ -29,9 +29,7 @@ class AspectRatioIdc(Enum):
     EXTENDED_SAR    = 255
     # rest is reserved
 
-
-
-def parse_vui_parameters(reader):
+def parse_vui_parameters(sps_max_sub_layers_minus1, reader):
     """Parse VUI parameters"""
     vui = {}
 
@@ -83,7 +81,7 @@ def parse_vui_parameters(reader):
 
             vui["vui_hrd_parameters_present_flag"] = reader.read_bit()
             if vui["vui_hrd_parameters_present_flag"]:
-                hrd_params = parse_vui_hrd_parameters(reader)
+                hrd_params = parse_hrd_parameters(True, sps_max_sub_layers_minus1, reader)
                 for key, value in hrd_params.items():
                     vui[key] = value
 
