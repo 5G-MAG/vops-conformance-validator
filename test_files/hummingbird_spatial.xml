@@ -59,6 +59,39 @@
       <general_reserved_zero_35bits>0</general_reserved_zero_35bits>
       <general_inbld_flag>0</general_inbld_flag>
       <general_level_idc>120</general_level_idc>
+      <vps_sub_layer_ordering_info_present_flag>0</vps_sub_layer_ordering_info_present_flag>
+      <vps_max_dec_pic_buffering_minus1 i="0">4</vps_max_dec_pic_buffering_minus1>
+      <vps_max_num_reorder_pics i="0">2</vps_max_num_reorder_pics>
+      <vps_max_latency_increase_plus1 i="0">0</vps_max_latency_increase_plus1>
+      <vps_max_layer_id>1</vps_max_layer_id>
+      <vps_num_layer_sets_minus1>1</vps_num_layer_sets_minus1>
+      <layer_id_included_flag i="1" j="0">1</layer_id_included_flag>
+      <layer_id_included_flag i="1" j="1">1</layer_id_included_flag>
+      <vps_timing_info_present_flag>0</vps_timing_info_present_flag>
+      <vps_extension_flag>1</vps_extension_flag>
+      <splitting_flag>0</splitting_flag>
+      <scalability_mask_flag i="0">0</scalability_mask_flag>
+      <scalability_mask_flag i="1">1</scalability_mask_flag>
+      <scalability_mask_flag i="2">0</scalability_mask_flag>
+      <scalability_mask_flag i="3">0</scalability_mask_flag>
+      <scalability_mask_flag i="4">0</scalability_mask_flag>
+      <scalability_mask_flag i="5">0</scalability_mask_flag>
+      <scalability_mask_flag i="6">0</scalability_mask_flag>
+      <scalability_mask_flag i="7">0</scalability_mask_flag>
+      <scalability_mask_flag i="8">0</scalability_mask_flag>
+      <scalability_mask_flag i="9">0</scalability_mask_flag>
+      <scalability_mask_flag i="10">0</scalability_mask_flag>
+      <scalability_mask_flag i="11">0</scalability_mask_flag>
+      <scalability_mask_flag i="12">0</scalability_mask_flag>
+      <scalability_mask_flag i="13">0</scalability_mask_flag>
+      <scalability_mask_flag i="14">0</scalability_mask_flag>
+      <scalability_mask_flag i="15">0</scalability_mask_flag>
+      <dimension_id_len_minus1 j="0">2</dimension_id_len_minus1>
+      <vps_nuh_layer_id_present_flag>1</vps_nuh_layer_id_present_flag>
+      <layer_id_in_nuh i="1">1</layer_id_in_nuh>
+      <dimension_id i="1" j="0">1</dimension_id>
+      <view_id_len>1</view_id_len>
+      <vps_extension2_flag>0</vps_extension2_flag>
     </VideoParameterSet>
   </NALUnit>
   <NALUnit>

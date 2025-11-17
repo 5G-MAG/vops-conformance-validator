@@ -67,7 +67,9 @@
         <xs:element name="vui_poc_proportional_to_timing_flag" type="xs:boolean"/>
         <xs:element name="vui_num_ticks_poc_diff_one_minus1" type="xs:integer" minOccurs="0"/>
         <xs:element name="vui_hrd_parameters_present_flag" type="xs:boolean"/>
-        <!-- NOTE: HRD parameters here but not yet implemented -->
+        
+        <!-- if vui_hrd_parameters_present_flag -->
+        <xs:element name="vui_hrd_parameters" type="HRDParametersType" minOccurs="0"/>
       </xs:sequence>
 
       <xs:element name="bitstream_restriction_flag" type="xs:boolean"/>
@@ -272,17 +274,127 @@
   </xs:group>
 
   <!-- Type definitions -->
+  <!-- HRDParametersType definition -->
+  <xs:complexType name="HRDParametersType">
+    <xs:sequence>
+      <!-- Common HRD parameters -->
+      <xs:element name="nal_hrd_parameters_present_flag" type="xs:boolean" minOccurs="0"/>
+      <xs:element name="vcl_hrd_parameters_present_flag" type="xs:boolean" minOccurs="0"/>
+      <xs:element name="sub_pic_hrd_params_present_flag" type="xs:boolean" minOccurs="0"/>
+      <xs:element name="tick_divisor_minus2" type="xs:integer" minOccurs="0"/>
+      <xs:element name="du_cpb_removal_delay_increment_length_minus1" type="xs:integer" minOccurs="0"/>
+      <xs:element name="sub_pic_cpb_params_in_pic_timing_sei_flag" type="xs:boolean" minOccurs="0"/>
+      <xs:element name="dpb_output_delay_du_length_minus1" type="xs:integer" minOccurs="0"/>
+      <xs:element name="bit_rate_scale" type="xs:integer" minOccurs="0"/>
+      <xs:element name="cpb_size_scale" type="xs:integer" minOccurs="0"/>
+      <xs:element name="cpb_size_du_scale" type="xs:integer" minOccurs="0"/>
+      <xs:element name="initial_cpb_removal_delay_length_minus1" type="xs:integer" minOccurs="0"/>
+      <xs:element name="au_cpb_removal_delay_length_minus1" type="xs:integer" minOccurs="0"/>
+      <xs:element name="dpb_output_delay_length_minus1" type="xs:integer" minOccurs="0"/>
+      
+      <!-- Sub-layer HRD parameters -->
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="fixed_pic_rate_general_flag" type="IndexedBooleanType"/>
+        <xs:element name="fixed_pic_rate_within_cvs_flag" type="IndexedBooleanType" minOccurs="0"/>
+        <xs:element name="elemental_duration_in_tc_minus1" type="IndexedIntegerType" minOccurs="0"/>
+        <xs:element name="low_delay_hrd_flag" type="IndexedBooleanType" minOccurs="0"/>
+        
+        <!-- NAL HRD parameters -->
+        <xs:element name="nal_cpb_cnt_minus1" type="IndexedIntegerType" minOccurs="0"/>
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+          <xs:element name="nal_bit_rate_value_minus1" type="IndexedIntegerType"/>
+          <xs:element name="nal_cpb_size_value_minus1" type="IndexedIntegerType"/>
+          <xs:element name="nal_cbr_flag" type="IndexedBooleanType"/>
+        </xs:sequence>
+        
+        <!-- VCL HRD parameters -->
+        <xs:element name="vcl_cpb_cnt_minus1" type="IndexedIntegerType" minOccurs="0"/>
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+          <xs:element name="vcl_bit_rate_value_minus1" type="IndexedIntegerType"/>
+          <xs:element name="vcl_cpb_size_value_minus1" type="IndexedIntegerType"/>
+          <xs:element name="vcl_cbr_flag" type="IndexedBooleanType"/>
+        </xs:sequence>
+      </xs:sequence>
+    </xs:sequence>
+  </xs:complexType>
+
   <!-- VideoParameterSetType definition -->
   <xs:complexType name="VideoParameterSetType">
     <xs:sequence>
       <xs:element name="vps_video_parameter_set_id" type="xs:integer"/>
-      <xs:element name="vps_base_layer_internal_flag" type="xs:integer"/>
+      <xs:element name="vps_base_layer_internal_flag" type="xs:boolean"/>
       <xs:element name="vps_base_layer_available_flag" type="xs:boolean"/>
       <xs:element name="vps_max_layers_minus1" type="xs:integer"/>
       <xs:element name="vps_max_sub_layers_minus1" type="xs:integer"/>
-      <xs:element name="vps_temporal_id_nesting_flag" type="xs:integer"/>
+      <xs:element name="vps_temporal_id_nesting_flag" type="xs:boolean"/>
       <xs:element name="vps_reserved_0xffff_16bits" type="xs:integer"/>
       <xs:group ref="ProfileTierLevelStructure"/>
+      <xs:element name="vps_sub_layer_ordering_info_present_flag" type="xs:boolean"/>
+      
+      <!-- Sub-layer ordering information -->
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="vps_max_dec_pic_buffering_minus1" type="IndexedIntegerType"/>
+        <xs:element name="vps_max_num_reorder_pics" type="IndexedIntegerType"/>
+        <xs:element name="vps_max_latency_increase_plus1" type="IndexedIntegerType"/>
+      </xs:sequence>
+      
+      <xs:element name="vps_max_layer_id" type="xs:integer"/>
+      <xs:element name="vps_num_layer_sets_minus1" type="xs:integer"/>
+      
+      <!-- Layer dependency flags -->
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="layer_dependency_flag" type="IndexedBooleanType"/>
+      </xs:sequence>
+      
+      <!-- Layer ID included flags -->
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="layer_id_included_flag" type="IndexedBooleanType"/>
+      </xs:sequence>
+      
+      <!-- VPS timing information -->
+      <xs:element name="vps_timing_info_present_flag" type="xs:boolean"/>
+      
+      <xs:sequence minOccurs="0">
+        <xs:element name="vps_num_units_in_tick" type="xs:integer"/>
+        <xs:element name="vps_time_scale" type="xs:integer"/>
+        <xs:element name="vps_poc_proportional_to_timing_flag" type="xs:boolean"/>
+        <xs:element name="vps_num_ticks_poc_diff_one_minus1" type="xs:integer" minOccurs="0"/>
+        <xs:element name="vps_num_hrd_parameters" type="xs:integer"/>
+        
+        <!-- HRD parameters -->
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+          <xs:element name="hrd_layer_set_idx" type="IndexedIntegerType"/>
+          <xs:element name="cprms_present_flag" type="IndexedBooleanType"/>
+          <xs:element name="hrd_parameters" type="HRDParametersType"/>
+        </xs:sequence>
+      </xs:sequence>
+      
+      <!-- VPS extension -->
+      <xs:element name="vps_extension_flag" type="xs:boolean"/>
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+        <xs:group ref="ProfileTierLevelStructure"/>
+      </xs:sequence>
+      <xs:element name="splitting_flag" type="xs:boolean"/>
+      <xs:sequence minOccurs="16" maxOccurs="16">
+        <xs:element name="scalability_mask_flag" type="IndexedBooleanType"/>
+      </xs:sequence>
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="dimension_id_len_minus1" type="IndexedIntegerType"/>
+      </xs:sequence>
+      <xs:element name="vps_nuh_layer_id_present_flag" type="xs:boolean"/>
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="layer_id_in_nuh" type="IndexedIntegerType" minOccurs="0"/>
+        <xs:sequence minOccurs="0" maxOccurs="unbounded">
+          <xs:element name="dimension_id" type="IndexedIntegerType"/>
+        </xs:sequence>
+      </xs:sequence>
+       <xs:element name="view_id_len" type="xs:integer"/>
+
+      <!-- VPS extension 2-->
+      <xs:element name="vps_extension2_flag" type="xs:boolean"/>
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="vps_extension_data_flag" type="xs:boolean"/>
+      </xs:sequence>
     </xs:sequence>
   </xs:complexType>
 
