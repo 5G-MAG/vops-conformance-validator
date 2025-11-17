@@ -17,8 +17,16 @@
       <xs:attribute name="uri" type="xs:anyURI"/>
 
       <xs:assert test="exists(NALUnit/VideoParameterSet)"/>
-      <xs:assert test="exists(NALUnit/VideoParameterSet/vps_max_layers_minus1)"/>
-      <xs:assert test="NALUnit/VideoParameterSet/vps_max_layers_minus1 = 1"/>
+
+      <xs:assert test="exists(NALUnit/VideoParameterSet/vps_num_layer_sets_minus1)"/>
+      <xs:assert test="NALUnit/VideoParameterSet/vps_num_layer_sets_minus1 >= 1"/>
+
+      <xs:assert test="exists(NALUnit/VideoParameterSet/layer_id_included_flag[@i=1][@j=0])"/>
+      <xs:assert test="NALUnit/VideoParameterSet/layer_id_included_flag[@i=1][@j=0] = 1"/>
+      <xs:assert test="exists(NALUnit/VideoParameterSet/layer_id_included_flag[@i=1][@j > 0][. = 1])"/>
+
+      <xs:assert test="NALUnit/VideoParameterSet/scalability_mask_flag[@i=1] = 1"/>
+
       <xs:assert test="exists(NALUnit/SequenceParameterSet/chroma_format_idc)"/>
       <xs:assert test="NALUnit/SequenceParameterSet/chroma_format_idc = 1"/>
       <xs:assert test="exists(NALUnit/SequenceParameterSet/aspect_ratio_idc)"/>
