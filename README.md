@@ -35,7 +35,8 @@ Usage: python -m sa4_bitstream_validator [OPTIONS] COMMAND [ARGS]...
   Main command group
 
 Options:
-  --help  Show this message and exit.
+  -v, --version  Show the version and exit.
+  --help         Show this message and exit.
 
 Commands:
   check     Check BITSTREAM against a predefined operation point.

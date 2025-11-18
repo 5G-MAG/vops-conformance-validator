@@ -4,17 +4,16 @@
     python -m sa4-bitstream-validator --help
 """
 
-__author__ = "Emmanuel Thomas"
-__email__  = "thomase@xiaomi.com"
-
 import os
 import click
 import yaml
 
+from sa4_bitstream_validator import __version__
 from sa4_bitstream_validator.parsers.hevc_parser import HEVCParser
 from sa4_bitstream_validator.validators import XMLValidator
 
 @click.group()
+@click.version_option(__version__, "--version", "-v", message="SA4 Bitstream Validator version %(version)s")
 @click.pass_context
 def cli(ctx):
     """Main command group"""
