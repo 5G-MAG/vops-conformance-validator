@@ -16,9 +16,14 @@ python -m pip install -r requirements.txt
 ## Usage
 
 ```shell
+# Dump bitstream to XML format
 $ python -m sa4_bitstream_validator dump bitstream_path description.xml
 
+# Validate XML description against XSD schemas
 $ python -m sa4_bitstream_validator validate description.xml bitstream_rules/operation_point.xsd
+
+# Check bitstream against predefined operation point (combines dump + validate)
+$ python -m sa4_bitstream_validator check bitstream_path operation_point_name
 ```
 
 ## Help
@@ -33,8 +38,9 @@ Options:
   --help  Show this message and exit.
 
 Commands:
+  check     Check BITSTREAM against a predefined operation point.
   dump      Dump BITSTREAM in XML format to DESCRIPTION.
-  validate  Validate BITSTREAM against the OP.
+  validate  Validate DESCRIPTION against one or more XSD schemas.
 ```
 
 ## License
