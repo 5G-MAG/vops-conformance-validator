@@ -6,7 +6,6 @@ SA4 Bitstream Validator
 ## Description
 The SA4 bitstream validator verifies that a input video bitstream conforms to a given operation point defined in the VOPS specification.
 
-
 ## Installation
 
 ```shell
@@ -19,11 +18,14 @@ python -m pip install -r requirements.txt
 # Dump bitstream to XML format
 $ python -m sa4_bitstream_validator dump bitstream_path description.xml
 
-# Validate XML description against XSD schemas
-$ python -m sa4_bitstream_validator validate description.xml bitstream_rules/operation_point.xsd
+# Check XML description against XSD schemas (console output only)
+$ python -m sa4_bitstream_validator check description.xml bitstream_rules/operation_point.xsd
 
-# Check bitstream against predefined operation point (combines dump + validate)
-$ python -m sa4_bitstream_validator check bitstream_path operation_point_name
+# Validate bitstream against predefined operation point with JSON report
+$ python -m sa4_bitstream_validator validate bitstream_path operation_point_name --report report.json
+
+# Validate without report (console output only, cleans up intermediate files)
+$ python -m sa4_bitstream_validator validate bitstream_path operation_point_name
 ```
 
 ## Help
@@ -39,9 +41,9 @@ Options:
   --help         Show this message and exit.
 
 Commands:
-  check     Check BITSTREAM against a predefined operation point.
+  check     Check DESCRIPTION against one or more XSD schemas.
   dump      Dump BITSTREAM in XML format to DESCRIPTION.
-  validate  Validate DESCRIPTION against one or more XSD schemas.
+  validate  Validate BITSTREAM against a predefined operation point.
 ```
 
 ## License
