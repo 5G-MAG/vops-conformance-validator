@@ -19,13 +19,13 @@ python -m pip install -r requirements.txt
 $ python -m sa4_bitstream_validator dump bitstream_path description.xml
 
 # Check XML description against XSD schemas (console output only)
-$ python -m sa4_bitstream_validator check description.xml bitstream_rules/operation_point.xsd
+$ python -m sa4_bitstream_validator check description.xml bitstream_rules/vops_3gpp-mv-hevc-stereo.xsd
 
 # Validate bitstream against predefined operation point with JSON report
-$ python -m sa4_bitstream_validator validate bitstream_path operation_point_name --report report.json
+$ python -m sa4_bitstream_validator validate bitstream_path 3GPP-MV-HEVC-Stereo --report report.json
 
 # Validate without report (console output only, cleans up intermediate files)
-$ python -m sa4_bitstream_validator validate bitstream_path operation_point_name
+$ python -m sa4_bitstream_validator validate bitstream_path 3GPP-MV-HEVC-Stereo
 ```
 
 ## Help
@@ -44,6 +44,16 @@ Commands:
   check     Check DESCRIPTION against one or more XSD schemas.
   dump      Dump BITSTREAM in XML format to DESCRIPTION.
   validate  Validate BITSTREAM against a predefined operation point.
+
+$ python -m sa4_bitstream_validator validate --help
+Usage: python -m sa4_bitstream_validator validate [OPTIONS] BITSTREAM OPERATION_POINT
+
+  Validate BITSTREAM against a predefined operation point and generate report.
+
+Options:
+  --config TEXT  Path to configuration file
+  --report PATH  Path to JSON validation report file
+  --help         Show this message and exit.
 ```
 
 ## License
