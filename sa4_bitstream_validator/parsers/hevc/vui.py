@@ -69,7 +69,7 @@ def parse_vui_parameters(sps_max_sub_layers_minus1, reader):
             vui["def_disp_win_left_offset"] = reader.read_ue()
             vui["def_disp_win_right_offset"] = reader.read_ue()
             vui["def_disp_win_top_offset"] = reader.read_ue()
-            vui["chroma_sample_loc_type_bottom_field"] = reader.read_ue()
+            vui["def_disp_win_bottom_offset"] = reader.read_ue()
 
         vui["vui_timing_info_present_flag"] = reader.read_bit()
         if vui["vui_timing_info_present_flag"]:

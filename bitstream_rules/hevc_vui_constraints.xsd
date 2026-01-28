@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
+  elementFormDefault="qualified"
+  attributeFormDefault="unqualified"
+  vc:minVersion="1.1">
+
+  <!-- Require HEVC bitstream schema -->
+  <xs:include schemaLocation="hevc_common.xsd"/>
+
+  <xs:element name="HEVCBitstream">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="NALUnit" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="uri" type="xs:anyURI"/>
+
+      <xs:assert test="exists(NALUnit[nuh_layer_id=0]/SequenceParameterSet/vui_parameters_present_flag)"/>
+      <xs:assert test="string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/vui_parameters_present_flag) = '1'"/>
+      <xs:assert test="exists(NALUnit[nuh_layer_id=0]/SequenceParameterSet/aspect_ratio_info_present_flag)"/>
+      <xs:assert test="string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/aspect_ratio_info_present_flag) = '1'"/>
+      <xs:assert test="exists(NALUnit[nuh_layer_id=0]/SequenceParameterSet/video_signal_type_present_flag)"/>
+      <xs:assert test="string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/video_signal_type_present_flag) = '1'"/>
+      <xs:assert test="exists(NALUnit[nuh_layer_id=0]/SequenceParameterSet/colour_description_present_flag)"/>
+      <xs:assert test="string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/colour_description_present_flag) = '1'"/>
+      <xs:assert test="exists(NALUnit[nuh_layer_id=0]/SequenceParameterSet/video_full_range_flag)"/>
+      <xs:assert test="string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/video_full_range_flag) = '0'"/>
+      <xs:assert test="exists(NALUnit[nuh_layer_id=0]/SequenceParameterSet/overscan_info_present_flag)"/>
+      <xs:assert test="string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/overscan_info_present_flag) = '0'"/>
+      <xs:assert test="exists(NALUnit[nuh_layer_id=0]/SequenceParameterSet/chroma_loc_info_present_flag)"/>
+      <xs:assert test="string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/chroma_loc_info_present_flag) = '1'"/>
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>
