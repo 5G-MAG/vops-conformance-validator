@@ -14,7 +14,7 @@ from sa4_bitstream_validator.tools import find_start_codes
 
 class HEVCParser(BaseParser):
     """Parser of HEVC bitstreams."""
-    def bitstream_to_xml(self, bitstream, description):
+    def bitstream_to_xml(self, bitstream, description, include_internal_vars=False):
         "Parse a HEVC bitstream"
         data = bitstream.read()
         start_codes = find_start_codes(data)
@@ -74,52 +74,96 @@ class HEVCParser(BaseParser):
                 vps_info = parse_vps(payload_data)
                 if vps_info:
                     vps_elem = SubElement(nal_unit, "VideoParameterSet")
+
+                    # Collect internal variables separately to add them at the end
+                    internal_vars = []
+
                     for key, value in vps_info.items():
-                        # Handle indexed parameters by extracting variable names and values from encoded keys
-                        # New format: field[k={k}][j={j}] -> extract variable names 'k', 'j' and their values
-                        
-                        # Pattern to match: field[name1=value1][name2=value2]...
-                        match_new_format = re.match(r"^([^\[]+?)((?:\[[^=]+=\d+\])+)$", key)
-                        if match_new_format:
-                            base_key = match_new_format.group(1)
-                            index_parts = match_new_format.group(2)
-                            
-                            # Extract all variable=value pairs
-                            var_value_pairs = re.findall(r"\[([^=]+)=(\d+)\]", index_parts)
-                            
-                            elem = SubElement(vps_elem, base_key)
-                            for var_name, var_value in var_value_pairs:
-                                elem.set(var_name, var_value)
-                            elem.text = str(value)
+                        # Skip internal variables if not requested
+                        if not include_internal_vars and key.startswith("_"):
+                            continue
+
+                        # Remove underscore prefix from internal variables when including them
+                        xml_key = key[1:] if key.startswith("_") and include_internal_vars else key
+
+                        # Handle internal variables by collecting them for later
+                        if key.startswith("_") and include_internal_vars:
+                            internal_vars.append((xml_key, value))
                         else:
-                            # Regular parameter without index
-                            elem = SubElement(vps_elem, key)
-                            elem.text = str(value)
+                            # Regular (non-internal) parameters go directly in VPS element
+                            # Handle indexed parameters by extracting variable names and values from encoded keys
+                            # New format: field[k={k}][j={j}] -> extract variable names 'k', 'j' and their values
+                            match_new_format = re.match(r"^([^\[]+?)((?:\[[^=]+=\d+\])+)$", xml_key)
+                            if match_new_format:
+                                base_key = match_new_format.group(1)
+                                index_parts = match_new_format.group(2)
+
+                                # Extract all variable=value pairs
+                                var_value_pairs = re.findall(r"\[([^=]+)=(\d+)\]", index_parts)
+
+                                elem = SubElement(vps_elem, base_key)
+                                for var_name, var_value in var_value_pairs:
+                                    elem.set(var_name, var_value)
+                                elem.text = str(value)
+                            else:
+                                # Regular parameter without index
+                                elem = SubElement(vps_elem, xml_key)
+                                elem.text = str(value)
+
+                    # Add InternalVariables element as last child of VPS if we have internal variables
+                    if internal_vars:
+                        internal_vars_elem = SubElement(vps_elem, "InternalVariables")
+                        for xml_key, value in internal_vars:
+                            # Handle indexed parameters by extracting variable names and values from encoded keys
+                            # New format: field[k={k}][j={j}] -> extract variable names 'k', 'j' and their values
+                            match_new_format = re.match(r"^([^\[]+?)((?:\[[^=]+=\d+\])+)$", xml_key)
+                            if match_new_format:
+                                base_key = match_new_format.group(1)
+                                index_parts = match_new_format.group(2)
+
+                                # Extract all variable=value pairs
+                                var_value_pairs = re.findall(r"\[([^=]+)=(\d+)\]", index_parts)
+
+                                elem = SubElement(internal_vars_elem, base_key)
+                                for var_name, var_value in var_value_pairs:
+                                    elem.set(var_name, var_value)
+                                elem.text = str(value)
+                            else:
+                                # Regular parameter without index
+                                elem = SubElement(internal_vars_elem, xml_key)
+                                elem.text = str(value)
             elif nut == 33: # SPS
                 payload_data = data[payload_start:end_pos]
                 sps_info = parse_sps(payload_data, nli)
                 if sps_info:
                     sps_elem = SubElement(nal_unit, "SequenceParameterSet")
                     for key, value in sps_info.items():
+                        # Skip internal variables if not requested
+                        if not include_internal_vars and key.startswith("_"):
+                            continue
+
+                        # Remove underscore prefix from internal variables when including them
+                        xml_key = key[1:] if key.startswith("_") and include_internal_vars else key
+
                         # Handle indexed parameters by extracting variable names and values from encoded keys
                         # Format: field[k={k}][j={j}] -> extract variable names 'k', 'j' and their values
-                        
+
                         # Pattern to match: field[name1=value1][name2=value2]...
-                        match_new_format = re.match(r"^([^\[]+?)((?:\[[^=]+=\d+\])+)$", key)
+                        match_new_format = re.match(r"^([^\[]+?)((?:\[[^=]+=\d+\])+)$", xml_key)
                         if match_new_format:
                             base_key = match_new_format.group(1)
                             index_parts = match_new_format.group(2)
-                            
+
                             # Extract all variable=value pairs
                             var_value_pairs = re.findall(r"\[([^=]+)=(\d+)\]", index_parts)
-                            
+
                             elem = SubElement(sps_elem, base_key)
                             for var_name, var_value in var_value_pairs:
                                 elem.set(var_name, var_value)
                             elem.text = str(value)
                         else:
                             # Regular parameter without index
-                            elem = SubElement(sps_elem, key)
+                            elem = SubElement(sps_elem, xml_key)
                             elem.text = str(value)
 
         # Generate formatted XML

@@ -226,9 +226,11 @@ def parse_sps(payload_data, nuh_layer_id):
         if not multi_layer_ext_sps_flag:
             sps["sps_temporal_id_nesting_flag"] = reader.read_bit()
 
+            # Use sps_ext_or_max_sub_layers_minus1 when nuh_layer_id != 0
+            max_sub_layers_minus1 = sps["sps_ext_or_max_sub_layers_minus1"] if nuh_layer_id != 0 else sps["sps_max_sub_layers_minus1"]
             sps = {
                     **sps,
-                    **parse_profile_tier_level(True, sps["sps_max_sub_layers_minus1"], reader)
+                    **parse_profile_tier_level(True, max_sub_layers_minus1, reader)
             }
 
         sps["sps_seq_parameter_set_id"] = reader.read_ue()
@@ -266,20 +268,24 @@ def parse_sps(payload_data, nuh_layer_id):
         sps["log2_max_pic_order_cnt_lsb_minus4"] = reader.read_ue()
         if not multi_layer_ext_sps_flag:
             sps["sps_sub_layer_ordering_info_present_flag"] = reader.read_bit()
+            # Use sps_ext_or_max_sub_layers_minus1 when nuh_layer_id != 0
+            max_sub_layers_minus1 = sps["sps_ext_or_max_sub_layers_minus1"] if nuh_layer_id != 0 else sps["sps_max_sub_layers_minus1"]
             init_value = (0 if sps["sps_sub_layer_ordering_info_present_flag"]
-                            else sps["sps_max_sub_layers_minus1"])
-            for i in range(init_value, sps["sps_max_sub_layers_minus1"]+1):
+                            else max_sub_layers_minus1)
+            for i in range(init_value, max_sub_layers_minus1+1):
                 sps[f"sps_max_dec_pic_buffering_minus1[i={i}]"] = reader.read_ue()
                 sps[f"sps_max_num_reorder_pics[i={i}]"] = reader.read_ue()
                 sps[f"sps_max_latency_increase_plus1[i={i}]"] = reader.read_ue()
 
         # Parse common fields with multi_layer=False
         sps = parse_common_sps_fields(reader, sps, multi_layer=False)
-        
+
         # Non-multi-layer specific VUI handling
         sps["vui_parameters_present_flag"] = reader.read_bit()
         if sps["vui_parameters_present_flag"]:
-            sps.update(parse_vui_parameters(sps["sps_max_sub_layers_minus1"], reader))
+            # Use sps_ext_or_max_sub_layers_minus1 when nuh_layer_id != 0
+            max_sub_layers_minus1 = sps["sps_ext_or_max_sub_layers_minus1"] if nuh_layer_id != 0 else sps["sps_max_sub_layers_minus1"]
+            sps.update(parse_vui_parameters(max_sub_layers_minus1, reader))
 
         # Parse extensions for non-multi-layer SPS
         sps = parse_sps_extensions(reader, sps)

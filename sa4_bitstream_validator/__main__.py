@@ -96,11 +96,12 @@ def cli(ctx):
 @cli.command()
 @click.argument("bitstream", type=click.File("rb"))
 @click.argument("description", type=click.File("w"))
-def dump(bitstream, description):
+@click.option("--include-internal-vars", is_flag=True, help="Include internal variables in XML dump")
+def dump(bitstream, description, include_internal_vars):
     """Dump BITSTREAM in XML format to DESCRIPTION."""
     click.echo(f"Start dumping {bitstream.name} in {description.name}")
     parser = HEVCParser()
-    parser.bitstream_to_xml(bitstream, description)
+    parser.bitstream_to_xml(bitstream, description, include_internal_vars=include_internal_vars)
 
 @cli.command()
 @click.argument("description", type=click.Path(exists=True))
@@ -121,7 +122,8 @@ def check(description, xsds):
 @click.argument("operation_point", type=click.STRING)
 @click.option("--config", default="config.yaml", help="Path to configuration file")
 @click.option("--report", "report_path", type=click.Path(), help="Path to JSON validation report file")
-def validate(bitstream, operation_point, config, report_path):
+@click.option("--include-internal-vars", is_flag=True, help="Include internal variables in XML dump")
+def validate(bitstream, operation_point, config, report_path, include_internal_vars):
     """Validate BITSTREAM against a predefined operation point and generate report."""
     if not os.path.exists(config):
         click.echo(f"Error: Configuration file '{config}' not found")
@@ -157,7 +159,7 @@ def validate(bitstream, operation_point, config, report_path):
     with open(bitstream, 'rb') as bs_file:
         with open(xml_filename, 'w') as xml_file:
             parser = HEVCParser()
-            parser.bitstream_to_xml(bs_file, xml_file)
+            parser.bitstream_to_xml(bs_file, xml_file, include_internal_vars=include_internal_vars)
     
     # Validate against the operation point's XSDs
     click.echo(f"Validating against {len(operation_point_config['xsds'])} schema(s)")

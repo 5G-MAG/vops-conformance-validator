@@ -318,6 +318,18 @@
     </xs:sequence>
   </xs:complexType>
 
+  <!-- InternalVariablesType definition -->
+  <xs:complexType name="VPSInternalVariablesType">
+    <xs:sequence>
+      <xs:element name="NumScalabilityTypes" type="xs:integer" minOccurs="0"/>
+      <xs:element name="NumLayerSets" type="xs:integer" minOccurs="0"/>
+      <xs:element name="NumIndependentLayers" type="xs:integer" minOccurs="0"/>
+      <xs:element name="NumLayersInIdList" type="xs:integer" minOccurs="0"/>
+      <xs:element name="ScalabilityId" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="NumViews" type="xs:integer" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <!-- VideoParameterSetType definition -->
   <xs:complexType name="VideoParameterSetType">
     <xs:sequence>
@@ -392,12 +404,28 @@
       <xs:sequence minOccurs="0" maxOccurs="unbounded">
         <xs:element name="view_id_val" type="IndexedIntegerType"/>
       </xs:sequence>
-
-      <!-- VPS extension 2-->
-      <xs:element name="vps_extension2_flag" type="xs:boolean"/>
-      <xs:sequence minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="vps_extension_data_flag" type="xs:boolean"/>
+      <xs:sequence minOccurs="1" maxOccurs="unbounded">
+        <xs:element name="direct_dependency_flag" type="IndexedIntegerType"/>
       </xs:sequence>
+      <xs:element name="num_add_layer_sets" type="xs:integer" minOccurs="0"/>
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="highest_layer_idx_plus1" type="IndexedIntegerType"/>
+      </xs:sequence>
+      <xs:element name="vps_sub_layers_max_minus1_present_flag" type="xs:boolean"/>
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="sub_layers_vps_max_minus1" type="IndexedIntegerType"/>
+      </xs:sequence>
+      <xs:element name="max_tid_ref_present_flag" type="xs:boolean"/>
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="max_tid_il_ref_pics_plus1" type="IndexedIntegerType"/>
+      </xs:sequence>
+      <xs:element name="default_ref_layers_active_flag" type="xs:boolean"/>
+      <xs:element name="vps_num_profile_tier_level_minus1" type="xs:integer"/>
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="vps_profile_present_flag" type="IndexedBooleanType"/>
+      </xs:sequence>    
+      <!-- Internal variables -->
+      <xs:element name="InternalVariables" type="VPSInternalVariablesType" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -408,6 +436,7 @@
         <xs:attribute name="i" type="xs:nonNegativeInteger" use="optional"/>
         <xs:attribute name="k" type="xs:nonNegativeInteger" use="optional"/>
         <xs:attribute name="j" type="xs:nonNegativeInteger" use="optional"/>
+        <xs:attribute name="smIdx" type="xs:nonNegativeInteger" use="optional"/>
         <xs:attribute name="size_id" type="xs:nonNegativeInteger" use="optional"/>
         <xs:attribute name="matrix_id" type="xs:nonNegativeInteger" use="optional"/>
       </xs:extension>

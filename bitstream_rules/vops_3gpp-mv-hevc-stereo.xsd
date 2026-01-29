@@ -6,7 +6,6 @@
   attributeFormDefault="unqualified"
   vc:minVersion="1.1">
 
-  <!-- Require HEVC bitstream schema -->
   <xs:include schemaLocation="hevc_common.xsd"/>
   
   <xs:element name="HEVCBitstream">
@@ -27,11 +26,15 @@
 
       <xs:assert test="NALUnit/VideoParameterSet/scalability_mask_flag[@i=1] = 1"/>
 
+      <xs:assert test="exists(NALUnit/VideoParameterSet/InternalVariables/ScalabilityId[@i=1][@smIdx=1])"/>
+      <xs:assert test="NALUnit/VideoParameterSet/InternalVariables/ScalabilityId[@i=1][@smIdx=1] = 1"/>
+
       <xs:assert test="exists(NALUnit/SequenceParameterSet/chroma_format_idc)"/>
       <xs:assert test="NALUnit/SequenceParameterSet/chroma_format_idc = 1"/>
+
       <xs:assert test="exists(NALUnit/SequenceParameterSet/aspect_ratio_idc)"/>
       <xs:assert test="NALUnit/SequenceParameterSet/aspect_ratio_idc = 1"/>
-      <!-- TODO: More todos -->
+
     </xs:complexType>
   </xs:element>
 

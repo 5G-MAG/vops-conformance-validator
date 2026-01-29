@@ -164,6 +164,6 @@ def parse_profile_tier_level(profile_present_flag: bool, max_num_sub_layers_minu
 
     except Error as e:
         print(f"PTL parsing error: {str(e)}")
-        return None
+        return {}
 
     return ptl
