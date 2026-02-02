@@ -478,6 +478,51 @@
           <xs:element name="vps_non_vui_extension_length" type="xs:integer"/>
           <xs:element name="vps_non_vui_extension_data_byte" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
           <xs:element name="vps_vui_present_flag" type="xs:boolean"/>
+
+          <!-- VPS VUI elements -->
+          <xs:element name="cross_layer_pic_type_aligned_flag" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="cross_layer_irap_aligned_flag" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="all_layers_idr_aligned_flag" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="bit_rate_present_vps_flag" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="pic_rate_present_vps_flag" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="bit_rate_present_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="pic_rate_present_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="avg_bit_rate" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="max_bit_rate" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="constant_pic_rate_idc" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="avg_pic_rate" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="video_signal_info_idx_present_flag" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="vps_num_video_signal_info_minus1" type="xs:integer" minOccurs="0"/>
+          <xs:element name="video_vps_format" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="video_full_range_vps_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="colour_primaries_vps" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="transfer_characteristics_vps" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="matrix_coeffs_vps" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="vps_video_signal_info_idx" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="tiles_not_in_use_flag" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="tiles_in_use_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="loop_filter_not_across_tiles_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="tile_boundaries_aligned_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="wpp_not_in_use_flag" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="wpp_in_use_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="single_layer_for_non_irap_flag" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="higher_layer_irap_skip_flag" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="ilp_restricted_ref_layers_flag" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="min_spatial_segment_offset_plus1" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="ctu_based_offset_enabled_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="min_horizontal_ctu_offset_plus1" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="vps_vui_bsp_hrd_present_flag" type="xs:boolean" minOccurs="0"/>
+          <xs:element name="vps_num_add_hrd_params" type="xs:integer" minOccurs="0"/>
+          <xs:element name="cprms_add_present_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="num_sub_layer_hrd_minus1" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="num_signalled_partitioning_schemes" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="num_partitions_in_scheme_minus1" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="layer_included_in_partition_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="num_bsp_schedules_minus1" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="bsp_hrd_idx" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="bsp_sched_idx" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="base_layer_parameter_set_compatibility_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
+
           <xs:element name="vps_extension2_flag" type="xs:boolean"/>
         </xs:sequence>
       </xs:choice>

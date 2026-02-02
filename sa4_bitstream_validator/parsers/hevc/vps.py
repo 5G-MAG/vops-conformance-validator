@@ -587,8 +587,213 @@ def parse_vps_extensions(reader, vps, vars):
 
     vps["vps_vui_present_flag"] = reader.read_bit()
 
-    if vps["vps_vui_present_flag"] and reader.bitstream.pos < len(reader.bitstream):
+    # VPS VUI is only present in MV-HEVC (vps_max_layers_minus1 > 0)
+    if vps["vps_vui_present_flag"] and vps["vps_max_layers_minus1"] > 0 and reader.bitstream.pos < len(reader.bitstream):
         reader.bitstream.bytealign()
 
+        # Parse VPS VUI
+        vps_vui_result = parse_vps_vui(reader, vps, vars)
+        vps.update(vps_vui_result)
 
     return vps
+
+
+def parse_vps_vui(reader, vps, vars):
+    """Parse VPS VUI structure according to HEVC specification"""
+    vps_vui = {}
+
+    # Parse basic VPS VUI flags
+    vps_vui["cross_layer_pic_type_aligned_flag"] = reader.read_bit()
+
+    if not vps_vui["cross_layer_pic_type_aligned_flag"]:
+        vps_vui["cross_layer_irap_aligned_flag"] = reader.read_bit()
+
+    if vps_vui.get("cross_layer_irap_aligned_flag", False):
+        vps_vui["all_layers_idr_aligned_flag"] = reader.read_bit()
+
+    vps_vui["bit_rate_present_vps_flag"] = reader.read_bit()
+    vps_vui["pic_rate_present_vps_flag"] = reader.read_bit()
+
+    # Parse bit rate and picture rate information
+    if vps_vui["bit_rate_present_vps_flag"] or vps_vui["pic_rate_present_vps_flag"]:
+        start_idx = 0 if vps["vps_base_layer_internal_flag"] else 1
+        for i in range(start_idx, vars.NumLayerSets):
+            for j in range(vars.MaxSubLayersInLayerSetMinus1[i] + 1):
+                if vps_vui["bit_rate_present_vps_flag"]:
+                    vps_vui[f"bit_rate_present_flag[i={i}][j={j}]"] = reader.read_bit()
+
+                if vps_vui["pic_rate_present_vps_flag"]:
+                    vps_vui[f"pic_rate_present_flag[i={i}][j={j}]"] = reader.read_bit()
+
+                if vps_vui.get(f"bit_rate_present_flag[i={i}][j={j}]", False):
+                    vps_vui[f"avg_bit_rate[i={i}][j={j}]"] = reader.read_bits(16)
+                    vps_vui[f"max_bit_rate[i={i}][j={j}]"] = reader.read_bits(16)
+
+                if vps_vui.get(f"pic_rate_present_flag[i={i}][j={j}]", False):
+                    vps_vui[f"constant_pic_rate_idc[i={i}][j={j}]"] = reader.read_bits(2)
+                    vps_vui[f"avg_pic_rate[i={i}][j={j}]"] = reader.read_bits(16)
+
+    # Parse video signal information
+    vps_vui["video_signal_info_idx_present_flag"] = reader.read_bit()
+
+    if vps_vui["video_signal_info_idx_present_flag"]:
+        vps_vui["vps_num_video_signal_info_minus1"] = reader.read_bits(4)
+
+    # Parse video signal info structures
+    if vps_vui.get("vps_num_video_signal_info_minus1", 0) >= 0:
+        for i in range(vps_vui.get("vps_num_video_signal_info_minus1", 0) + 1):
+            video_signal_info_result = parse_video_signal_info(reader, i)
+            vps_vui.update(video_signal_info_result)
+
+    # Parse video signal info indices
+    if (vps_vui["video_signal_info_idx_present_flag"] and
+        vps_vui.get("vps_num_video_signal_info_minus1", 0) > 0):
+        start_idx = 0 if vps["vps_base_layer_internal_flag"] else 1
+        for i in range(start_idx, vars.MaxLayersMinus1 + 1):
+            vps_vui[f"vps_video_signal_info_idx[i={i}]"] = reader.read_bits(4)
+
+    # Parse tile information
+    vps_vui["tiles_not_in_use_flag"] = reader.read_bit()
+
+    if not vps_vui["tiles_not_in_use_flag"]:
+        start_idx = 0 if vps["vps_base_layer_internal_flag"] else 1
+        for i in range(start_idx, vars.MaxLayersMinus1 + 1):
+            vps_vui[f"tiles_in_use_flag[i={i}]"] = reader.read_bit()
+
+            if vps_vui.get(f"tiles_in_use_flag[i={i}]", False):
+                vps_vui[f"loop_filter_not_across_tiles_flag[i={i}]"] = reader.read_bit()
+
+        start_i = 1 if vps["vps_base_layer_internal_flag"] else 2
+        for i in range(start_i, vars.MaxLayersMinus1 + 1):
+            i_nuh_lid = vps.get(f"layer_id_in_nuh[i={i}]", 0)
+            num_direct_ref_layers = vars.NumDirectRefLayers.get(i_nuh_lid, 0)
+
+            for j in range(num_direct_ref_layers):
+                ref_layer_id = vars.IdDirectRefLayer.get((i_nuh_lid, j), 0)
+                layer_idx = None
+
+                # Find layer index for reference layer
+                for idx in range(vars.MaxLayersMinus1 + 1):
+                    if vps.get(f"layer_id_in_nuh[i={idx}]", 0) == ref_layer_id:
+                        layer_idx = idx
+                        break
+
+                if (layer_idx is not None and
+                    vps_vui.get(f"tiles_in_use_flag[i={i}]", False) and
+                    vps_vui.get(f"tiles_in_use_flag[i={layer_idx}]", False)):
+                    vps_vui[f"tile_boundaries_aligned_flag[i={i}][j={j}]"] = reader.read_bit()
+
+    # Parse WPP information
+    vps_vui["wpp_not_in_use_flag"] = reader.read_bit()
+
+    if not vps_vui["wpp_not_in_use_flag"]:
+        start_idx = 0 if vps["vps_base_layer_internal_flag"] else 1
+        for i in range(start_idx, vars.MaxLayersMinus1 + 1):
+            vps_vui[f"wpp_in_use_flag[i={i}]"] = reader.read_bit()
+
+    # Parse additional flags
+    vps_vui["single_layer_for_non_irap_flag"] = reader.read_bit()
+    vps_vui["higher_layer_irap_skip_flag"] = reader.read_bit()
+    vps_vui["ilp_restricted_ref_layers_flag"] = reader.read_bit()
+
+    # Parse ILP restricted reference layers
+    if vps_vui["ilp_restricted_ref_layers_flag"]:
+        for i in range(1, vars.MaxLayersMinus1 + 1):
+            i_nuh_lid = vps.get(f"layer_id_in_nuh[i={i}]", 0)
+            num_direct_ref_layers = vars.NumDirectRefLayers.get(i_nuh_lid, 0)
+
+            for j in range(num_direct_ref_layers):
+                ref_layer_id = vars.IdDirectRefLayer.get((i_nuh_lid, j), 0)
+
+                if (vps["vps_base_layer_internal_flag"] or ref_layer_id > 0):
+                    vps_vui[f"min_spatial_segment_offset_plus1[i={i}][j={j}]"] = reader.read_ue()
+
+                    if vps_vui.get(f"min_spatial_segment_offset_plus1[i={i}][j={j}]", 0) > 0:
+                        vps_vui[f"ctu_based_offset_enabled_flag[i={i}][j={j}]"] = reader.read_bit()
+
+                        if vps_vui.get(f"ctu_based_offset_enabled_flag[i={i}][j={j}]", False):
+                            vps_vui[f"min_horizontal_ctu_offset_plus1[i={i}][j={j}]"] = reader.read_ue()
+
+    # Parse VPS VUI BSP HRD parameters
+    vps_vui["vps_vui_bsp_hrd_present_flag"] = reader.read_bit()
+
+    if vps_vui["vps_vui_bsp_hrd_present_flag"]:
+        vps_vui_bsp_hrd_result = parse_vps_vui_bsp_hrd_params(reader, vps, vars)
+        vps_vui.update(vps_vui_bsp_hrd_result)
+
+    # Parse base layer parameter set compatibility flags
+    for i in range(1, vars.MaxLayersMinus1 + 1):
+        i_nuh_lid = vps.get(f"layer_id_in_nuh[i={i}]", 0)
+        if vars.NumDirectRefLayers.get(i_nuh_lid, 0) == 0:
+            vps_vui[f"base_layer_parameter_set_compatibility_flag[i={i}]"] = reader.read_bit()
+
+    return vps_vui
+
+
+def parse_video_signal_info(reader, i):
+    """Parse video_signal_info structure"""
+    video_signal_info = {}
+
+    video_signal_info[f"video_vps_format[i={i}]"] = reader.read_bits(3)
+    video_signal_info[f"video_full_range_vps_flag[i={i}]"] = reader.read_bit()
+    video_signal_info[f"colour_primaries_vps[i={i}]"] = reader.read_bits(8)
+    video_signal_info[f"transfer_characteristics_vps[i={i}]"] = reader.read_bits(8)
+    video_signal_info[f"matrix_coeffs_vps[i={i}]"] = reader.read_bits(8)
+
+    return video_signal_info
+
+
+def parse_vps_vui_bsp_hrd_params(reader, vps, vars):
+    """Parse VPS VUI BSP HRD parameters"""
+    vps_vui_bsp_hrd = {}
+
+    vps_vui_bsp_hrd["vps_num_add_hrd_params"] = reader.read_ue()
+
+    # Parse additional HRD parameters
+    for i in range(vps.get("vps_num_hrd_parameters", 0),
+                   vps.get("vps_num_hrd_parameters", 0) + vps_vui_bsp_hrd["vps_num_add_hrd_params"]):
+        if i > 0:
+            vps_vui_bsp_hrd[f"cprms_add_present_flag[i={i}]"] = reader.read_bit()
+
+        vps_vui_bsp_hrd[f"num_sub_layer_hrd_minus1[i={i}]"] = reader.read_ue()
+
+        # Parse HRD parameters
+        cprms_present = vps_vui_bsp_hrd.get(f"cprms_add_present_flag[i={i}]", True) if i > 0 else True
+        hrd_params = parse_hrd_parameters(
+            cprms_present,
+            vps_vui_bsp_hrd[f"num_sub_layer_hrd_minus1[i={i}]"],
+            reader
+        )
+
+        for key, value in hrd_params.items():
+            vps_vui_bsp_hrd[f"{key}[i={i}]"] = value
+
+    # Parse bitstream partitioning schemes
+    total_hrd_params = vps.get("vps_num_hrd_parameters", 0) + vps_vui_bsp_hrd["vps_num_add_hrd_params"]
+
+    if total_hrd_params > 0:
+        for h in range(1, vars.NumOutputLayerSets):
+            vps_vui_bsp_hrd[f"num_signalled_partitioning_schemes[h={h}]"] = reader.read_ue()
+
+            for j in range(1, vps_vui_bsp_hrd[f"num_signalled_partitioning_schemes[h={h}]"] + 1):
+                vps_vui_bsp_hrd[f"num_partitions_in_scheme_minus1[h={h}][j={j}]"] = reader.read_ue()
+
+                for k in range(vps_vui_bsp_hrd[f"num_partitions_in_scheme_minus1[h={h}][j={j}]"] + 1):
+                    for r in range(vars.NumLayersInIdList[vars.OlsIdxToLsIdx[h]]):
+                        vps_vui_bsp_hrd[f"layer_included_in_partition_flag[h={h}][j={j}][k={k}][r={r}]"] = reader.read_bit()
+
+            for i in range(vps_vui_bsp_hrd[f"num_signalled_partitioning_schemes[h={h}]"] + 1):
+                for t in range(vars.MaxSubLayersInLayerSetMinus1[vars.OlsIdxToLsIdx[h]] + 1):
+                    vps_vui_bsp_hrd[f"num_bsp_schedules_minus1[h={h}][i={i}][t={t}]"] = reader.read_ue()
+
+                    for j in range(vps_vui_bsp_hrd[f"num_bsp_schedules_minus1[h={h}][i={i}][t={t}]"] + 1):
+                        for k in range(vps_vui_bsp_hrd[f"num_partitions_in_scheme_minus1[h={h}][i={i}]"] + 1):
+                            if total_hrd_params > 1:
+                                # Calculate bit length for HRD index
+                                import math
+                                bit_length = math.ceil(math.log2(total_hrd_params))
+                                vps_vui_bsp_hrd[f"bsp_hrd_idx[h={h}][i={i}][t={t}][j={j}][k={k}]"] = reader.read_bits(bit_length)
+
+                            vps_vui_bsp_hrd[f"bsp_sched_idx[h={h}][i={i}][t={t}][j={j}][k={k}]"] = reader.read_ue()
+
+    return vps_vui_bsp_hrd

@@ -18,16 +18,22 @@
 
       <xs:assert test="exists(NALUnit[nuh_layer_id=0]/SequenceParameterSet/vui_parameters_present_flag)"/>
       <xs:assert test="string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/vui_parameters_present_flag) = '1'"/>
+
       <xs:assert test="exists(NALUnit[nuh_layer_id=0]/SequenceParameterSet/aspect_ratio_info_present_flag)"/>
       <xs:assert test="string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/aspect_ratio_info_present_flag) = '1'"/>
+
       <xs:assert test="exists(NALUnit[nuh_layer_id=0]/SequenceParameterSet/video_signal_type_present_flag)"/>
       <xs:assert test="string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/video_signal_type_present_flag) = '1'"/>
+
       <xs:assert test="exists(NALUnit[nuh_layer_id=0]/SequenceParameterSet/colour_description_present_flag)"/>
       <xs:assert test="string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/colour_description_present_flag) = '1'"/>
+
       <xs:assert test="exists(NALUnit[nuh_layer_id=0]/SequenceParameterSet/video_full_range_flag)"/>
       <xs:assert test="string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/video_full_range_flag) = '0'"/>
+
       <xs:assert test="exists(NALUnit[nuh_layer_id=0]/SequenceParameterSet/overscan_info_present_flag)"/>
       <xs:assert test="string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/overscan_info_present_flag) = '0'"/>
+      
       <xs:assert test="exists(NALUnit[nuh_layer_id=0]/SequenceParameterSet/chroma_loc_info_present_flag)"/>
       <xs:assert test="string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/chroma_loc_info_present_flag) = '1'"/>
     </xs:complexType>
