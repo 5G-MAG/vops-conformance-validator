@@ -75,7 +75,12 @@ def generate_validation_report(results, tested_bitstream, report_path, operation
             "schema_path": schema_path,  # Use relative path when possible
             "validation_success": schema_result["success"],
             "error_count": schema_result["error_count"],
-            "errors": schema_result["errors"]
+            "errors": schema_result["errors"],
+            "assertion_results": schema_result.get("assertion_results", {
+                "total_assertions": 0,
+                "passing_assertions": [],
+                "failing_assertions": []
+            })
         }
         report["validation_results"]["schema_details"].append(schema_detail)
     
