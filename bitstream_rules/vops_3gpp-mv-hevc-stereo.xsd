@@ -24,10 +24,14 @@
       <xs:assert test="NALUnit/VideoParameterSet/layer_id_included_flag[@i=1][@j=0] = 1"/>
       <xs:assert test="exists(NALUnit/VideoParameterSet/layer_id_included_flag[@i=1][@j > 0][. = 1])"/>
 
+      <xs:assert test="exists(NALUnit/VideoParameterSet/scalability_mask_flag[@i=1])"/>
       <xs:assert test="NALUnit/VideoParameterSet/scalability_mask_flag[@i=1] = 1"/>
 
-      <xs:assert test="exists(NALUnit/VideoParameterSet/InternalVariables/ScalabilityId[@i=1][@smIdx=1])"/>
-      <xs:assert test="NALUnit/VideoParameterSet/InternalVariables/ScalabilityId[@i=1][@smIdx=1] = 1"/>
+      <xs:assert test="exists(NALUnit/VideoParameterSet/InternalVariables/ScalabilityId[@i=1][@j=1])"/>
+      <xs:assert test="NALUnit/VideoParameterSet/InternalVariables/ScalabilityId[@i=1][@j=1] = 1"/>
+
+      <xs:assert test="exists(NALUnit/VideoParameterSet/default_output_layer_idc)"/>
+      <xs:assert test="NALUnit/VideoParameterSet/default_output_layer_idc = 0"/>
 
       <xs:assert test="exists(NALUnit/SequenceParameterSet/chroma_format_idc)"/>
       <xs:assert test="NALUnit/SequenceParameterSet/chroma_format_idc = 1"/>

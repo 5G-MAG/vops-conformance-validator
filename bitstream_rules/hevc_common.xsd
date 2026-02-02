@@ -38,18 +38,18 @@
       </xs:sequence>
 
       <xs:element name="chroma_loc_info_present_flag" type="xs:boolean"/>
-      
+
       <!-- if chroma_loc_info_present_flag -->
       <xs:sequence minOccurs="0">
         <xs:element name="chroma_sample_loc_type_top_field" type="xs:integer"/>
         <xs:element name="chroma_sample_loc_type_bottom_field" type="xs:integer"/>
       </xs:sequence>
-      
+
       <xs:element name="neutral_chroma_indication_flag" type="xs:boolean"/>
       <xs:element name="field_seq_flag" type="xs:boolean"/>
       <xs:element name="frame_field_info_present_flag" type="xs:boolean"/>
       <xs:element name="default_display_window_flag" type="xs:boolean"/>
-      
+
       <!-- if default_display_window_flag -->
       <xs:sequence minOccurs="0">
         <xs:element name="def_disp_win_left_offset" type="xs:integer"/>
@@ -57,9 +57,9 @@
         <xs:element name="def_disp_win_top_offset" type="xs:integer"/>
         <xs:element name="def_disp_win_bottom_offset" type="xs:integer"/>
       </xs:sequence>
-      
+
       <xs:element name="vui_timing_info_present_flag" type="xs:boolean"/>
-      
+
       <!-- if vui_timing_info_present_flag -->
       <xs:sequence minOccurs="0">
         <xs:element name="vui_num_units_in_tick" type="xs:integer"/>
@@ -67,13 +67,13 @@
         <xs:element name="vui_poc_proportional_to_timing_flag" type="xs:boolean"/>
         <xs:element name="vui_num_ticks_poc_diff_one_minus1" type="xs:integer" minOccurs="0"/>
         <xs:element name="vui_hrd_parameters_present_flag" type="xs:boolean"/>
-        
+
         <!-- if vui_hrd_parameters_present_flag -->
         <xs:element name="vui_hrd_parameters" type="HRDParametersType" minOccurs="0"/>
       </xs:sequence>
 
       <xs:element name="bitstream_restriction_flag" type="xs:boolean"/>
-      
+
       <!-- if bitstream_restriction_flag -->
       <xs:sequence minOccurs="0">
         <xs:element name="tiles_fixed_structure_flag" type="xs:boolean"/>
@@ -88,36 +88,46 @@
     </xs:sequence>
   </xs:group>
 
+  <!-- ProfileTierLevelType definition -->
+  <xs:complexType name="ProfileTierLevelType">
+    <xs:sequence>
+      <xs:group ref="ProfileTierLevelStructure" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="i" type="xs:nonNegativeInteger" use="required"/>
+  </xs:complexType>
+
   <!-- ProfileTierLevel definition -->
   <xs:group name="ProfileTierLevelStructure">
-    <xs:sequence>
-      <xs:element name="general_profile_space" type="xs:integer"/>
-      <xs:element name="general_tier_flag" type="xs:boolean"/>
-      <xs:element name="general_profile_idc" type="xs:integer"/>
-      <xs:element name="general_profile_compatibility_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="general_progressive_source_flag" type="xs:boolean"/>
-      <xs:element name="general_interlaced_source_flag" type="xs:boolean"/>
-      <xs:element name="general_non_packed_constraint_flag" type="xs:boolean"/>
-      <xs:element name="general_frame_only_constraint_flag" type="xs:boolean"/>
-      <xs:choice>
-        <xs:sequence>
-          <xs:element name="general_max_12bit_constraint_flag" type="xs:boolean"/>
-          <xs:element name="general_max_10bit_constraint_flag" type="xs:boolean"/>
-          <xs:element name="general_max_8bit_constraint_flag" type="xs:boolean"/>
-          <xs:element name="general_max_422chroma_constraint_flag" type="xs:boolean"/>
-          <xs:element name="general_max_420chroma_constraint_flag" type="xs:boolean"/>
-          <xs:element name="general_max_monochrome_constraint_flag" type="xs:boolean"/>
-          <xs:element name="general_intra_constraint_flag" type="xs:boolean"/>
-          <xs:element name="general_one_picture_only_constraint_flag" type="xs:boolean"/>
-          <xs:element name="general_lower_bit_rate_constraint_flag" type="xs:boolean"/>
-          <xs:choice>
-            <xs:sequence>
-              <xs:element name="general_max_14bit_constraint_flag" type="xs:boolean"/>
-              <xs:element name="general_reserved_zero_33bits" type="xs:integer"/>
-            </xs:sequence>
-            <xs:sequence>
-              <xs:element name="general_reserved_zero_34bits" type="xs:integer"/>
-           </xs:sequence>
+    <xs:choice>
+      <!-- Full profile tier level structure -->
+      <xs:sequence>
+        <xs:element name="general_profile_space" type="xs:integer"/>
+        <xs:element name="general_tier_flag" type="xs:boolean"/>
+        <xs:element name="general_profile_idc" type="xs:integer"/>
+        <xs:element name="general_profile_compatibility_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
+        <xs:element name="general_progressive_source_flag" type="xs:boolean"/>
+        <xs:element name="general_interlaced_source_flag" type="xs:boolean"/>
+        <xs:element name="general_non_packed_constraint_flag" type="xs:boolean"/>
+        <xs:element name="general_frame_only_constraint_flag" type="xs:boolean"/>
+        <xs:choice>
+          <xs:sequence>
+            <xs:element name="general_max_12bit_constraint_flag" type="xs:boolean"/>
+            <xs:element name="general_max_10bit_constraint_flag" type="xs:boolean"/>
+            <xs:element name="general_max_8bit_constraint_flag" type="xs:boolean"/>
+            <xs:element name="general_max_422chroma_constraint_flag" type="xs:boolean"/>
+            <xs:element name="general_max_420chroma_constraint_flag" type="xs:boolean"/>
+            <xs:element name="general_max_monochrome_constraint_flag" type="xs:boolean"/>
+            <xs:element name="general_intra_constraint_flag" type="xs:boolean"/>
+            <xs:element name="general_one_picture_only_constraint_flag" type="xs:boolean"/>
+            <xs:element name="general_lower_bit_rate_constraint_flag" type="xs:boolean"/>
+            <xs:choice>
+              <xs:sequence>
+                <xs:element name="general_max_14bit_constraint_flag" type="xs:boolean"/>
+                <xs:element name="general_reserved_zero_33bits" type="xs:integer"/>
+              </xs:sequence>
+              <xs:sequence>
+                <xs:element name="general_reserved_zero_34bits" type="xs:integer"/>
+             </xs:sequence>
           </xs:choice>
         </xs:sequence>
         <xs:sequence>
@@ -129,7 +139,7 @@
           <xs:element name="general_reserved_zero_43bits" type="xs:integer"/>
         </xs:sequence>
       </xs:choice>
-      
+
       <xs:choice>
         <xs:sequence>
           <xs:element name="general_inbld_flag" type="xs:boolean"/>
@@ -138,24 +148,26 @@
           <xs:element name="general_reserved_zero_bit" type="xs:boolean"/>
         </xs:sequence>
       </xs:choice>
-      
-      <xs:element name="general_level_idc" type="xs:integer"/>
-      
+
+      <xs:element name="general_level_idc" type="xs:integer" minOccurs="0" maxOccurs="unbounded"/>
+
       <!-- Sub-layer presence flags -->
       <xs:element name="sub_layer_profile_present_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element name="sub_layer_level_present_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element name="reserved_zero_2bits" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
-      
+
       <!-- Sub-layer profile information -->
       <xs:element name="sub_layer_profile_space" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element name="sub_layer_tier_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element name="sub_layer_profile_idc" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element name="sub_layer_profile_compatibility_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
+
+      <!-- Sub-layer progressive and interlaced source flags -->
       <xs:element name="sub_layer_progressive_source_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element name="sub_layer_interlaced_source_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element name="sub_layer_non_packed_constraint_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element name="sub_layer_frame_only_constraint_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
-      
+
       <!-- Sub-layer conditional constraint flags -->
       <xs:element name="sub_layer_max_12bit_constraint_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element name="sub_layer_max_10bit_constraint_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
@@ -169,17 +181,24 @@
       <xs:element name="sub_layer_max_14bit_constraint_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element name="sub_layer_reserved_zero_33bits" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element name="sub_layer_reserved_zero_34bits" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="sub_layer_reserved_zero_7bits" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element name="sub_layer_reserved_zero_35bits" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element name="sub_layer_reserved_zero_43bits" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
-      
+
+      <!-- Sub-layer inbld flag -->
       <xs:element name="sub_layer_inbld_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element name="sub_layer_reserved_zero_bit" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
-      
+
+      <!-- Sub-layer level information -->
       <xs:element name="sub_layer_level_idc" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
-    </xs:sequence>
+      </xs:sequence>
+
+      <!-- Level-only profile tier level structure (when profile_present_flag=False) -->
+      <xs:sequence>
+        <xs:element name="general_level_idc" type="xs:integer"/>
+      </xs:sequence>
+    </xs:choice>
   </xs:group>
-  
+
   <!-- StRefPicSet definition -->
   <xs:group name="StRefPicSetStructure">
     <xs:sequence>
@@ -291,14 +310,14 @@
       <xs:element name="initial_cpb_removal_delay_length_minus1" type="xs:integer" minOccurs="0"/>
       <xs:element name="au_cpb_removal_delay_length_minus1" type="xs:integer" minOccurs="0"/>
       <xs:element name="dpb_output_delay_length_minus1" type="xs:integer" minOccurs="0"/>
-      
+
       <!-- Sub-layer HRD parameters -->
       <xs:sequence minOccurs="0" maxOccurs="unbounded">
         <xs:element name="fixed_pic_rate_general_flag" type="IndexedBooleanType"/>
         <xs:element name="fixed_pic_rate_within_cvs_flag" type="IndexedBooleanType" minOccurs="0"/>
         <xs:element name="elemental_duration_in_tc_minus1" type="IndexedIntegerType" minOccurs="0"/>
         <xs:element name="low_delay_hrd_flag" type="IndexedBooleanType" minOccurs="0"/>
-        
+
         <!-- NAL HRD parameters -->
         <xs:element name="nal_cpb_cnt_minus1" type="IndexedIntegerType" minOccurs="0"/>
         <xs:sequence minOccurs="0" maxOccurs="unbounded">
@@ -306,7 +325,7 @@
           <xs:element name="nal_cpb_size_value_minus1" type="IndexedIntegerType"/>
           <xs:element name="nal_cbr_flag" type="IndexedBooleanType"/>
         </xs:sequence>
-        
+
         <!-- VCL HRD parameters -->
         <xs:element name="vcl_cpb_cnt_minus1" type="IndexedIntegerType" minOccurs="0"/>
         <xs:sequence minOccurs="0" maxOccurs="unbounded">
@@ -319,20 +338,39 @@
   </xs:complexType>
 
   <!-- InternalVariablesType definition -->
-  <xs:complexType name="VPSInternalVariablesType">
+  <xs:complexType name="InternalVariablesType">
     <xs:sequence>
-      <xs:element name="NumScalabilityTypes" type="xs:integer" minOccurs="0"/>
-      <xs:element name="NumLayerSets" type="xs:integer" minOccurs="0"/>
-      <xs:element name="NumIndependentLayers" type="xs:integer" minOccurs="0"/>
-      <xs:element name="NumLayersInIdList" type="xs:integer" minOccurs="0"/>
-      <xs:element name="ScalabilityId" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="NumViews" type="xs:integer" minOccurs="0"/>
+      <xs:any processContents="skip" namespace="##any" minOccurs="0" maxOccurs="unbounded"/>
     </xs:sequence>
   </xs:complexType>
+
+  <!-- Reusable groups for timing information and HRD parameters -->
+  <xs:group name="VpsTimingInfoGroup">
+    <xs:sequence>
+      <xs:element name="vps_timing_info_present_flag" type="xs:boolean"/>
+      <xs:sequence minOccurs="0">
+        <xs:element name="vps_num_units_in_tick" type="xs:integer"/>
+        <xs:element name="vps_time_scale" type="xs:integer"/>
+        <xs:element name="vps_poc_proportional_to_timing_flag" type="xs:boolean"/>
+        <xs:element name="vps_num_ticks_poc_diff_one_minus1" type="xs:integer" minOccurs="0"/>
+        <xs:element name="vps_num_hrd_parameters" type="xs:integer"/>
+        <xs:group ref="HrdParametersGroup"/>
+      </xs:sequence>
+    </xs:sequence>
+  </xs:group>
+
+  <xs:group name="HrdParametersGroup">
+    <xs:sequence>
+      <xs:element name="hrd_layer_set_idx" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="cprms_present_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="hrd_parameters" type="HRDParametersType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:group>
 
   <!-- VideoParameterSetType definition -->
   <xs:complexType name="VideoParameterSetType">
     <xs:sequence>
+      <!-- Common VPS elements for both single-layer HEVC and MV-HEVC -->
       <xs:element name="vps_video_parameter_set_id" type="xs:integer"/>
       <xs:element name="vps_base_layer_internal_flag" type="xs:boolean"/>
       <xs:element name="vps_base_layer_available_flag" type="xs:boolean"/>
@@ -340,92 +378,112 @@
       <xs:element name="vps_max_sub_layers_minus1" type="xs:integer"/>
       <xs:element name="vps_temporal_id_nesting_flag" type="xs:boolean"/>
       <xs:element name="vps_reserved_0xffff_16bits" type="xs:integer"/>
-      <xs:group ref="ProfileTierLevelStructure"/>
+
+      <!-- Profile tier level - common for both types -->
+      <xs:element name="profile_tier_level" type="ProfileTierLevelType"/>
+
+      <!-- Common elements for both single-layer HEVC and MV-HEVC -->
       <xs:element name="vps_sub_layer_ordering_info_present_flag" type="xs:boolean"/>
-      
-      <!-- Sub-layer ordering information -->
-      <xs:sequence minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="vps_max_dec_pic_buffering_minus1" type="IndexedIntegerType"/>
-        <xs:element name="vps_max_num_reorder_pics" type="IndexedIntegerType"/>
-        <xs:element name="vps_max_latency_increase_plus1" type="IndexedIntegerType"/>
-      </xs:sequence>
-      
-      <xs:element name="vps_max_layer_id" type="xs:integer"/>
-      <xs:element name="vps_num_layer_sets_minus1" type="xs:integer"/>
-      
-      <!-- Layer dependency flags -->
-      <xs:sequence minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="layer_dependency_flag" type="IndexedBooleanType"/>
-      </xs:sequence>
-      
-      <!-- Layer ID included flags -->
-      <xs:sequence minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="layer_id_included_flag" type="IndexedBooleanType"/>
-      </xs:sequence>
-      
-      <!-- VPS timing information -->
-      <xs:element name="vps_timing_info_present_flag" type="xs:boolean"/>
-      
-      <xs:sequence minOccurs="0">
-        <xs:element name="vps_num_units_in_tick" type="xs:integer"/>
-        <xs:element name="vps_time_scale" type="xs:integer"/>
-        <xs:element name="vps_poc_proportional_to_timing_flag" type="xs:boolean"/>
-        <xs:element name="vps_num_ticks_poc_diff_one_minus1" type="xs:integer" minOccurs="0"/>
-        <xs:element name="vps_num_hrd_parameters" type="xs:integer"/>
-        
-        <!-- HRD parameters -->
-        <xs:sequence minOccurs="0" maxOccurs="unbounded">
-          <xs:element name="hrd_layer_set_idx" type="IndexedIntegerType"/>
-          <xs:element name="cprms_present_flag" type="IndexedBooleanType"/>
-          <xs:element name="hrd_parameters" type="HRDParametersType"/>
+
+      <!-- Sub-layer ordering information (common for both) -->
+      <xs:element name="vps_max_dec_pic_buffering_minus1" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="vps_max_num_reorder_pics" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="vps_max_latency_increase_plus1" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+
+      <!-- Choice between single-layer HEVC and MV-HEVC specific structures -->
+      <xs:choice>
+        <!-- Single-layer HEVC VPS structure (vps_max_layers_minus1 = 0) -->
+        <xs:sequence>
+          <!-- VPS timing information and HRD parameters -->
+          <xs:group ref="VpsTimingInfoGroup"/>
+
+          <!-- VPS extension -->
+          <xs:element name="vps_extension_flag" type="xs:boolean"/>
+          <xs:element name="vps_extension_data_byte" type="xs:integer" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
-      </xs:sequence>
-      
-      <!-- VPS extension -->
-      <xs:element name="vps_extension_flag" type="xs:boolean"/>
-      <xs:sequence minOccurs="0" maxOccurs="unbounded">
-        <xs:group ref="ProfileTierLevelStructure"/>
-      </xs:sequence>
-      <xs:element name="splitting_flag" type="xs:boolean"/>
-      <xs:sequence minOccurs="16" maxOccurs="16">
-        <xs:element name="scalability_mask_flag" type="IndexedBooleanType"/>
-      </xs:sequence>
-      <xs:sequence minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="dimension_id_len_minus1" type="IndexedIntegerType"/>
-      </xs:sequence>
-      <xs:element name="vps_nuh_layer_id_present_flag" type="xs:boolean"/>
-      <xs:sequence minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="layer_id_in_nuh" type="IndexedIntegerType" minOccurs="0"/>
-        <xs:sequence minOccurs="0" maxOccurs="unbounded">
-          <xs:element name="dimension_id" type="IndexedIntegerType"/>
+
+        <!-- MV-HEVC VPS structure (vps_max_layers_minus1 > 0) -->
+        <xs:sequence>
+          <xs:element name="vps_max_layer_id" type="xs:integer"/>
+          <xs:element name="vps_num_layer_sets_minus1" type="xs:integer"/>
+
+          <!-- Layer dependency flags -->
+          <xs:element name="layer_dependency_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
+
+          <!-- Layer ID included flags -->
+          <xs:element name="layer_id_included_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
+
+          <!-- MV-HEVC specific elements -->
+          <xs:element name="view_id_len" type="xs:integer" minOccurs="0"/>
+          <xs:element name="view_id_val" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="direct_dependency_flag" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+
+          <!-- VPS timing information and HRD parameters -->
+          <xs:group ref="VpsTimingInfoGroup"/>
+
+          <!-- VPS extension -->
+          <xs:element name="vps_extension_flag" type="xs:boolean"/>
+
+          <!-- Additional profile tier levels immediately after VPS extension -->
+          <xs:element name="profile_tier_level" type="ProfileTierLevelType" minOccurs="0" maxOccurs="unbounded"/>
+
+          <!-- Additional MV-HEVC elements after profile tier levels -->
+          <xs:element name="splitting_flag" type="xs:boolean"/>
+          <xs:element name="scalability_mask_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="16"/>
+          <xs:element name="dimension_id_len_minus1" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="vps_nuh_layer_id_present_flag" type="xs:boolean"/>
+          <xs:element name="layer_id_in_nuh" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="dimension_id" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="view_id_len" type="xs:integer" minOccurs="0"/>
+          <xs:element name="view_id_val" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="direct_dependency_flag" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="num_add_layer_sets">
+            <xs:complexType>
+              <xs:simpleContent>
+                <xs:extension base="xs:integer">
+                  <xs:attribute name="inferred" type="xs:boolean" use="optional"/>
+                </xs:extension>
+              </xs:simpleContent>
+            </xs:complexType>
+          </xs:element>
+          <xs:element name="vps_sub_layers_max_minus1_present_flag" type="xs:boolean"/>
+          <xs:element name="max_tid_ref_present_flag" type="xs:boolean"/>
+          <xs:element name="default_ref_layers_active_flag" type="xs:boolean"/>
+          <xs:element name="vps_num_profile_tier_level_minus1" type="xs:integer"/>
+          <xs:element name="vps_profile_present_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
+
+          <!-- Additional profile tier levels after num_add_layer_sets -->
+          <xs:element name="profile_tier_level" type="ProfileTierLevelType" minOccurs="0" maxOccurs="unbounded"/>
+
+          <xs:element name="num_add_olss" type="xs:integer"/>
+          <xs:element name="default_output_layer_idc" type="xs:integer"/>
+          <xs:element name="profile_tier_level_idx" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="vps_num_rep_formats_minus1" type="xs:integer"/>
+          <xs:element name="rep_format" type="RepFormatType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="highest_layer_idx_plus1" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="sub_layers_vps_max_minus1" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="max_tid_il_ref_pics_plus1" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+          <!-- VPS extension elements -->
+          <xs:element name="max_one_active_ref_layer_flag" type="xs:boolean"/>
+          <xs:element name="vps_poc_lsb_aligned_flag" type="xs:boolean"/>
+          <xs:element name="poc_lsb_not_present_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="sub_layer_flag_info_present_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="sub_layer_dpb_info_present_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="max_vps_dec_pic_buffering_minus1" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="max_vps_num_reorder_pics" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="max_vps_latency_increase_plus1" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="direct_dep_type_len_minus2" type="xs:integer"/>
+          <xs:element name="direct_dependency_all_layers_flag" type="xs:boolean"/>
+          <xs:element name="direct_dependency_all_layers_type" type="xs:integer"/>
+          <xs:element name="vps_non_vui_extension_length" type="xs:integer"/>
+          <xs:element name="vps_non_vui_extension_data_byte" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="vps_vui_present_flag" type="xs:boolean"/>
+          <xs:element name="vps_extension2_flag" type="xs:boolean"/>
         </xs:sequence>
-      </xs:sequence>
-      <xs:element name="view_id_len" type="xs:integer"/>
-      <xs:sequence minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="view_id_val" type="IndexedIntegerType"/>
-      </xs:sequence>
-      <xs:sequence minOccurs="1" maxOccurs="unbounded">
-        <xs:element name="direct_dependency_flag" type="IndexedIntegerType"/>
-      </xs:sequence>
-      <xs:element name="num_add_layer_sets" type="xs:integer" minOccurs="0"/>
-      <xs:sequence minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="highest_layer_idx_plus1" type="IndexedIntegerType"/>
-      </xs:sequence>
-      <xs:element name="vps_sub_layers_max_minus1_present_flag" type="xs:boolean"/>
-      <xs:sequence minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="sub_layers_vps_max_minus1" type="IndexedIntegerType"/>
-      </xs:sequence>
-      <xs:element name="max_tid_ref_present_flag" type="xs:boolean"/>
-      <xs:sequence minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="max_tid_il_ref_pics_plus1" type="IndexedIntegerType"/>
-      </xs:sequence>
-      <xs:element name="default_ref_layers_active_flag" type="xs:boolean"/>
-      <xs:element name="vps_num_profile_tier_level_minus1" type="xs:integer"/>
-      <xs:sequence minOccurs="0" maxOccurs="unbounded">
-        <xs:element name="vps_profile_present_flag" type="IndexedBooleanType"/>
-      </xs:sequence>    
+      </xs:choice>
+
       <!-- Internal variables -->
-      <xs:element name="InternalVariables" type="VPSInternalVariablesType" minOccurs="0"/>
+      <xs:element name="InternalVariables" type="InternalVariablesType" minOccurs="0"/>
     </xs:sequence>
   </xs:complexType>
 
@@ -439,6 +497,7 @@
         <xs:attribute name="smIdx" type="xs:nonNegativeInteger" use="optional"/>
         <xs:attribute name="size_id" type="xs:nonNegativeInteger" use="optional"/>
         <xs:attribute name="matrix_id" type="xs:nonNegativeInteger" use="optional"/>
+        <xs:attribute name="inferred" type="xs:boolean" use="optional"/>
       </xs:extension>
     </xs:simpleContent>
   </xs:complexType>
@@ -464,11 +523,39 @@
     </xs:simpleContent>
   </xs:complexType>
 
+  <xs:complexType name="IndexedStringType">
+    <xs:simpleContent>
+      <xs:restriction base="BaseIndexedType">
+        <xs:simpleType>
+          <xs:restriction base="xs:string"/>
+        </xs:simpleType>
+      </xs:restriction>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <!-- RepFormatType definition -->
+  <xs:complexType name="RepFormatType">
+    <xs:sequence>
+      <xs:element name="pic_width_vps_in_luma_samples" type="xs:integer"/>
+      <xs:element name="pic_height_vps_in_luma_samples" type="xs:integer"/>
+      <xs:element name="chroma_and_bit_depth_vps_present_flag" type="xs:boolean"/>
+      <xs:element name="chroma_format_vps_idc" type="xs:integer" minOccurs="0"/>
+      <xs:element name="bit_depth_vps_luma_minus8" type="xs:integer" minOccurs="0"/>
+      <xs:element name="bit_depth_vps_chroma_minus8" type="xs:integer" minOccurs="0"/>
+      <xs:element name="conformance_window_vps_flag" type="xs:boolean"/>
+      <xs:element name="conf_win_vps_left_offset" type="xs:integer" minOccurs="0"/>
+      <xs:element name="conf_win_vps_right_offset" type="xs:integer" minOccurs="0"/>
+      <xs:element name="conf_win_vps_top_offset" type="xs:integer" minOccurs="0"/>
+      <xs:element name="conf_win_vps_bottom_offset" type="xs:integer" minOccurs="0"/>
+    </xs:sequence>
+    <xs:attribute name="i" type="xs:nonNegativeInteger" use="required"/>
+  </xs:complexType>
+
   <!-- SequenceParameterSetType definition -->
   <xs:complexType name="SequenceParameterSetType">
     <xs:sequence>
       <xs:element name="sps_video_parameter_set_id" type="xs:integer"/>
-      
+
       <xs:choice>
         <!-- if nuh_layer_id == 0 -->
         <xs:element name="sps_max_sub_layers_minus1" type="xs:integer"/>
@@ -480,7 +567,7 @@
         <xs:group ref="ProfileTierLevelStructure" minOccurs="0"/>
       </xs:sequence>
       <xs:element name="sps_seq_parameter_set_id" type="xs:integer"/>
-      
+
       <xs:choice>
         <!-- if multi layer ext sps -->
         <xs:sequence>
@@ -504,7 +591,7 @@
         </xs:sequence>
       </xs:choice>
       <xs:element name="log2_max_pic_order_cnt_lsb_minus4" type="xs:integer"/>
-      
+
       <!-- if not multi layer ext sps -->
       <xs:sequence minOccurs="0">
         <xs:element name="sps_sub_layer_ordering_info_present_flag" type="xs:boolean"/>
@@ -514,7 +601,7 @@
           <xs:element name="sps_max_latency_increase_plus1" type="IndexedIntegerType"/>
         </xs:sequence>
       </xs:sequence>
-      
+
       <xs:element name="log2_min_luma_coding_block_size_minus3" type="xs:integer"/>
       <xs:element name="log2_diff_max_min_luma_coding_block_size" type="xs:integer"/>
       <xs:element name="log2_min_luma_transform_block_size_minus2" type="xs:integer"/>
@@ -522,7 +609,7 @@
       <xs:element name="max_transform_hierarchy_depth_inter" type="xs:integer"/>
       <xs:element name="max_transform_hierarchy_depth_intra" type="xs:integer"/>
       <xs:element name="scaling_list_enabled_flag" type="xs:boolean"/>
-      
+
       <!-- Scaling list data -->
       <xs:element name="sps_scaling_list_data_present_flag" type="xs:boolean" minOccurs="0"/>
       <xs:sequence minOccurs="0">
@@ -531,11 +618,11 @@
         <xs:element name="scaling_list_dc_coef_minus8" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
         <xs:element name="scaling_list_delta_coef" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
       </xs:sequence>
-      
+
       <xs:element name="amp_enabled_flag" type="xs:boolean"/>
       <xs:element name="sample_adaptive_offset_enabled_flag" type="xs:boolean"/>
       <xs:element name="pcm_enabled_flag" type="xs:boolean"/>
-      
+
       <!-- if pcm_enabled_flag -->
       <xs:sequence minOccurs="0">
         <xs:element name="pcm_sample_bit_depth_luma_minus1" type="xs:integer"/>
@@ -544,7 +631,7 @@
         <xs:element name="log2_diff_max_min_pcm_luma_coding_block_size" type="xs:integer"/>
         <xs:element name="pcm_loop_filter_disabled_flag" type="xs:boolean"/>
       </xs:sequence>
-      
+
       <xs:element name="num_short_term_ref_pic_sets" type="xs:integer"/>
       <xs:group ref="StRefPicSetStructure" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element name="long_term_ref_pics_present_flag" type="xs:boolean"/>
@@ -557,7 +644,7 @@
           <xs:element name="used_by_curr_pic_lt_sps_flag" type="IndexedBooleanType"/>
         </xs:sequence>
       </xs:sequence>
-      
+
       <xs:element name="sps_temporal_mvp_enabled_flag" type="xs:boolean"/>
       <xs:element name="strong_intra_smoothing_enabled_flag" type="xs:boolean"/>
       <xs:element name="vui_parameters_present_flag" type="xs:boolean"/>
@@ -571,7 +658,7 @@
         <xs:element name="sps_multilayer_extension_flag" type="xs:boolean"/>
         <xs:element name="sps_extension_1bit" type="xs:boolean"/>
         <xs:element name="sps_scc_extension_flag" type="xs:boolean"/>
-        
+
         <!-- Parse the extension data based on flags -->
         <xs:group ref="SpsRangeExtension" minOccurs="0"/>
         <xs:group ref="SpsMultilayerExtension" minOccurs="0"/>
@@ -580,7 +667,7 @@
       </xs:sequence>
     </xs:sequence>
   </xs:complexType>
-  
+
   <!-- NALUnit definition -->
   <xs:element name="NALUnit" type="NALUnitType"/>
   <xs:complexType name="NALUnitType">
@@ -597,5 +684,5 @@
       </xs:choice>
     </xs:sequence>
   </xs:complexType>
-  
+
 </xs:schema>

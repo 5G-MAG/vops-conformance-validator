@@ -7,14 +7,13 @@ from bitstring import Error
 def parse_profile_tier_level(profile_present_flag: bool, max_num_sub_layers_minus1: int, reader):
     """Parse profile tier level strucuture in the current bitstream"""
     ptl = {}
-
     try:
         if profile_present_flag:
             # Parse profile/tier/level information
             ptl["general_profile_space"] = reader.read_bits(2)
             ptl["general_tier_flag"] = reader.read_bit()
             ptl["general_profile_idc"] = reader.read_bits(5)
-            
+
             # Parse profile compatibility flags
             for j in range(32):
                 ptl[f"general_profile_compatibility_flag[j={j}]"] = reader.read_bit()
