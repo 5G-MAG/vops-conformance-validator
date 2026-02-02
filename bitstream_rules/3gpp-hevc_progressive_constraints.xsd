@@ -6,7 +6,6 @@
   attributeFormDefault="unqualified"
   vc:minVersion="1.1">
 
-  <!-- Require HEVC bitstream schema -->
   <xs:include schemaLocation="hevc_common.xsd"/>
   
   <xs:element name="HEVCBitstream">

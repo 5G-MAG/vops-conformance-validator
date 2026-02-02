@@ -2,9 +2,9 @@
 # Each operation point defines a set of XSD schemas to validate against
 
 operation_points:
-  3GPP-MV-HEVC-Stereo:
-    description: "3GPP MV-HEVC Stereo Operation Point"
+  3GPP-MV-HEVC-Main-Stereo:
+    description: "3GPP MV-HEVC Main Stereo Operation Point"
     xsds:
-      - bitstream_rules/hevc_vui_constraints.xsd
-      - bitstream_rules/hevc_progressive_constraints.xsd
-      - bitstream_rules/vops_3gpp-mv-hevc-stereo.xsd
+      - bitstream_rules/3gpp-hevc_vui_constraints.xsd
+      - bitstream_rules/3gpp-hevc_progressive_constraints.xsd
+      - bitstream_rules/3gpp-mv-hevc_stereo.xsd
