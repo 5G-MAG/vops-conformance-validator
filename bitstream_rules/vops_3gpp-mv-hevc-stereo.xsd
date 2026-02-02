@@ -67,6 +67,17 @@
         )
       "/>
 
+      <xs:assert test="exists(NALUnit/SEI/SEIMessage/payload/three_dimensional_reference_displays_info)"/>
+
+      <xs:assert test="NALUnit/SEI/SEIMessage/payload/three_dimensional_reference_displays_info/num_ref_displays_minus1 = 0"/>
+
+      <xs:assert test="every $left_view in NALUnit/SEI/SEIMessage/payload/three_dimensional_reference_displays_info/left_view_id
+                    satisfies $left_view = NALUnit/VideoParameterSet/view_id_val[@i = $left_view/@i]"/>
+
+      <xs:assert test="every $right_view in NALUnit/SEI/SEIMessage/payload/three_dimensional_reference_displays_info/right_view_id
+                    satisfies $right_view = NALUnit/VideoParameterSet/view_id_val[@i = number($right_view/@i) + 1] and
+                    $right_view != NALUnit/SEI/SEIMessage/payload/three_dimensional_reference_displays_info/left_view_id[@i = $right_view/@i]"/>
+
     </xs:complexType>
   </xs:element>
 
