@@ -713,6 +713,49 @@
     </xs:sequence>
   </xs:complexType>
 
+  <!-- SEI definitions -->
+  <xs:complexType name="SEIType">
+    <xs:sequence>
+      <xs:element name="SEIMessage" type="SEIMessageType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+    <xs:attribute name="nal_unit_type" type="xs:string" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="SEIMessageType">
+    <xs:sequence>
+      <xs:element name="payload_type" type="xs:integer"/>
+      <xs:element name="payload_size" type="xs:integer"/>
+      <xs:element name="payload" type="SEIPayloadType"/>
+    </xs:sequence>
+    <xs:attribute name="index" type="xs:nonNegativeInteger" use="required"/>
+  </xs:complexType>
+
+  <xs:complexType name="SEIPayloadType">
+    <xs:choice>
+      <xs:element name="three_dimensional_reference_displays_info" type="ThreeDimensionalReferenceDisplaysInfoType" minOccurs="0"/>
+      <xs:element name="type" type="xs:string" minOccurs="0"/>
+    </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="ThreeDimensionalReferenceDisplaysInfoType">
+    <xs:sequence>
+      <xs:element name="prec_ref_display_width" type="xs:integer"/>
+      <xs:element name="ref_viewing_distance_flag" type="xs:boolean"/>
+      <xs:element name="prec_ref_viewing_dist" type="xs:integer" minOccurs="0"/>
+      <xs:element name="num_ref_displays_minus1" type="xs:integer"/>
+      <xs:element name="three_dimensional_reference_displays_extension_flag" type="xs:boolean"/>
+      <!-- Indexed parameters - now directly under three_dimensional_reference_displays_info -->
+      <xs:element name="left_view_id" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="right_view_id" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="exponent_ref_display_width" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="mantissa_ref_display_width" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="exponent_ref_viewing_distance" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="mantissa_ref_viewing_distance" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="additional_shift_present_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="num_sample_shift_plus512" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
   <!-- NALUnit definition -->
   <xs:element name="NALUnit" type="NALUnitType"/>
   <xs:complexType name="NALUnitType">
@@ -726,6 +769,7 @@
       <xs:choice minOccurs="0">
         <xs:element name="VideoParameterSet" type="VideoParameterSetType"/>
         <xs:element name="SequenceParameterSet" type="SequenceParameterSetType"/>
+        <xs:element name="SEI" type="SEIType"/>
       </xs:choice>
     </xs:sequence>
   </xs:complexType>

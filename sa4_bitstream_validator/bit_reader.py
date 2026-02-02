@@ -28,3 +28,21 @@ class BitReader:
     def read_flags(self, nb):
         """Read a an array of n flags"""
         return self.bitstream.readlist(["uint:1"] * nb)
+
+    def remaining_bits(self):
+        """Get number of remaining bits"""
+        return len(self.bitstream) - self.bitstream.pos
+
+    def get_position(self):
+        """Get current bit position"""
+        return self.bitstream.pos
+
+    def next_bits(self, n):
+        """Peek at next n bits without advancing position"""
+        if self.bitstream.pos + n > len(self.bitstream):
+            return None
+        return self.bitstream.peek(f"uint:{n}")
+
+    def is_byte_aligned(self):
+        """Check if current position is byte-aligned"""
+        return self.bitstream.pos % 8 == 0

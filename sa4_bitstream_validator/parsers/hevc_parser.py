@@ -10,6 +10,7 @@ from xml.dom import minidom
 from sa4_bitstream_validator.parsers.base_parser import BaseParser
 from sa4_bitstream_validator.parsers.hevc import parse_sps
 from sa4_bitstream_validator.parsers.hevc import parse_vps
+from sa4_bitstream_validator.parsers.hevc.sei import parse_sei_rbsp
 from sa4_bitstream_validator.tools import find_start_codes
 
 
@@ -233,6 +234,40 @@ class HEVCParser(BaseParser):
 
                     # Add InternalVariables element as last child of SPS if we have internal variables
                     create_internal_variables_element(sps_elem, internal_vars)
+
+            # Parse SEI NAL units (PREFIX_SEI_NUT = 39, SUFFIX_SEI_NUT = 40)
+            elif nut == 39 or nut == 40: # SEI
+                payload_data = data[payload_start:end_pos]
+                sei_messages = parse_sei_rbsp(payload_data)
+                if sei_messages:
+                    sei_elem = SubElement(nal_unit, "SEI")
+                    sei_elem.set("nal_unit_type", "prefix" if nut == 39 else "suffix")
+
+                    for i, sei_message in enumerate(sei_messages):
+                        message_elem = SubElement(sei_elem, "SEIMessage")
+                        message_elem.set("index", str(i))
+
+                        # Add payload type and size
+                        SubElement(message_elem, "payload_type").text = str(sei_message.get("payload_type", ""))
+                        SubElement(message_elem, "payload_size").text = str(sei_message.get("payload_size", ""))
+
+                        # Add payload data
+                        payload = sei_message.get("payload", {})
+                        if payload:
+                            payload_elem = SubElement(message_elem, "payload")
+
+                            if sei_message.get("payload_type") == 176:
+                                three_d_elem = SubElement(payload_elem, "three_dimensional_reference_displays_info")
+
+                                # Process parameters using common function (payload is already flattened by SEI parser)
+                                internal_vars = process_parameters(three_d_elem, payload, include_internal_vars)
+
+                                # Add InternalVariables element if we have internal variables
+                                create_internal_variables_element(three_d_elem, internal_vars)
+                            else:
+                                # For unsupported SEI types, just add the type
+                                type_elem = SubElement(payload_elem, "type")
+                                type_elem.text = payload.get("type", "unknown")
 
         # Generate formatted XML
         xml_str = minidom.parseString(tostring(root)).toprettyxml(indent="  ")
