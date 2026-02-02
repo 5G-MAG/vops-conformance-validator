@@ -743,7 +743,6 @@
       <xs:element name="ref_viewing_distance_flag" type="xs:boolean"/>
       <xs:element name="prec_ref_viewing_dist" type="xs:integer" minOccurs="0"/>
       <xs:element name="num_ref_displays_minus1" type="xs:integer"/>
-      <xs:element name="three_dimensional_reference_displays_extension_flag" type="xs:boolean"/>
       <!-- Indexed parameters - now directly under three_dimensional_reference_displays_info -->
       <xs:element name="left_view_id" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element name="right_view_id" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
@@ -753,6 +752,7 @@
       <xs:element name="mantissa_ref_viewing_distance" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element name="additional_shift_present_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
       <xs:element name="num_sample_shift_plus512" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="three_dimensional_reference_displays_extension_flag" type="xs:boolean"/>
     </xs:sequence>
   </xs:complexType>
 
