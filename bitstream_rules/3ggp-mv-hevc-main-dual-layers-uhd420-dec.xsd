@@ -22,6 +22,7 @@
                         NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_profile_compatibility_flag[@i=2] = 1)"/>
 
       <!-- Base layer: Main Tier, Level 5.1 -->
+      <xs:assert test="NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_tier_flag = 0"/>
       <xs:assert test="NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_level_idc = 51"/>
 
       <!-- At least one enhancement layer exists -->
@@ -45,6 +46,7 @@
       <xs:assert test="NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_lower_bit_rate_constraint_flag = 1"/>
 
       <!-- Enhancement layer: Main Tier, Level 5.1 -->
+      <xs:assert test="NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_tier_flag = 0"/>
       <xs:assert test="NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_level_idc = 51"/>
     </xs:complexType>
   </xs:element>

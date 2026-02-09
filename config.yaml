@@ -7,6 +7,7 @@ operation_points:
     xsds:
       - bitstream_rules/3gpp-hevc_vui_constraints.xsd
       - bitstream_rules/3gpp-hevc_progressive_constraints.xsd
+      - bitstream_rules/3gpp-hevc-uhd-dec.xsd
       - bitstream_rules/3gpp-mv-hevc_stereo.xsd
       - bitstream_rules/3ggp-mv-hevc-main-dual-layers-uhd420-dec.xsd
   
@@ -15,5 +16,6 @@ operation_points:
     xsds:
       - bitstream_rules/3gpp-hevc_vui_constraints.xsd
       - bitstream_rules/3gpp-hevc_progressive_constraints.xsd
+      - bitstream_rules/3gpp-hevc-uhd-dec.xsd
       - bitstream_rules/3gpp-mv-hevc_stereo.xsd
       - bitstream_rules/3ggp-mv-hevc-ext-dual-layers-uhd420-dec.xsd
