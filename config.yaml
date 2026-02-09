@@ -8,3 +8,12 @@ operation_points:
       - bitstream_rules/3gpp-hevc_vui_constraints.xsd
       - bitstream_rules/3gpp-hevc_progressive_constraints.xsd
       - bitstream_rules/3gpp-mv-hevc_stereo.xsd
+      - bitstream_rules/3ggp-mv-hevc-main-dual-layers-uhd420-dec.xsd
+  
+  3GPP-MV-HEVC-Ext-Stereo:
+    description: "3GPP MV-HEVC Main Stereo Operation Point"
+    xsds:
+      - bitstream_rules/3gpp-hevc_vui_constraints.xsd
+      - bitstream_rules/3gpp-hevc_progressive_constraints.xsd
+      - bitstream_rules/3gpp-mv-hevc_stereo.xsd
+      - bitstream_rules/3ggp-mv-hevc-ext-dual-layers-uhd420-dec.xsd
