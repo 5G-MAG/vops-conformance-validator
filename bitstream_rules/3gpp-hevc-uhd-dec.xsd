@@ -20,10 +20,10 @@
       <xs:assert test="exists(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_profile_idc)"/>
       <xs:assert test="NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_profile_idc = 2 or
                        (exists(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_profile_compatibility_flag[@i=2]) and
-                        NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_profile_compatibility_flag[@i=2] = 1)"/>
+                        string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_profile_compatibility_flag[@i=2]) = '1')"/>
 
       <!-- Base layer: Main Tier, Level 5.1 -->
-      <xs:assert test="NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_tier_flag = 0"/>
+      <xs:assert test="string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_tier_flag) = '0'"/>
       <xs:assert test="NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_level_idc = 51"/>
 
       <!-- Base layer: Progressive constraints -->

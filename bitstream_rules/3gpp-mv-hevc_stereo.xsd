@@ -21,11 +21,11 @@
       <xs:assert test="NALUnit/VideoParameterSet/vps_num_layer_sets_minus1 >= 1"/>
 
       <xs:assert test="exists(NALUnit/VideoParameterSet/layer_id_included_flag[@i=1][@j=0])"/>
-      <xs:assert test="NALUnit/VideoParameterSet/layer_id_included_flag[@i=1][@j=0] = 1"/>
-      <xs:assert test="exists(NALUnit/VideoParameterSet/layer_id_included_flag[@i=1][@j > 0][. = 1])"/>
+      <xs:assert test="string(NALUnit/VideoParameterSet/layer_id_included_flag[@i=1][@j=0]) = '1'"/>
+      <xs:assert test="exists(NALUnit/VideoParameterSet/layer_id_included_flag[@i=1][@j > 0][string(.) = '1'])"/>
 
       <xs:assert test="exists(NALUnit/VideoParameterSet/scalability_mask_flag[@i=1])"/>
-      <xs:assert test="NALUnit/VideoParameterSet/scalability_mask_flag[@i=1] = 1"/>
+      <xs:assert test="string(NALUnit/VideoParameterSet/scalability_mask_flag[@i=1]) = '1'"/>
 
       <xs:assert test="exists(NALUnit/VideoParameterSet/InternalVariables/ScalabilityId[@i=1][@j=1])"/>
       <xs:assert test="NALUnit/VideoParameterSet/InternalVariables/ScalabilityId[@i=1][@j=1] = 1"/>
