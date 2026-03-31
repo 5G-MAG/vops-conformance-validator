@@ -58,31 +58,69 @@ def generate_validation_report(results, tested_bitstream, report_path, operation
     # Note: xml_intermediate is an internal temporary file, not included in the report
     
     # Add detailed schema results with relative paths
-    for schema_path, schema_result in results["schema_results"].items():
-        # Convert absolute paths to relative paths from project root
-        if os.path.isabs(schema_path):
-            # Try to make it relative to the project root
-            try:
-                rel_path = os.path.relpath(schema_path, os.getcwd())
-                # If the relative path doesn't start with '..', use it
-                if not rel_path.startswith('..'):
-                    schema_path = rel_path
-            except ValueError:
-                # If we can't make it relative, keep the absolute path
-                pass
-        
-        schema_detail = {
-            "schema_path": schema_path,  # Use relative path when possible
-            "validation_success": schema_result["success"],
-            "error_count": schema_result["error_count"],
-            "errors": schema_result["errors"],
-            "assertion_results": schema_result.get("assertion_results", {
-                "total_assertions": 0,
-                "passing_assertions": [],
-                "failing_assertions": []
-            })
-        }
-        report["validation_results"]["schema_details"].append(schema_detail)
+    for schema_key, schema_result in results["schema_results"].items():
+        # Handle OR groups differently from single schemas
+        if schema_result.get("is_or_group", False):
+            # This is an OR group
+            or_group_detail = {
+                "type": "or_group",
+                "group_key": schema_key,
+                "validation_success": schema_result["success"],
+                "passed_schemas": schema_result["passed_schemas"],
+                "total_schemas": schema_result["total_schemas"],
+                "schemas": []
+            }
+
+            # Add details for each schema in the OR group
+            for schema_path, schema_detail in schema_result["schemas"].items():
+                # Convert absolute paths to relative paths from project root
+                if os.path.isabs(schema_path):
+                    try:
+                        rel_path = os.path.relpath(schema_path, os.getcwd())
+                        if not rel_path.startswith('..'):
+                            schema_path = rel_path
+                    except ValueError:
+                        pass
+
+                or_group_detail["schemas"].append({
+                    "schema_path": schema_path,
+                    "validation_success": schema_detail["success"],
+                    "error_count": schema_detail["error_count"],
+                    "errors": schema_detail["errors"],
+                    "assertion_results": schema_detail.get("assertion_results", {
+                        "total_assertions": 0,
+                        "passing_assertions": [],
+                        "failing_assertions": []
+                    })
+                })
+
+            report["validation_results"]["schema_details"].append(or_group_detail)
+        else:
+            # This is a single schema
+            schema_path = schema_key
+
+            # Convert absolute paths to relative paths from project root
+            if os.path.isabs(schema_path):
+                try:
+                    rel_path = os.path.relpath(schema_path, os.getcwd())
+                    if not rel_path.startswith('..'):
+                        schema_path = rel_path
+                except ValueError:
+                    pass
+
+            schema_detail = {
+                "type": "single_schema",
+                "schema_path": schema_path,
+                "validation_success": schema_result["success"],
+                "error_count": schema_result["error_count"],
+                "errors": schema_result["errors"],
+                "assertion_results": schema_result.get("assertion_results", {
+                    "total_assertions": 0,
+                    "passing_assertions": [],
+                    "failing_assertions": []
+                })
+            }
+            report["validation_results"]["schema_details"].append(schema_detail)
     
     # Write the report to file
     try:
@@ -167,9 +205,16 @@ def validate(bitstream, operation_point, config, report_path, include_internal_v
             parser.bitstream_to_xml(bs_file, xml_file, include_internal_vars=include_internal_vars)
     
     # Validate against the operation point's XSDs
-    click.echo(f"Validating against {len(operation_point_config['xsds'])} schema(s)")
     validator = XMLValidator()
-    results = validator.validate_multiple(xml_filename, operation_point_config['xsds'])
+
+    # Handle both simple schema lists and OR conditions (nested lists)
+    xsds_config = operation_point_config['xsds']
+
+    # Count total validation conditions (single schemas + OR groups)
+    total_conditions = len(xsds_config)
+    click.echo(f"Validating against {total_conditions} condition(s)")
+
+    results = validator.validate_multiple(xml_filename, xsds_config)
     
     # Remove intermediate XML file (internal temporary file)
     try:

@@ -8,13 +8,16 @@
 
   <!-- Require HEVC bitstream schema -->
   <xs:include schemaLocation="hevc_common.xsd"/>
-  
+
   <xs:element name="HEVCBitstream">
     <xs:complexType>
       <xs:sequence>
         <xs:element ref="NALUnit" maxOccurs="unbounded"/>
       </xs:sequence>
       <xs:attribute name="uri" type="xs:anyURI"/>
+
+      <!-- Multi-layer constraint: Must have layer 0 (base layer) -->
+      <xs:assert test="exists(NALUnit[nuh_layer_id=0])"/>
 
       <!-- Base layer: Main 10 profile conformance -->
       <xs:assert test="exists(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_profile_idc)"/>
@@ -24,9 +27,9 @@
 
       <!-- Base layer: Main Tier, Level 5.1 -->
       <xs:assert test="string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_tier_flag) = '0'"/>
-      <xs:assert test="NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_level_idc = 51"/>
+      <xs:assert test="NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_level_idc = 153"/>
 
-      <!-- Base layer: Progressive constraints -->
+      <!-- Progressive constraints (duplicated from 3gpp-hevc_progressive_constraints.xsd) -->
       <xs:assert test="exists(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_progressive_source_flag)"/>
       <xs:assert test="string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_progressive_source_flag) = '1'"/>
       <xs:assert test="exists(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_interlaced_source_flag)"/>

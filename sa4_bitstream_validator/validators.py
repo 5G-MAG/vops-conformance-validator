@@ -149,70 +149,133 @@ class XMLValidator(BaseValidator):
 
     def validate_multiple(self, description_path, schema_paths, verbose=True):
         """Validate the description against multiple XSD schemas.
-        
+
         Args:
             description_path: Path to the XML description file
-            schema_paths: List of paths to XSD schema files
+            schema_paths: List of paths to XSD schema files or lists of paths for OR conditions
             verbose: Whether to print detailed output to console
-            
+
         Returns:
             dict: Validation results for each schema
         """
         results = {}
         overall_success = True
-        
-        for i, schema_path in enumerate(schema_paths, 1):
-            if verbose:
-                print(f"\n=== Validating against schema {i}/{len(schema_paths)}: {schema_path} ===")
-            
-            success, errors, assertion_results = self.validate(description_path, schema_path)
 
-            # Store detailed results
-            results[schema_path] = {
-                "success": success,
-                "errors": errors,
-                "error_count": len(errors),
-                "assertion_results": assertion_results
-            }
-            
-            if verbose:
-                if errors:
-                    print(f"[FAILED] Validation failed with {len(errors)} error(s)")
-                    for j, error in enumerate(errors, 1):
-                        error_msg = error["reason"]
-                        if error["path"]:
-                            error_msg += f" at path {error['path']}"
-                        print(f"  Error {j}: {error_msg}")
+        for i, schema_item in enumerate(schema_paths, 1):
+            # Handle OR conditions (list of schemas) vs single schema
+            if isinstance(schema_item, list):
+                # OR condition: at least one schema in the list must pass
+                or_group_results = {}
+                or_group_success = False
 
-                    # Show only failing assertions for concise output
-                    if assertion_results['failing_assertions']:
-                        print(f"\n  Failing assertions ({len(assertion_results['failing_assertions'])}/{assertion_results['total_assertions']}):")
-                        for j, assertion in enumerate(assertion_results['failing_assertions'], 1):
-                            desc = assertion.get('description', 'No description')
-                            print(f"    {j}. {desc}")
-                            if 'error' in assertion:
-                                print(f"       Error: {assertion['error']}")
-                else:
-                    print("[PASSED] Validation passed")
+                if verbose:
+                    print(f"\n=== Validating OR group {i}/{len(schema_paths)} ===")
+                    print(f"Schemas in OR group: {schema_item}")
 
-                    # Show assertion results for successful validation
-                    if assertion_results['total_assertions'] > 0:
-                        print(f"  All {assertion_results['total_assertions']} assertions passed")
-                    
-            if not success:
-                overall_success = False
-        
+                # Validate against each schema in the OR group
+                for j, schema_path in enumerate(schema_item, 1):
+                    if verbose:
+                        print(f"  Schema {j}/{len(schema_item)}: {schema_path}")
+
+                    success, errors, assertion_results = self.validate(description_path, schema_path)
+
+                    # Store detailed results for this schema
+                    or_group_results[schema_path] = {
+                        "success": success,
+                        "errors": errors,
+                        "error_count": len(errors),
+                        "assertion_results": assertion_results
+                    }
+
+                    # If any schema in the OR group passes, the group passes
+                    if success:
+                        or_group_success = True
+                        if verbose:
+                            print(f"  [PASSED] Schema {j} passed - OR group condition satisfied")
+                        # Continue to validate remaining schemas for detailed reporting
+                    else:
+                        if verbose:
+                            print(f"  [FAILED] Schema {j} failed")
+                            if errors:
+                                for k, error in enumerate(errors, 1):
+                                    error_msg = error["reason"]
+                                    if error["path"]:
+                                        error_msg += f" at path {error['path']}"
+                                    print(f"    Error {k}: {error_msg}")
+
+                # Store OR group results with a composite key
+                or_group_key = f"or_group_{i}"
+                results[or_group_key] = {
+                    "success": or_group_success,
+                    "is_or_group": True,
+                    "schemas": or_group_results,
+                    "passed_schemas": sum(1 for r in or_group_results.values() if r["success"]),
+                    "total_schemas": len(schema_item)
+                }
+
+                if verbose:
+                    if or_group_success:
+                        print(f"[OR GROUP PASSED] At least one schema in group passed")
+                    else:
+                        print(f"[OR GROUP FAILED] All schemas in group failed")
+
+                if not or_group_success:
+                    overall_success = False
+
+            else:
+                # Single schema (AND condition)
+                schema_path = schema_item
+                if verbose:
+                    print(f"\n=== Validating against schema {i}/{len(schema_paths)}: {schema_path} ===")
+
+                success, errors, assertion_results = self.validate(description_path, schema_path)
+
+                # Store detailed results
+                results[schema_path] = {
+                    "success": success,
+                    "errors": errors,
+                    "error_count": len(errors),
+                    "assertion_results": assertion_results
+                }
+
+                if verbose:
+                    if errors:
+                        print(f"[FAILED] Validation failed with {len(errors)} error(s)")
+                        for j, error in enumerate(errors, 1):
+                            error_msg = error["reason"]
+                            if error["path"]:
+                                error_msg += f" at path {error['path']}"
+                            print(f"  Error {j}: {error_msg}")
+
+                        # Show only failing assertions for concise output
+                        if assertion_results['failing_assertions']:
+                            print(f"\n  Failing assertions ({len(assertion_results['failing_assertions'])}/{assertion_results['total_assertions']}):")
+                            for j, assertion in enumerate(assertion_results['failing_assertions'], 1):
+                                desc = assertion.get('description', 'No description')
+                                print(f"    {j}. {desc}")
+                                if 'error' in assertion:
+                                    print(f"       Error: {assertion['error']}")
+                    else:
+                        print("[PASSED] Validation passed")
+
+                        # Show assertion results for successful validation
+                        if assertion_results['total_assertions'] > 0:
+                            print(f"  All {assertion_results['total_assertions']} assertions passed")
+
+                if not success:
+                    overall_success = False
+
         if verbose:
             print(f"\n=== Overall Validation Result ===")
             if overall_success:
                 print("[SUCCESS] All validations passed")
             else:
                 print("[FAILED] One or more validations failed")
-            
+
         return {
             "overall_success": overall_success,
             "schema_results": results,
             "total_schemas": len(schema_paths),
-            "passed_schemas": sum(1 for r in results.values() if r["success"]),
-            "failed_schemas": sum(1 for r in results.values() if not r["success"])
+            "passed_schemas": sum(1 for r in results.values() if r.get("success", False) or (r.get("is_or_group", False) and r["success"])),
+            "failed_schemas": sum(1 for r in results.values() if not r.get("success", True) or (r.get("is_or_group", False) and not r["success"]))
         }
