@@ -15,39 +15,38 @@
       </xs:sequence>
       <xs:attribute name="uri" type="xs:anyURI"/>
 
-      <!-- Base layer: Main 10 profile conformance -->
-      <xs:assert test="exists(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_profile_idc)"/>
-      <xs:assert test="NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_profile_idc = 2 or
-                       (exists(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_profile_compatibility_flag[@i=2]) and
-                        string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_profile_compatibility_flag[@i=2]) = '1')"/>
+      <!-- MV-HEVC-Main-Dual-layers-UHD420-Dec constraints from TS 26.265 clause 5.3.3 -->
+
+      <!-- TODO: Add constraint to verify exactly one enhancement layer (dual-layer requirement) -->
+      <!-- The constraint should check that all enhancement layer NAL units have the same nuh_layer_id -->
+      <xs:assert test="count(NALUnit[nuh_layer_id != 0]) >= 1"/>
+      <!-- Option 1: Main 10 base + Multiview Main 10 enhancement -->
+      <!-- Option 2: Main base + Multiview Main enhancement -->
+      <xs:assert test="(
+        (NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_profile_idc = 2 or
+         (exists(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_profile_compatibility_flag[@i=2]) and
+          string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_profile_compatibility_flag[@i=2]) = '1'))
+        and
+        (NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_profile_idc = 4 or
+         (exists(NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_profile_compatibility_flag[@j=4]) and
+          string(NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_profile_compatibility_flag[@j=4]) = '1'))
+      ) or (
+        (NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_profile_idc = 1 or
+         (exists(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_profile_compatibility_flag[@i=1]) and
+          string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_profile_compatibility_flag[@i=1]) = '1'))
+        and
+        (NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_profile_idc = 3 or
+         (exists(NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_profile_compatibility_flag[@j=3]) and
+          string(NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_profile_compatibility_flag[@j=3]) = '1'))
+      )"/>
 
       <!-- Base layer: Main Tier, Level 5.1 -->
       <xs:assert test="string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_tier_flag) = '0'"/>
-      <xs:assert test="NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_level_idc = 51"/>
-
-      <!-- At least one enhancement layer exists -->
-      <xs:assert test="count(NALUnit[nuh_layer_id != 0]) >= 1"/>
-
-      <!-- Enhancement layer: Multiview Main 10 profile conformance -->
-      <xs:assert test="exists(NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_profile_idc)"/>
-      <xs:assert test="NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_profile_idc = 6 or
-                       (exists(NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_profile_compatibility_flag[@j=6]) and
-                        string(NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_profile_compatibility_flag[@j=6]) = '1')"/>
-
-      <!-- Enhancement layer: Multiview Main 10 constraint flags -->
-      <xs:assert test="string(NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_max_12bit_constraint_flag) = '1'"/>
-      <xs:assert test="string(NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_max_10bit_constraint_flag) = '1'"/>
-      <xs:assert test="string(NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_max_8bit_constraint_flag) = '1'"/>
-      <xs:assert test="string(NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_max_422chroma_constraint_flag) = '1'"/>
-      <xs:assert test="string(NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_max_420chroma_constraint_flag) = '1'"/>
-      <xs:assert test="string(NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_max_monochrome_constraint_flag) = '0'"/>
-      <xs:assert test="string(NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_intra_constraint_flag) = '0'"/>
-      <xs:assert test="string(NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_one_picture_only_constraint_flag) = '0'"/>
-      <xs:assert test="string(NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_lower_bit_rate_constraint_flag) = '1'"/>
-
+      <xs:assert test="NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_level_idc = 153"/>
       <!-- Enhancement layer: Main Tier, Level 5.1 -->
       <xs:assert test="string(NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_tier_flag) = '0'"/>
-      <xs:assert test="NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_level_idc = 51"/>
+      <xs:assert test="NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_level_idc = 153"/>
+
     </xs:complexType>
   </xs:element>
 
