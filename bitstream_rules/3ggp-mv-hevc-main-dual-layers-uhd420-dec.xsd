@@ -26,14 +26,14 @@
         (string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_profile_idc) = '2' or
          string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_profile_compatibility_flag[@i=2]) = '1')
         and
-        (string(NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_profile_idc) = '4' or
-         string(NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_profile_compatibility_flag[@j=4]) = '1')
+        (string(NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_profile_idc) = '6' or
+         string(NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_profile_compatibility_flag[@j=6]) = '1')
       ) or (
         (string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_profile_idc) = '1' or
          string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_profile_compatibility_flag[@i=1]) = '1')
         and
-        (string(NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_profile_idc) = '3' or
-         string(NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_profile_compatibility_flag[@j=3]) = '1')
+        (string(NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_profile_idc) = '6' or
+         string(NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_profile_compatibility_flag[@j=6]) = '1')
       )"/>
 
       <!-- Base layer: Main Tier, Level 5.1 -->
