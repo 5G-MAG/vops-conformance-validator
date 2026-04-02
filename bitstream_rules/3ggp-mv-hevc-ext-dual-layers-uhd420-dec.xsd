@@ -23,26 +23,23 @@
       <!-- Option 1: Main 10 base + Multiview Extended 10 enhancement -->
       <!-- Option 2: Main base + Multiview Extended Main enhancement -->
       <xs:assert test="(
-        (NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_profile_idc = 2 or
-         (exists(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_profile_compatibility_flag[@i=2]) and
-          string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_profile_compatibility_flag[@i=2]) = '1'))
+        (string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_profile_idc) = '2' or
+         string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_profile_compatibility_flag[@i=2]) = '1')
         and
-        (NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_profile_idc = 13 or
-         (exists(NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_profile_compatibility_flag[@j=13]) and
-          string(NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_profile_compatibility_flag[@j=13]) = '1'))
+        (string(NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_profile_idc) = '13' or
+         string(NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_profile_compatibility_flag[@j=13]) = '1')
       ) or (
-        (NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_profile_idc = 1 or
-         (exists(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_profile_compatibility_flag[@i=1]) and
-          string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_profile_compatibility_flag[@i=1]) = '1'))
+        (string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_profile_idc) = '1' or
+         string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_profile_compatibility_flag[@i=1]) = '1')
         and
-        (NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_profile_idc = 12 or
-         (exists(NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_profile_compatibility_flag[@j=12]) and
-          string(NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_profile_compatibility_flag[@j=12]) = '1'))
+        (string(NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_profile_idc) = '12' or
+         string(NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_profile_compatibility_flag[@j=12]) = '1')
       )"/>
 
       <!-- Base layer: Main Tier, Level 5.1 -->
       <xs:assert test="string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_tier_flag) = '0'"/>
       <xs:assert test="NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_level_idc = 153"/>
+      
       <!-- Enhancement layer: Main Tier, Level 5.1 -->
       <xs:assert test="string(NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_tier_flag) = '0'"/>
       <xs:assert test="NALUnit[nuh_layer_id=0]/VideoParameterSet/profile_tier_level[@i=1]/general_level_idc = 153"/>
