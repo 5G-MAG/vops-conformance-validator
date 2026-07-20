@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
+  elementFormDefault="qualified"
+  attributeFormDefault="unqualified"
+  vc:minVersion="1.1">
+
+  <xs:include schemaLocation="hevc_common.xsd"/>
+
+  <xs:element name="HEVCBitstream">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="NALUnit" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="uri" type="xs:anyURI"/>
+
+      <!-- HD Common Constraints (shared by3GPP-HEVC-HD and3GPP-HEVC-HDR) -->
+
+      <!-- Chroma format 4:2:0 (clause 6.3.2.2 / 6.3.3.2) -->
+      <xs:assert test="exists(NALUnit[nuh_layer_id=0]/SequenceParameterSet/chroma_format_idc)"/>
+      <xs:assert test="NALUnit[nuh_layer_id=0]/SequenceParameterSet/chroma_format_idc = 1"/>
+
+      <!-- Square sample aspect ratio 1:1 (clause 6.3.2.2 / 6.3.3.2) -->
+      <xs:assert test="exists(NALUnit[nuh_layer_id=0]/SequenceParameterSet/aspect_ratio_idc)"/>
+      <xs:assert test="NALUnit[nuh_layer_id=0]/SequenceParameterSet/aspect_ratio_idc = 1"/>
+
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

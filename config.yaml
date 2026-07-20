@@ -3,9 +3,22 @@
 
 operation_points:
   3GPP-HEVC-HD:
-    description: "3GPP HEVC HD Operation Point (Main 10 Profile, Main Tier, Level 4.1 with progressive and VUI constraints)"
+    description: "3GPP HEVC HD Operation Point (Main 10 Profile, Main Tier, Level 4.1 with SDR representation)"
     xsds:
+      - bitstream_rules/3gpp-hevc_vui_constraints.xsd
+      - bitstream_rules/3gpp-hevc_progressive_constraints.xsd
       - bitstream_rules/3gpp-hevc-main10-main-41.xsd
+      - bitstream_rules/3gpp-hevc-hd-common.xsd
+      - bitstream_rules/3gpp-hevc-sdr-hd-colour.xsd
+
+  3GPP-HEVC-HDR:
+    description: "3GPP HEVC HDR Operation Point (Main 10 Profile, Main Tier, Level 4.1 with HDR representation)"
+    xsds:
+      - bitstream_rules/3gpp-hevc_vui_constraints.xsd
+      - bitstream_rules/3gpp-hevc_progressive_constraints.xsd
+      - bitstream_rules/3gpp-hevc-main10-main-41.xsd
+      - bitstream_rules/3gpp-hevc-hd-common.xsd
+      - bitstream_rules/3gpp-hevc-hdr-colour.xsd
 
   3GPP-HEVC-UHD:
     description: "3GPP HEVC UHD Operation Point (Main 10 Profile, Main Tier, Level 5.1 with progressive and VUI constraints)"
