@@ -128,68 +128,75 @@
               <xs:sequence>
                 <xs:element name="general_reserved_zero_34bits" type="xs:integer"/>
              </xs:sequence>
-          </xs:choice>
+            </xs:choice>
+          </xs:sequence>
+          <xs:sequence>
+            <xs:element name="general_reserved_zero_7bits" type="xs:integer"/>
+            <xs:element name="general_one_picture_only_constraint_flag" type="xs:boolean"/>
+            <xs:element name="general_reserved_zero_35bits" type="xs:integer"/>
+          </xs:sequence>
+          <xs:sequence>
+            <xs:element name="general_reserved_zero_43bits" type="xs:integer"/>
+          </xs:sequence>
+        </xs:choice>
+
+        <xs:choice>
+          <xs:sequence>
+            <xs:element name="general_inbld_flag" type="xs:boolean"/>
+          </xs:sequence>
+          <xs:sequence>
+            <xs:element name="general_reserved_zero_bit" type="xs:boolean"/>
+          </xs:sequence>
+        </xs:choice>
+
+        <xs:element name="general_level_idc" type="xs:integer" minOccurs="1" maxOccurs="1"/>
+
+        <!-- Sub-layer presence flags -->
+        <xs:sequence minOccurs="0">
+          <xs:element name="sub_layer_profile_present_flag" type="IndexedBooleanType" minOccurs="1" maxOccurs="1"/>
+          <xs:element name="sub_layer_level_present_flag" type="IndexedBooleanType" minOccurs="1" maxOccurs="1"/>
         </xs:sequence>
-        <xs:sequence>
-          <xs:element name="general_reserved_zero_7bits" type="xs:integer"/>
-          <xs:element name="general_one_picture_only_constraint_flag" type="xs:boolean"/>
-          <xs:element name="general_reserved_zero_35bits" type="xs:integer"/>
+
+        <xs:sequence minOccurs="0">
+          <xs:element name="reserved_zero_2bits" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
-        <xs:sequence>
-          <xs:element name="general_reserved_zero_43bits" type="xs:integer"/>
+
+        <xs:sequence minOccurs="0">
+          <!-- Sub-layer profile information -->
+          <xs:element name="sub_layer_profile_space" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="sub_layer_tier_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="sub_layer_profile_idc" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="sub_layer_profile_compatibility_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
+
+          <!-- Sub-layer progressive and interlaced source flags -->
+          <xs:element name="sub_layer_progressive_source_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="sub_layer_interlaced_source_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="sub_layer_non_packed_constraint_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="sub_layer_frame_only_constraint_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
+
+          <!-- Sub-layer conditional constraint flags -->
+          <xs:element name="sub_layer_max_12bit_constraint_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="sub_layer_max_10bit_constraint_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="sub_layer_max_8bit_constraint_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="sub_layer_max_422chroma_constraint_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="sub_layer_max_420chroma_constraint_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="sub_layer_max_monochrome_constraint_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="sub_layer_intra_constraint_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="sub_layer_one_picture_only_constraint_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="sub_layer_lower_bit_rate_constraint_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="sub_layer_max_14bit_constraint_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="sub_layer_reserved_zero_33bits" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="sub_layer_reserved_zero_34bits" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="sub_layer_reserved_zero_35bits" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="sub_layer_reserved_zero_43bits" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+
+          <!-- Sub-layer inbld flag -->
+          <xs:element name="sub_layer_inbld_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
+          <xs:element name="sub_layer_reserved_zero_bit" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
+
+          <!-- Sub-layer level information -->
+          <xs:element name="sub_layer_level_idc" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
-      </xs:choice>
-
-      <xs:choice>
-        <xs:sequence>
-          <xs:element name="general_inbld_flag" type="xs:boolean"/>
-        </xs:sequence>
-        <xs:sequence>
-          <xs:element name="general_reserved_zero_bit" type="xs:boolean"/>
-        </xs:sequence>
-      </xs:choice>
-
-      <xs:element name="general_level_idc" type="xs:integer" minOccurs="0" maxOccurs="unbounded"/>
-
-      <!-- Sub-layer presence flags -->
-      <xs:element name="sub_layer_profile_present_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="sub_layer_level_present_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="reserved_zero_2bits" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
-
-      <!-- Sub-layer profile information -->
-      <xs:element name="sub_layer_profile_space" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="sub_layer_tier_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="sub_layer_profile_idc" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="sub_layer_profile_compatibility_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
-
-      <!-- Sub-layer progressive and interlaced source flags -->
-      <xs:element name="sub_layer_progressive_source_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="sub_layer_interlaced_source_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="sub_layer_non_packed_constraint_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="sub_layer_frame_only_constraint_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
-
-      <!-- Sub-layer conditional constraint flags -->
-      <xs:element name="sub_layer_max_12bit_constraint_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="sub_layer_max_10bit_constraint_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="sub_layer_max_8bit_constraint_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="sub_layer_max_422chroma_constraint_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="sub_layer_max_420chroma_constraint_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="sub_layer_max_monochrome_constraint_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="sub_layer_intra_constraint_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="sub_layer_one_picture_only_constraint_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="sub_layer_lower_bit_rate_constraint_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="sub_layer_max_14bit_constraint_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="sub_layer_reserved_zero_33bits" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="sub_layer_reserved_zero_34bits" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="sub_layer_reserved_zero_35bits" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="sub_layer_reserved_zero_43bits" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
-
-      <!-- Sub-layer inbld flag -->
-      <xs:element name="sub_layer_inbld_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="sub_layer_reserved_zero_bit" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
-
-      <!-- Sub-layer level information -->
-      <xs:element name="sub_layer_level_idc" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
       </xs:sequence>
 
       <!-- Level-only profile tier level structure (when profile_present_flag=False) -->
@@ -386,44 +393,35 @@
       <xs:element name="vps_sub_layer_ordering_info_present_flag" type="xs:boolean"/>
 
       <!-- Sub-layer ordering information (common for both) -->
-      <xs:element name="vps_max_dec_pic_buffering_minus1" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="vps_max_num_reorder_pics" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
-      <xs:element name="vps_max_latency_increase_plus1" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="vps_max_dec_pic_buffering_minus1" type="IndexedIntegerType" minOccurs="1" maxOccurs="1"/>
+        <xs:element name="vps_max_num_reorder_pics" type="IndexedIntegerType" minOccurs="1" maxOccurs="1"/>
+        <xs:element name="vps_max_latency_increase_plus1" type="IndexedIntegerType" minOccurs="1" maxOccurs="1"/>
+      </xs:sequence>
+      <xs:element name="vps_max_layer_id" type="xs:integer"/>
+      <xs:element name="vps_num_layer_sets_minus1" type="xs:integer"/>
+
+      <!-- Layer dependency flags -->
+      <xs:element name="layer_dependency_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
+
+      <!-- Layer ID included flags -->
+      <xs:element name="layer_id_included_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
+      
+      <!-- VPS timing information and HRD parameters -->
+      <xs:group ref="VpsTimingInfoGroup"/>
+
+      <xs:element name="vps_extension_flag" type="xs:boolean"/>
 
       <!-- Choice between single-layer HEVC and MV-HEVC specific structures -->
       <xs:choice>
         <!-- Single-layer HEVC VPS structure (vps_max_layers_minus1 = 0) -->
         <xs:sequence>
-          <!-- VPS timing information and HRD parameters -->
-          <xs:group ref="VpsTimingInfoGroup"/>
-
           <!-- VPS extension -->
-          <xs:element name="vps_extension_flag" type="xs:boolean"/>
           <xs:element name="vps_extension_data_byte" type="xs:integer" minOccurs="0" maxOccurs="unbounded"/>
         </xs:sequence>
 
         <!-- MV-HEVC VPS structure (vps_max_layers_minus1 > 0) -->
         <xs:sequence>
-          <xs:element name="vps_max_layer_id" type="xs:integer"/>
-          <xs:element name="vps_num_layer_sets_minus1" type="xs:integer"/>
-
-          <!-- Layer dependency flags -->
-          <xs:element name="layer_dependency_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
-
-          <!-- Layer ID included flags -->
-          <xs:element name="layer_id_included_flag" type="IndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
-
-          <!-- MV-HEVC specific elements -->
-          <xs:element name="view_id_len" type="xs:integer" minOccurs="0"/>
-          <xs:element name="view_id_val" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
-          <xs:element name="direct_dependency_flag" type="IndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
-
-          <!-- VPS timing information and HRD parameters -->
-          <xs:group ref="VpsTimingInfoGroup"/>
-
-          <!-- VPS extension -->
-          <xs:element name="vps_extension_flag" type="xs:boolean"/>
-
           <!-- Additional profile tier levels immediately after VPS extension -->
           <xs:element name="profile_tier_level" type="ProfileTierLevelType" minOccurs="0" maxOccurs="unbounded"/>
 

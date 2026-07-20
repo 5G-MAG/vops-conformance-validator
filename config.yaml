@@ -2,12 +2,25 @@
 # Each operation point defines a set of XSD schemas to validate against
 
 operation_points:
+  3GPP-HEVC-HD:
+    description: "3GPP HEVC HD Operation Point (Main 10 Profile, Main Tier, Level 4.1 with progressive and VUI constraints)"
+    xsds:
+      - bitstream_rules/3gpp-hevc-main10-main-41.xsd
+
   3GPP-HEVC-UHD:
     description: "3GPP HEVC UHD Operation Point (Main 10 Profile, Main Tier, Level 5.1 with progressive and VUI constraints)"
     xsds:
       - bitstream_rules/3gpp-hevc_vui_constraints.xsd
       - bitstream_rules/3gpp-hevc_progressive_constraints.xsd
-      - bitstream_rules/3ggp-hevc-uhd-op.xsd
+      - bitstream_rules/3gpp-hevc-uhd-op.xsd
+
+  3GPP-HEVC-UHD-HDR:
+    description: "3GPP HEVC UHD HDR Operation Point (Main 10 Profile, Main Tier, Level 5.1 with HDR representation)"
+    xsds:
+      - bitstream_rules/3gpp-hevc_vui_constraints.xsd
+      - bitstream_rules/3gpp-hevc_progressive_constraints.xsd
+      - bitstream_rules/3gpp-hevc-uhd-op.xsd
+      - bitstream_rules/3gpp-hevc-hdr-colour.xsd
 
   3GPP-MV-HEVC-Main-Stereo:
     description: "3GPP MV-HEVC Main Stereo Operation Point"
@@ -16,13 +29,13 @@ operation_points:
       - bitstream_rules/3gpp-hevc_progressive_constraints.xsd
       - [bitstream_rules/3gpp-hevc-uhd-dec-single-layer.xsd, bitstream_rules/3gpp-hevc-uhd-dec-multi-layer.xsd]
       - bitstream_rules/3gpp-mv-hevc_stereo.xsd
-      - bitstream_rules/3ggp-mv-hevc-main-dual-layers-uhd420-dec.xsd
-  
+      - bitstream_rules/3gpp-mv-hevc-main-dual-layers-uhd420-dec.xsd
+
   3GPP-MV-HEVC-Ext-Stereo:
-    description: "3GPP MV-HEVC Main Stereo Operation Point"
+    description: "3GPP MV-HEVC Ext Stereo Operation Point"
     xsds:
       - bitstream_rules/3gpp-hevc_vui_constraints.xsd
       - bitstream_rules/3gpp-hevc_progressive_constraints.xsd
       - [bitstream_rules/3gpp-hevc-uhd-dec-single-layer.xsd, bitstream_rules/3gpp-hevc-uhd-dec-multi-layer.xsd]
       - bitstream_rules/3gpp-mv-hevc_stereo.xsd
-      - bitstream_rules/3ggp-mv-hevc-ext-dual-layers-uhd420-dec.xsd
+      - bitstream_rules/3gpp-mv-hevc-ext-dual-layers-uhd420-dec.xsd

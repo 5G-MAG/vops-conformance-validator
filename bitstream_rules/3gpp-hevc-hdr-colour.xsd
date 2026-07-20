@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
+  elementFormDefault="qualified"
+  attributeFormDefault="unqualified"
+  vc:minVersion="1.1">
+
+  <xs:include schemaLocation="hevc_common.xsd"/>
+
+  <xs:element name="HEVCBitstream">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="NALUnit" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="uri" type="xs:anyURI"/>
+
+      <!-- HDR Colour Space (BT.2020) per clause 4.4.3.3 -->
+      <!-- colour_primaries = 9 (BT.2020) -->
+      <xs:assert test="exists(NALUnit[nuh_layer_id=0]/SequenceParameterSet/colour_primaries)"/>
+      <xs:assert test="NALUnit[nuh_layer_id=0]/SequenceParameterSet/colour_primaries = 9"/>
+
+      <!-- transfer_characteristics = 14 (SDR WCG), 16 (PQ), or 18 (HLG) -->
+      <xs:assert test="exists(NALUnit[nuh_layer_id=0]/SequenceParameterSet/transfer_characteristics)"/>
+      <xs:assert test="NALUnit[nuh_layer_id=0]/SequenceParameterSet/transfer_characteristics = 14 or
+                       NALUnit[nuh_layer_id=0]/SequenceParameterSet/transfer_characteristics = 16 or
+                       NALUnit[nuh_layer_id=0]/SequenceParameterSet/transfer_characteristics = 18"/>
+
+      <!-- matrix_coeffs = 9 (BT.2020 NCL) -->
+      <xs:assert test="exists(NALUnit[nuh_layer_id=0]/SequenceParameterSet/matrix_coeffs)"/>
+      <xs:assert test="NALUnit[nuh_layer_id=0]/SequenceParameterSet/matrix_coeffs = 9"/>
+
+      <!-- chroma_sample_loc_type_top_field = 2 (co-sited with luma) -->
+      <xs:assert test="exists(NALUnit[nuh_layer_id=0]/SequenceParameterSet/chroma_sample_loc_type_top_field)"/>
+      <xs:assert test="NALUnit[nuh_layer_id=0]/SequenceParameterSet/chroma_sample_loc_type_top_field = 2"/>
+
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

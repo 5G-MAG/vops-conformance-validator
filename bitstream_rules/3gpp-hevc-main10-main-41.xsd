@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
+  elementFormDefault="qualified"
+  attributeFormDefault="unqualified"
+  vc:minVersion="1.1">
+
+  <xs:include schemaLocation="hevc_common.xsd"/>
+
+  <xs:element name="HEVCBitstream">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="NALUnit" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="uri" type="xs:anyURI"/>
+
+      <!-- HEVC/ITU-T H.265 Main 10 Profile, Main Tier, Level 5.1 constraints -->
+
+      <!-- Main 10 Profile conformance -->
+      <xs:assert test="exists(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_profile_idc)"/>
+      <xs:assert test="NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_profile_idc = 2 or
+                       (exists(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_profile_compatibility_flag[@i=2]) and
+                        string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_profile_compatibility_flag[@i=2]) = '1')"/>
+
+      <!-- Main Tier, Level 4.1 -->
+      <xs:assert test="string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_tier_flag) = '0'"/>
+      <xs:assert test="NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_level_idc = 123"/>
+
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>
