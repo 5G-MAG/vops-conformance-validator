@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
+  elementFormDefault="qualified"
+  attributeFormDefault="unqualified"
+  vc:minVersion="1.1">
+
+  <xs:include schemaLocation="hevc_common.xsd"/>
+
+  <xs:element name="HEVCBitstream">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="NALUnit" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="uri" type="xs:anyURI"/>
+
+      <!-- Colour space: BT.709 OR BT.2020 (clause 4.4.3.4) -->
+      <!-- Either SDR HD (BT.709) or HDR (BT.2020) colour space is permitted -->
+      <xs:assert test="
+        (
+          exists(NALUnit/SequenceParameterSet/colour_primaries) and
+          NALUnit/SequenceParameterSet/colour_primaries = 1 and
+          exists(NALUnit/SequenceParameterSet/transfer_characteristics) and
+          NALUnit/SequenceParameterSet/transfer_characteristics = 1 and
+          exists(NALUnit/SequenceParameterSet/matrix_coeffs) and
+          NALUnit/SequenceParameterSet/matrix_coeffs = 1 and
+          exists(NALUnit/SequenceParameterSet/chroma_sample_loc_type_top_field) and
+          NALUnit/SequenceParameterSet/chroma_sample_loc_type_top_field = 0
+        )
+        or
+        (
+          exists(NALUnit/SequenceParameterSet/colour_primaries) and
+          NALUnit/SequenceParameterSet/colour_primaries = 9 and
+          exists(NALUnit/SequenceParameterSet/transfer_characteristics) and
+          (
+            NALUnit/SequenceParameterSet/transfer_characteristics = 14 or
+            NALUnit/SequenceParameterSet/transfer_characteristics = 16 or
+            NALUnit/SequenceParameterSet/transfer_characteristics = 18
+          ) and
+          exists(NALUnit/SequenceParameterSet/matrix_coeffs) and
+          NALUnit/SequenceParameterSet/matrix_coeffs = 9 and
+          exists(NALUnit/SequenceParameterSet/chroma_sample_loc_type_top_field) and
+          NALUnit/SequenceParameterSet/chroma_sample_loc_type_top_field = 2
+        )
+      "/>
+
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

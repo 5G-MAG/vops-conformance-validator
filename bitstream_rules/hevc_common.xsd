@@ -731,8 +731,36 @@
   <xs:complexType name="SEIPayloadType">
     <xs:choice>
       <xs:element name="three_dimensional_reference_displays_info" type="ThreeDimensionalReferenceDisplaysInfoType" minOccurs="0"/>
+      <xs:element name="frame_packing_arrangement" type="FramePackingArrangementType" minOccurs="0"/>
       <xs:element name="type" type="xs:string" minOccurs="0"/>
     </xs:choice>
+  </xs:complexType>
+
+  <xs:complexType name="FramePackingArrangementType">
+    <xs:sequence>
+      <xs:element name="frame_packing_arrangement_id" type="xs:integer"/>
+      <xs:element name="frame_packing_arrangement_cancel_flag" type="xs:boolean"/>
+      <xs:sequence minOccurs="0">
+        <xs:element name="frame_packing_arrangement_type" type="xs:integer"/>
+        <xs:element name="quincunx_sampling_flag" type="xs:boolean"/>
+        <xs:element name="content_interpretation_type" type="xs:integer"/>
+        <xs:element name="spatial_flipping_flag" type="xs:boolean"/>
+        <xs:element name="frame0_flipped_flag" type="xs:boolean"/>
+        <xs:element name="field_views_flag" type="xs:boolean"/>
+        <xs:element name="current_frame_is_frame0_flag" type="xs:boolean"/>
+        <xs:element name="frame0_self_contained_flag" type="xs:boolean"/>
+        <xs:element name="frame1_self_contained_flag" type="xs:boolean"/>
+        <xs:sequence minOccurs="0">
+          <xs:element name="frame0_grid_position_x" type="xs:integer"/>
+          <xs:element name="frame0_grid_position_y" type="xs:integer"/>
+          <xs:element name="frame1_grid_position_x" type="xs:integer"/>
+          <xs:element name="frame1_grid_position_y" type="xs:integer"/>
+        </xs:sequence>
+        <xs:element name="frame_packing_arrangement_reserved_byte" type="xs:integer"/>
+        <xs:element name="frame_packing_arrangement_persistence_flag" type="xs:boolean"/>
+      </xs:sequence>
+      <xs:element name="upsampled_aspect_ratio_flag" type="xs:boolean"/>
+    </xs:sequence>
   </xs:complexType>
 
   <xs:complexType name="ThreeDimensionalReferenceDisplaysInfoType">

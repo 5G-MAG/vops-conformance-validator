@@ -256,7 +256,15 @@ class HEVCParser(BaseParser):
                         if payload:
                             payload_elem = SubElement(message_elem, "payload")
 
-                            if sei_message.get("payload_type") == 176:
+                            if sei_message.get("payload_type") == 45:
+                                fp_elem = SubElement(payload_elem, "frame_packing_arrangement")
+
+                                # Process parameters using common function (payload is already flattened by SEI parser)
+                                internal_vars = process_parameters(fp_elem, payload, include_internal_vars)
+
+                                # Add InternalVariables element if we have internal variables
+                                create_internal_variables_element(fp_elem, internal_vars)
+                            elif sei_message.get("payload_type") == 176:
                                 three_d_elem = SubElement(payload_elem, "three_dimensional_reference_displays_info")
 
                                 # Process parameters using common function (payload is already flattened by SEI parser)

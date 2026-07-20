@@ -6,6 +6,7 @@ from bitstring import Error
 from sa4_bitstream_validator.bit_reader import BitReader
 from sa4_bitstream_validator.tools import remove_emulation_prevention
 from sa4_bitstream_validator.parsers.hevc.sei.three_dimensional_reference_displays import parse_three_dimensional_reference_displays_info
+from sa4_bitstream_validator.parsers.hevc.sei.frame_packing_arrangement import parse_frame_packing_arrangement
 
 
 def parse_sei_rbsp(payload_data):
@@ -99,7 +100,9 @@ def parse_sei_payload(payload_type, payload_size, reader):
 
     try:
         # Handle different payload types
-        if payload_type == 176:  # three_dimensional_reference_displays_info
+        if payload_type == 45:  # frame_packing_arrangement
+            return parse_frame_packing_arrangement(payload_size, reader)
+        elif payload_type == 176:  # three_dimensional_reference_displays_info
             return parse_three_dimensional_reference_displays_info(payload_size, reader)
         else:
             # For unsupported payload types, skip the payload bytes

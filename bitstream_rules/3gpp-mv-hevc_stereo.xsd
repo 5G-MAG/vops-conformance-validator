@@ -39,34 +39,6 @@
       <xs:assert test="exists(NALUnit/SequenceParameterSet/aspect_ratio_idc)"/>
       <xs:assert test="NALUnit/SequenceParameterSet/aspect_ratio_idc = 1"/>
 
-      <xs:assert test="
-        (
-          exists(NALUnit/SequenceParameterSet/colour_primaries) and
-          NALUnit/SequenceParameterSet/colour_primaries = 1 and
-          exists(NALUnit/SequenceParameterSet/transfer_characteristics) and
-          NALUnit/SequenceParameterSet/transfer_characteristics = 1 and
-          exists(NALUnit/SequenceParameterSet/matrix_coeffs) and
-          NALUnit/SequenceParameterSet/matrix_coeffs = 1 and
-          exists(NALUnit/SequenceParameterSet/chroma_sample_loc_type_top_field) and
-          NALUnit/SequenceParameterSet/chroma_sample_loc_type_top_field = 0
-        )
-        or
-        (
-          exists(NALUnit/SequenceParameterSet/colour_primaries) and
-          NALUnit/SequenceParameterSet/colour_primaries = 9 and
-          exists(NALUnit/SequenceParameterSet/transfer_characteristics) and
-          (
-            NALUnit/SequenceParameterSet/transfer_characteristics = 14 or
-            NALUnit/SequenceParameterSet/transfer_characteristics = 16 or
-            NALUnit/SequenceParameterSet/transfer_characteristics = 18
-          ) and
-          exists(NALUnit/SequenceParameterSet/matrix_coeffs) and
-          NALUnit/SequenceParameterSet/matrix_coeffs = 9 and
-          exists(NALUnit/SequenceParameterSet/chroma_sample_loc_type_top_field) and
-          NALUnit/SequenceParameterSet/chroma_sample_loc_type_top_field = 2
-        )
-      "/>
-
       <xs:assert test="exists(NALUnit/SEI/SEIMessage/payload/three_dimensional_reference_displays_info)"/>
 
       <xs:assert test="NALUnit/SEI/SEIMessage/payload/three_dimensional_reference_displays_info/num_ref_displays_minus1 = 0"/>

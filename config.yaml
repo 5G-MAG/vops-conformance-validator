@@ -22,6 +22,13 @@ operation_points:
       - bitstream_rules/3gpp-hevc-uhd-op.xsd
       - bitstream_rules/3gpp-hevc-hdr-colour.xsd
 
+  3GPP-HEVC-Stereo:
+    description: "3GPP HEVC Stereo Operation Point (Main 10 Profile, Main Tier, Level 5.2 with frame-packing)"
+    xsds:
+      - bitstream_rules/3gpp-hevc_vui_constraints.xsd
+      - bitstream_rules/3gpp-hevc-stereo.xsd
+      - bitstream_rules/3gpp-hevc-stereo-colour.xsd
+
   3GPP-MV-HEVC-Main-Stereo:
     description: "3GPP MV-HEVC Main Stereo Operation Point"
     xsds:
@@ -29,6 +36,7 @@ operation_points:
       - bitstream_rules/3gpp-hevc_progressive_constraints.xsd
       - [bitstream_rules/3gpp-hevc-uhd-dec-single-layer.xsd, bitstream_rules/3gpp-hevc-uhd-dec-multi-layer.xsd]
       - bitstream_rules/3gpp-mv-hevc_stereo.xsd
+      - bitstream_rules/3gpp-hevc-stereo-colour.xsd
       - bitstream_rules/3gpp-mv-hevc-main-dual-layers-uhd420-dec.xsd
 
   3GPP-MV-HEVC-Ext-Stereo:
@@ -38,4 +46,5 @@ operation_points:
       - bitstream_rules/3gpp-hevc_progressive_constraints.xsd
       - [bitstream_rules/3gpp-hevc-uhd-dec-single-layer.xsd, bitstream_rules/3gpp-hevc-uhd-dec-multi-layer.xsd]
       - bitstream_rules/3gpp-mv-hevc_stereo.xsd
+      - bitstream_rules/3gpp-hevc-stereo-colour.xsd
       - bitstream_rules/3gpp-mv-hevc-ext-dual-layers-uhd420-dec.xsd

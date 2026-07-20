@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
+  elementFormDefault="qualified"
+  attributeFormDefault="unqualified"
+  vc:minVersion="1.1">
+
+  <xs:include schemaLocation="hevc_common.xsd"/>
+
+  <xs:element name="HEVCBitstream">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="NALUnit" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="uri" type="xs:anyURI"/>
+
+      <!-- HEVC/ITU-T H.265 Main 10 Profile, Main Tier, Level 5.2 constraints -->
+
+      <!-- Main 10 Profile conformance -->
+      <xs:assert test="exists(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_profile_idc)"/>
+      <xs:assert test="NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_profile_idc = 2 or
+                       (exists(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_profile_compatibility_flag[@i=2]) and
+                        string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_profile_compatibility_flag[@i=2]) = '1')"/>
+
+      <!-- Main Tier, Level 5.2 (general_level_idc = 156) -->
+      <xs:assert test="string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_tier_flag) = '0'"/>
+      <xs:assert test="NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_level_idc = 156"/>
+
+      <!-- Chroma format 4:2:0 -->
+      <xs:assert test="exists(NALUnit[nuh_layer_id=0]/SequenceParameterSet/chroma_format_idc)"/>
+      <xs:assert test="NALUnit[nuh_layer_id=0]/SequenceParameterSet/chroma_format_idc = 1"/>
+
+      <!-- Frame-packing constraints (clause 4.5.3) -->
+      <xs:assert test="exists(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_progressive_source_flag)"/>
+      <xs:assert test="string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_progressive_source_flag) = '1'"/>
+
+      <xs:assert test="exists(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_interlaced_source_flag)"/>
+      <xs:assert test="string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_interlaced_source_flag) = '0'"/>
+
+      <xs:assert test="exists(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_non_packed_constraint_flag)"/>
+      <xs:assert test="string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_non_packed_constraint_flag) = '0'"/>
+
+      <xs:assert test="exists(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_frame_only_constraint_flag)"/>
+      <xs:assert test="string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/general_frame_only_constraint_flag) = '1'"/>
+
+      <!-- Frame packing SEI present -->
+      <xs:assert test="exists(NALUnit/SEI/SEIMessage/payload_type[text()='45'])"/>
+      <xs:assert test="exists(NALUnit/SEI/SEIMessage[payload_type=45]/payload/frame_packing_arrangement)"/>
+
+      <!-- Frame packing arrangement constraints (clause 4.5.3) -->
+      <!-- frame_packing_arrangement_type = 3 (side-by-side) or 4 (top-bottom) -->
+      <xs:assert test="
+        exists(NALUnit/SEI/SEIMessage[payload_type=45]/payload/frame_packing_arrangement/frame_packing_arrangement_type) and
+        (NALUnit/SEI/SEIMessage[payload_type=45]/payload/frame_packing_arrangement/frame_packing_arrangement_type = 3 or
+         NALUnit/SEI/SEIMessage[payload_type=45]/payload/frame_packing_arrangement/frame_packing_arrangement_type = 4)
+      "/>
+
+      <!-- quincunx_sampling_flag = 0 -->
+      <xs:assert test="
+        exists(NALUnit/SEI/SEIMessage[payload_type=45]/payload/frame_packing_arrangement/quincunx_sampling_flag) and
+        string(NALUnit/SEI/SEIMessage[payload_type=45]/payload/frame_packing_arrangement/quincunx_sampling_flag) = '0'
+      "/>
+
+      <!-- content_interpretation_type = 1 (left first) or 2 (right first) -->
+      <xs:assert test="
+        exists(NALUnit/SEI/SEIMessage[payload_type=45]/payload/frame_packing_arrangement/content_interpretation_type) and
+        (NALUnit/SEI/SEIMessage[payload_type=45]/payload/frame_packing_arrangement/content_interpretation_type = 1 or
+         NALUnit/SEI/SEIMessage[payload_type=45]/payload/frame_packing_arrangement/content_interpretation_type = 2)
+      "/>
+
+      <!-- spatial_flipping_flag = 0 -->
+      <xs:assert test="
+        exists(NALUnit/SEI/SEIMessage[payload_type=45]/payload/frame_packing_arrangement/spatial_flipping_flag) and
+        string(NALUnit/SEI/SEIMessage[payload_type=45]/payload/frame_packing_arrangement/spatial_flipping_flag) = '0'
+      "/>
+
+      <!-- frame0_flipped_flag = 0 -->
+      <xs:assert test="
+        exists(NALUnit/SEI/SEIMessage[payload_type=45]/payload/frame_packing_arrangement/frame0_flipped_flag) and
+        string(NALUnit/SEI/SEIMessage[payload_type=45]/payload/frame_packing_arrangement/frame0_flipped_flag) = '0'
+      "/>
+
+      <!-- field_views_flag = 0 -->
+      <xs:assert test="
+        exists(NALUnit/SEI/SEIMessage[payload_type=45]/payload/frame_packing_arrangement/field_views_flag) and
+        string(NALUnit/SEI/SEIMessage[payload_type=45]/payload/frame_packing_arrangement/field_views_flag) = '0'
+      "/>
+
+      <!-- current_frame_is_frame0_flag = 0 -->
+      <xs:assert test="
+        exists(NALUnit/SEI/SEIMessage[payload_type=45]/payload/frame_packing_arrangement/current_frame_is_frame0_flag) and
+        string(NALUnit/SEI/SEIMessage[payload_type=45]/payload/frame_packing_arrangement/current_frame_is_frame0_flag) = '0'
+      "/>
+
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>
