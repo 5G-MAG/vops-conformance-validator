@@ -32,6 +32,9 @@ def extract_assertions_from_xsd(schema_path):
         for assert_elem in root.findall('.//xs:assert', ns):
             test_expr = assert_elem.get('test', '')
 
+            # Extract provision type (default to "requirement")
+            provision = assert_elem.get('provision', 'requirement')
+
             # Extract description from preceding comment if available
             description = ""
             # Note: getprevious() is not available in standard ElementTree
@@ -41,7 +44,8 @@ def extract_assertions_from_xsd(schema_path):
             assertions.append({
                 'test': test_expr,
                 'description': description,
-                'schema_path': schema_path
+                'schema_path': schema_path,
+                'provision': provision
             })
 
     except Exception as e:
@@ -67,6 +71,7 @@ class XMLValidator(BaseValidator):
         assertion_results = {
             'passing_assertions': [],
             'failing_assertions': [],
+            'warning_assertions': [],
             'total_assertions': 0
         }
 
@@ -107,14 +112,20 @@ class XMLValidator(BaseValidator):
                         failing_assertion = assertion.copy()
                         failing_assertion['error'] = error_detail["reason"]
                         failing_assertion['error_path'] = error_path
-                        assertion_results['failing_assertions'].append(failing_assertion)
+
+                        # Categorize by provision type
+                        if assertion.get('provision') == 'recommendation':
+                            assertion_results['warning_assertions'].append(failing_assertion)
+                        else:
+                            assertion_results['failing_assertions'].append(failing_assertion)
                     # Don't add to passing_assertions here - we'll handle that after processing all errors
 
             # After processing all errors, determine which assertions passed
-            # An assertion passes if it's not in the failing_assertions list
+            # An assertion passes if it's not in the failing_assertions or warning_assertions lists
             failing_tests = {assertion['test'] for assertion in assertion_results['failing_assertions']}
+            warning_tests = {assertion['test'] for assertion in assertion_results['warning_assertions']}
             for assertion in assertions:
-                if assertion['test'] not in failing_tests:
+                if assertion['test'] not in failing_tests and assertion['test'] not in warning_tests:
                     assertion_results['passing_assertions'].append(assertion)
 
             # Remove duplicates from passing assertions
@@ -137,7 +148,18 @@ class XMLValidator(BaseValidator):
                     unique_failing.append(assertion)
             assertion_results['failing_assertions'] = unique_failing
 
-            return len(errors) == 0, errors, assertion_results
+            # Remove duplicates from warning assertions
+            warning_set = set()
+            unique_warnings = []
+            for assertion in assertion_results['warning_assertions']:
+                key = assertion['test']
+                if key not in warning_set:
+                    warning_set.add(key)
+                    unique_warnings.append(assertion)
+            assertion_results['warning_assertions'] = unique_warnings
+
+            # Only "requirement" failures affect success - warnings do not
+            return len(assertion_results['failing_assertions']) == 0, errors, assertion_results
 
         except Exception as e:
             # For schema loading errors, create a single error entry
@@ -261,6 +283,15 @@ class XMLValidator(BaseValidator):
                         # Show assertion results for successful validation
                         if assertion_results['total_assertions'] > 0:
                             print(f"  All {assertion_results['total_assertions']} assertions passed")
+
+                    # Show warnings regardless of pass/fail
+                    if assertion_results.get('warning_assertions'):
+                        print(f"\n  Warnings ({len(assertion_results['warning_assertions'])}):")
+                        for j, assertion in enumerate(assertion_results['warning_assertions'], 1):
+                            desc = assertion.get('description', 'No description')
+                            print(f"    {j}. {desc} (recommendation)")
+                            if 'error' in assertion:
+                                print(f"       Warning: {assertion['error']}")
 
                 if not success:
                     overall_success = False

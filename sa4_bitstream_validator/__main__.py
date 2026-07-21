@@ -90,7 +90,8 @@ def generate_validation_report(results, tested_bitstream, report_path, operation
                     "assertion_results": schema_detail.get("assertion_results", {
                         "total_assertions": 0,
                         "passing_assertions": [],
-                        "failing_assertions": []
+                        "failing_assertions": [],
+                        "warning_assertions": []
                     })
                 })
 
@@ -117,7 +118,8 @@ def generate_validation_report(results, tested_bitstream, report_path, operation
                 "assertion_results": schema_result.get("assertion_results", {
                     "total_assertions": 0,
                     "passing_assertions": [],
-                    "failing_assertions": []
+                    "failing_assertions": [],
+                    "warning_assertions": []
                 })
             }
             report["validation_results"]["schema_details"].append(schema_detail)

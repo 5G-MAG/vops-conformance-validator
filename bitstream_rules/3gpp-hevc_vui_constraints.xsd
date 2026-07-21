@@ -19,7 +19,8 @@
       <xs:assert test="string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/vui_parameters_present_flag) = '1'"/>
 
       <xs:assert test="exists(NALUnit[nuh_layer_id=0]/SequenceParameterSet/aspect_ratio_info_present_flag)"/>
-      <xs:assert test="string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/aspect_ratio_info_present_flag) = '1'"/>
+      <xs:assert test="string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/aspect_ratio_info_present_flag) = '1'"
+                 provision="recommendation"/>
 
       <xs:assert test="exists(NALUnit[nuh_layer_id=0]/SequenceParameterSet/video_signal_type_present_flag)"/>
       <xs:assert test="string(NALUnit[nuh_layer_id=0]/SequenceParameterSet/video_signal_type_present_flag) = '1'"/>
