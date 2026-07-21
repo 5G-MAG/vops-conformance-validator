@@ -93,6 +93,33 @@
         string(NALUnit/SEI/SEIMessage[payload_type=45]/payload/frame_packing_arrangement/current_frame_is_frame0_flag) = '0'
       "/>
 
+      <!-- Grid position constraints (clause 4.5.3) -->
+      <xs:assert test="
+        exists(NALUnit/SEI/SEIMessage[payload_type=45]/payload/frame_packing_arrangement/frame0_grid_position_x) and
+        NALUnit/SEI/SEIMessage[payload_type=45]/payload/frame_packing_arrangement/frame0_grid_position_x = 0
+      "/>
+
+      <xs:assert test="
+        exists(NALUnit/SEI/SEIMessage[payload_type=45]/payload/frame_packing_arrangement/frame0_grid_position_y) and
+        NALUnit/SEI/SEIMessage[payload_type=45]/payload/frame_packing_arrangement/frame0_grid_position_y = 0
+      "/>
+
+      <xs:assert test="
+        exists(NALUnit/SEI/SEIMessage[payload_type=45]/payload/frame_packing_arrangement/frame1_grid_position_x) and
+        NALUnit/SEI/SEIMessage[payload_type=45]/payload/frame_packing_arrangement/frame1_grid_position_x = 0
+      "/>
+
+      <xs:assert test="
+        exists(NALUnit/SEI/SEIMessage[payload_type=45]/payload/frame_packing_arrangement/frame1_grid_position_y) and
+        NALUnit/SEI/SEIMessage[payload_type=45]/payload/frame_packing_arrangement/frame1_grid_position_y = 0
+      "/>
+
+      <!-- upsampled_aspect_ratio_flag = 0 (clause 4.5.3) -->
+      <xs:assert test="
+        exists(NALUnit/SEI/SEIMessage[payload_type=45]/payload/frame_packing_arrangement/upsampled_aspect_ratio_flag) and
+        string(NALUnit/SEI/SEIMessage[payload_type=45]/payload/frame_packing_arrangement/upsampled_aspect_ratio_flag) = '0'
+      "/>
+
     </xs:complexType>
   </xs:element>
 
