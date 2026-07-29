@@ -4,7 +4,7 @@
 SA4 Bitstream Validator
 
 ## Description
-The SA4 bitstream validator verifies that an input video bitstream conforms to a given operation point defined in the VOPS specification. The tool supports HEVC bitstream validation with comprehensive assertion reporting.
+The SA4 bitstream validator verifies that an input video bitstream conforms to a given operation point defined in the VOPS specification. The tool supports HEVC and AVC bitstream validation with comprehensive assertion reporting.
 
 ## Installation
 
@@ -21,6 +21,9 @@ $ python -m sa4_bitstream_validator dump bitstream_path description.xml
 # Dump bitstream with internal variables included
 $ python -m sa4_bitstream_validator dump bitstream_path description.xml --include-internal-vars
 
+# Dump AVC bitstream to XML format
+$ python -m sa4_bitstream_validator dump bitstream_path description.xml --codec avc
+
 # Check XML description against XSD schemas (console output only)
 $ python -m sa4_bitstream_validator check description.xml bitstream_rules/3gpp-mv-hevc_stereo.xsd
 
@@ -32,6 +35,9 @@ $ python -m sa4_bitstream_validator validate bitstream_path 3GPP-MV-HEVC-Main-St
 
 # Validate with internal variables included
 $ python -m sa4_bitstream_validator validate bitstream_path 3GPP-MV-HEVC-Main-Stereo --include-internal-vars
+
+# Validate AVC bitstream against operation point (codec auto-detected)
+$ python -m sa4_bitstream_validator validate bitstream_path 3GPP-AVC-HD --report report.json
 ```
 
 ## Features
@@ -87,6 +93,8 @@ Options:
   --include-internal-vars  Include internal variables in XML dump
   --help                   Show this message and exit.
 
+> **Note**: The validate command auto-detects the codec based on the operation point name. Operation points starting with "3GPP-AVC" use the AVC parser, all others use the HEVC parser.
+
 $ python -m sa4_bitstream_validator dump --help
 Usage: python -m sa4_bitstream_validator dump [OPTIONS] BITSTREAM DESCRIPTION
 
@@ -94,6 +102,7 @@ Usage: python -m sa4_bitstream_validator dump [OPTIONS] BITSTREAM DESCRIPTION
 
 Options:
   --include-internal-vars  Include internal variables in XML dump
+  --codec [hevc|avc]       Codec type (default: hevc)
   --help                   Show this message and exit.
 ```
 
