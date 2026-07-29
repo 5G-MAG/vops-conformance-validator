@@ -48,14 +48,14 @@ $ python -m sa4_bitstream_validator validate bitstream_path 3GPP-MV-HEVC-Main-St
 
 | Operation Point | Codec | Status | Tested |
 |-----------------|-------|--------|--------|
-| `3GPP-AVC-HD` | AVC | Implemented | Needs testing with Progressive High profile bitstream |
-| `3GPP-HEVC-HD` | HEVC | Implemented | ✅ |
-| `3GPP-HEVC-HDR` | HEVC | Implemented | ✅ |
-| `3GPP-HEVC-UHD` | HEVC | Implemented | ✅ |
-| `3GPP-HEVC-UHD-HDR` | HEVC | Implemented | ✅ |
-| `3GPP-HEVC-Stereo` | HEVC | Implemented | ✅ |
-| `3GPP-MV-HEVC-Main-Stereo` | MV-HEVC | Implemented | ✅ |
-| `3GPP-MV-HEVC-Ext-Stereo` | MV-HEVC | Implemented | ✅ |
+| `3GPP-AVC-HD` | AVC | Implemented | Needs testing|
+| `3GPP-HEVC-HD` | HEVC | Implemented | Needs testing |
+| `3GPP-HEVC-HDR` | HEVC | Implemented | Needs testing |
+| `3GPP-HEVC-UHD` | HEVC | Implemented | Needs testing |
+| `3GPP-HEVC-UHD-HDR` | HEVC | Implemented | Needs testing |
+| `3GPP-HEVC-Stereo` | HEVC | Implemented | Needs testing |
+| `3GPP-MV-HEVC-Main-Stereo` | MV-HEVC | Implemented | Needs testing |
+| `3GPP-MV-HEVC-Ext-Stereo` | MV-HEVC | Implemented | Needs testing |
 
 > **Note**: All operation points need to be tested with their respective conformance bitstreams. "Implemented" means the XSD schemas and parser support exist, but validation against actual bitstreams may reveal issues.
 
@@ -133,10 +133,10 @@ In development as part of the VOPS Work Item.
 ### Validation Pipeline
 
 ```
-┌─────────────┐     ┌─────────────┐     ┌─────────────┐     ┌─────────────┐
-│  Bitstream  │────▶│   Parser    │────▶│    XML      │────▶│  Validator  │
-│  (.264/.hevc)│     │ (AVC/HEVC)  │     │  Document   │     │ (XSD 1.1)   │
-└─────────────┘     └─────────────┘     └─────────────┘     └─────────────┘
+┌──────────────┐     ┌──────────────┐     ┌─────────────┐      ┌─────────────┐
+│  Bitstream   │────▶│   Parser    │────▶│    XML      │────▶│  Validator  │
+│  (.264/.hevc)│     │ (AVC/HEVC)   │     │  Document   │      │ (XSD 1.1)   │
+└──────────────┘     └──────────────┘     └─────────────┘      └─────────────┘
                                                     │
                                                     ▼
                                             ┌─────────────┐
