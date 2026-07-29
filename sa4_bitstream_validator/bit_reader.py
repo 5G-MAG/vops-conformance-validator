@@ -25,6 +25,10 @@ class BitReader:
         """Read unsigned exponential-Golomb code"""
         return self.bitstream.read("ue")
 
+    def read_se(self):
+        """Read signed exponential-Golomb code"""
+        return self.bitstream.read("se")
+
     def read_flags(self, nb):
         """Read a an array of n flags"""
         return self.bitstream.readlist(["uint:1"] * nb)

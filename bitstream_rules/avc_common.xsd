@@ -1,0 +1,234 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
+  elementFormDefault="qualified"
+  attributeFormDefault="unqualified"
+  vc:minVersion="1.1">
+
+  <!-- AVC Common Type Definitions -->
+
+  <!-- Indexed types for AVC parameters -->
+  <xs:complexType name="AVCBaseIndexedType">
+    <xs:simpleContent>
+      <xs:extension base="xs:anySimpleType">
+        <xs:attribute name="i" type="xs:nonNegativeInteger" use="optional"/>
+        <xs:attribute name="j" type="xs:nonNegativeInteger" use="optional"/>
+        <xs:attribute name="inferred" type="xs:boolean" use="optional"/>
+      </xs:extension>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="AVCIndexedIntegerType">
+    <xs:simpleContent>
+      <xs:restriction base="AVCBaseIndexedType">
+        <xs:simpleType>
+          <xs:restriction base="xs:integer"/>
+        </xs:simpleType>
+      </xs:restriction>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <xs:complexType name="AVCIndexedBooleanType">
+    <xs:simpleContent>
+      <xs:restriction base="AVCBaseIndexedType">
+        <xs:simpleType>
+          <xs:restriction base="xs:boolean"/>
+        </xs:simpleType>
+      </xs:restriction>
+    </xs:simpleContent>
+  </xs:complexType>
+
+  <!-- VUI Parameters type -->
+  <xs:complexType name="AVCVUIParametersType">
+    <xs:sequence>
+      <xs:element name="aspect_ratio_info_present_flag" type="xs:boolean"/>
+      <xs:sequence minOccurs="0">
+        <xs:element name="aspect_ratio_idc" type="xs:integer"/>
+        <xs:sequence minOccurs="0">
+          <xs:element name="sar_width" type="xs:integer"/>
+          <xs:element name="sar_height" type="xs:integer"/>
+        </xs:sequence>
+      </xs:sequence>
+
+      <xs:element name="overscan_info_present_flag" type="xs:boolean"/>
+      <xs:element name="overscan_appropriate_flag" type="xs:boolean" minOccurs="0"/>
+
+      <xs:element name="video_signal_type_present_flag" type="xs:boolean"/>
+      <xs:sequence minOccurs="0">
+        <xs:element name="video_format" type="xs:integer"/>
+        <xs:element name="video_full_range_flag" type="xs:boolean"/>
+        <xs:element name="colour_description_present_flag" type="xs:boolean"/>
+        <xs:sequence minOccurs="0">
+          <xs:element name="colour_primaries" type="xs:integer"/>
+          <xs:element name="transfer_characteristics" type="xs:integer"/>
+          <xs:element name="matrix_coefficients" type="xs:integer"/>
+        </xs:sequence>
+      </xs:sequence>
+
+      <xs:element name="chroma_loc_info_present_flag" type="xs:boolean"/>
+      <xs:sequence minOccurs="0">
+        <xs:element name="chroma_sample_loc_type_top_field" type="xs:integer"/>
+        <xs:element name="chroma_sample_loc_type_bottom_field" type="xs:integer"/>
+      </xs:sequence>
+
+      <xs:element name="timing_info_present_flag" type="xs:boolean"/>
+      <xs:sequence minOccurs="0">
+        <xs:element name="num_units_in_tick" type="xs:integer"/>
+        <xs:element name="time_scale" type="xs:integer"/>
+        <xs:element name="fixed_frame_rate_flag" type="xs:boolean"/>
+      </xs:sequence>
+
+      <xs:element name="nal_hrd_parameters_present_flag" type="xs:boolean"/>
+      <xs:element name="vcl_hrd_parameters_present_flag" type="xs:boolean"/>
+
+      <xs:element name="low_delay_hrd_flag" type="xs:boolean" minOccurs="0"/>
+      <xs:element name="pic_struct_present_flag" type="xs:boolean"/>
+
+      <xs:element name="bitstream_restriction_flag" type="xs:boolean"/>
+      <xs:sequence minOccurs="0">
+        <xs:element name="motion_vectors_over_pic_boundaries_flag" type="xs:boolean"/>
+        <xs:element name="max_bytes_per_pic_denom" type="xs:integer"/>
+        <xs:element name="max_bits_per_mb_denom" type="xs:integer"/>
+        <xs:element name="log2_max_mv_length_horizontal" type="xs:integer"/>
+        <xs:element name="log2_max_mv_length_vertical" type="xs:integer"/>
+        <xs:element name="max_num_reorder_frames" type="xs:integer"/>
+        <xs:element name="max_dec_frame_buffering" type="xs:integer"/>
+      </xs:sequence>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- HRD Parameters type -->
+  <xs:complexType name="AVCHRDParametersType">
+    <xs:sequence>
+      <xs:element name="cpb_cnt_minus1" type="xs:integer"/>
+      <xs:element name="bit_rate_scale" type="xs:integer"/>
+      <xs:element name="cpb_size_scale" type="xs:integer"/>
+      <xs:sequence minOccurs="0" maxOccurs="unbounded">
+        <xs:element name="bit_rate_value_minus1" type="AVCIndexedIntegerType"/>
+        <xs:element name="cpb_size_value_minus1" type="AVCIndexedIntegerType"/>
+        <xs:element name="cbr_flag" type="AVCIndexedBooleanType"/>
+      </xs:sequence>
+      <xs:element name="initial_cpb_removal_delay_length_minus1" type="xs:integer"/>
+      <xs:element name="cpb_removal_delay_length_minus1" type="xs:integer"/>
+      <xs:element name="dpb_output_delay_length_minus1" type="xs:integer"/>
+      <xs:element name="time_offset_length" type="xs:integer"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- InternalVariables type -->
+  <xs:complexType name="AVCInternalVariablesType">
+    <xs:sequence>
+      <xs:element name="MaxPictureSliceCount" type="xs:integer" minOccurs="0"/>
+      <xs:element name="PictureCount" type="xs:integer" minOccurs="0"/>
+      <xs:element name="PictureSliceCount" type="AVCIndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="VclBitRate" type="AVCIndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- SequenceParameterSet type -->
+  <xs:complexType name="AVCSequenceParameterSetType">
+    <xs:sequence>
+      <xs:element name="profile_idc" type="xs:integer"/>
+      <xs:element name="constraint_set0_flag" type="xs:integer"/>
+      <xs:element name="constraint_set1_flag" type="xs:integer"/>
+      <xs:element name="constraint_set2_flag" type="xs:integer"/>
+      <xs:element name="constraint_set3_flag" type="xs:integer"/>
+      <xs:element name="constraint_set4_flag" type="xs:integer"/>
+      <xs:element name="constraint_set5_flag" type="xs:integer"/>
+      <xs:element name="level_idc" type="xs:integer"/>
+      <xs:element name="seq_parameter_set_id" type="xs:integer"/>
+      <xs:element name="chroma_format_idc" type="xs:integer" minOccurs="0"/>
+      <xs:element name="bit_depth_luma_minus8" type="xs:integer" minOccurs="0"/>
+      <xs:element name="bit_depth_chroma_minus8" type="xs:integer" minOccurs="0"/>
+      <xs:element name="qpprime_y_zero_transform_bypass_flag" type="xs:boolean" minOccurs="0"/>
+      <xs:element name="seq_scaling_matrix_present_flag" type="xs:boolean" minOccurs="0"/>
+      <xs:element name="seq_scaling_list_present_flag" type="AVCIndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="log2_max_frame_num_minus4" type="xs:integer"/>
+      <xs:element name="pic_order_cnt_type" type="xs:integer"/>
+      <xs:element name="log2_max_pic_order_cnt_lsb_minus4" type="xs:integer" minOccurs="0"/>
+      <xs:element name="delta_pic_order_always_zero_flag" type="xs:boolean" minOccurs="0"/>
+      <xs:element name="offset_for_non_ref_pic" type="xs:integer" minOccurs="0"/>
+      <xs:element name="offset_for_top_to_bottom_field" type="xs:integer" minOccurs="0"/>
+      <xs:element name="num_ref_frames_in_pic_order_cnt_cycle" type="xs:integer" minOccurs="0"/>
+      <xs:element name="offset_for_ref_frame" type="AVCIndexedIntegerType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="max_num_ref_frames" type="xs:integer"/>
+      <xs:element name="gaps_in_frame_num_value_allowed_flag" type="xs:boolean"/>
+      <xs:element name="pic_width_in_mbs_minus1" type="xs:integer"/>
+      <xs:element name="pic_height_in_map_units_minus1" type="xs:integer"/>
+      <xs:element name="frame_mbs_only_flag" type="xs:boolean"/>
+      <xs:element name="mb_adaptive_frame_field_flag" type="xs:boolean" minOccurs="0"/>
+      <xs:element name="direct_8x8_inference_flag" type="xs:boolean"/>
+      <xs:element name="frame_cropping_flag" type="xs:boolean"/>
+      <xs:sequence minOccurs="0">
+        <xs:element name="frame_crop_left_offset" type="xs:integer"/>
+        <xs:element name="frame_crop_right_offset" type="xs:integer"/>
+        <xs:element name="frame_crop_top_offset" type="xs:integer"/>
+        <xs:element name="frame_crop_bottom_offset" type="xs:integer"/>
+      </xs:sequence>
+      <xs:element name="vui_parameters_present_flag" type="xs:boolean"/>
+      <xs:element name="VUIParameters" type="AVCVUIParametersType" minOccurs="0"/>
+      <xs:element name="InternalVariables" type="AVCInternalVariablesType" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- PictureParameterSet type -->
+  <xs:complexType name="AVCPictureParameterSetType">
+    <xs:sequence>
+      <xs:element name="pic_parameter_set_id" type="xs:integer"/>
+      <xs:element name="seq_parameter_set_id" type="xs:integer"/>
+      <xs:element name="entropy_coding_mode_flag" type="xs:boolean"/>
+      <xs:element name="bottom_field_pic_order_in_frame_present_flag" type="xs:boolean"/>
+      <xs:element name="num_slice_groups_minus1" type="xs:integer"/>
+      <xs:element name="num_ref_idx_l0_active_minus1" type="xs:integer"/>
+      <xs:element name="num_ref_idx_l1_active_minus1" type="xs:integer"/>
+      <xs:element name="weighted_pred_flag" type="xs:boolean"/>
+      <xs:element name="weighted_bipred_idc" type="xs:integer"/>
+      <xs:element name="pic_init_qp_minus26" type="xs:integer"/>
+      <xs:element name="pic_init_qs_minus26" type="xs:integer"/>
+      <xs:element name="chroma_qp_index_offset" type="xs:integer"/>
+      <xs:element name="deblocking_filter_control_present_flag" type="xs:boolean"/>
+      <xs:element name="constrained_intra_pred_flag" type="xs:boolean"/>
+      <xs:element name="redundant_pic_cnt_present_flag" type="xs:boolean"/>
+      <xs:element name="transform_8x8_mode_flag" type="xs:boolean" minOccurs="0"/>
+      <xs:element name="pic_scaling_matrix_present_flag" type="xs:boolean" minOccurs="0"/>
+      <xs:element name="pic_scaling_list_present_flag" type="AVCIndexedBooleanType" minOccurs="0" maxOccurs="unbounded"/>
+      <xs:element name="second_chroma_qp_index_offset" type="xs:integer" minOccurs="0"/>
+      <xs:element name="InternalVariables" type="AVCInternalVariablesType" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- SliceHeader type -->
+  <xs:complexType name="AVCSliceHeaderType">
+    <xs:sequence>
+      <xs:element name="first_mb_in_slice" type="xs:integer"/>
+      <xs:element name="slice_type" type="xs:integer"/>
+      <xs:element name="pic_parameter_set_id" type="xs:integer"/>
+      <xs:element name="frame_num" type="xs:integer"/>
+      <xs:element name="idr_pic_id" type="xs:integer" minOccurs="0"/>
+      <xs:element name="pic_order_cnt_lsb" type="xs:integer" minOccurs="0"/>
+      <xs:element name="no_output_of_prior_pics_flag" type="xs:boolean" minOccurs="0"/>
+      <xs:element name="long_term_reference_flag" type="xs:boolean" minOccurs="0"/>
+      <xs:element name="slice_qp_delta" type="xs:integer"/>
+      <xs:element name="InternalVariables" type="AVCInternalVariablesType" minOccurs="0"/>
+    </xs:sequence>
+  </xs:complexType>
+
+  <!-- NALUnit type -->
+  <xs:element name="NALUnit" type="AVCNALUnitType"/>
+  <xs:complexType name="AVCNALUnitType">
+    <xs:sequence>
+      <xs:element name="startCode" type="xs:string"/>
+      <xs:element name="forbidden_zero_bit" type="xs:integer"/>
+      <xs:element name="nal_ref_idc" type="xs:integer"/>
+      <xs:element name="nal_unit_type" type="xs:integer"/>
+      <xs:element name="payload" type="xs:string"/>
+      <xs:choice minOccurs="0">
+        <xs:element name="SequenceParameterSet" type="AVCSequenceParameterSetType"/>
+        <xs:element name="PictureParameterSet" type="AVCPictureParameterSetType"/>
+        <xs:element name="SliceHeader" type="AVCSliceHeaderType"/>
+      </xs:choice>
+    </xs:sequence>
+  </xs:complexType>
+
+</xs:schema>

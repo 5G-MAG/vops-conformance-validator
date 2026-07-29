@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
+  elementFormDefault="qualified"
+  attributeFormDefault="unqualified"
+  vc:minVersion="1.1">
+
+  <xs:include schemaLocation="avc_common.xsd"/>
+
+  <xs:element name="AVCBitstream">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="NALUnit" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="uri" type="xs:anyURI"/>
+
+      <!-- AVC/ITU-T H.264 High Progressive Profile, Level 4.0 constraints -->
+
+      <!-- High Progressive Profile conformance (profile_idc = 100) -->
+      <xs:assert test="exists(NALUnit/SequenceParameterSet/profile_idc)"/>
+      <xs:assert test="NALUnit/SequenceParameterSet/profile_idc = 100"/>
+
+      <!-- Progressive High constraint (constraint_set4_flag = 1) -->
+      <xs:assert test="exists(NALUnit/SequenceParameterSet/constraint_set4_flag)"/>
+      <xs:assert test="NALUnit/SequenceParameterSet/constraint_set4_flag = 1"/>
+
+      <!-- Level 4.0 (level_idc = 40) -->
+      <xs:assert test="exists(NALUnit/SequenceParameterSet/level_idc)"/>
+      <xs:assert test="NALUnit/SequenceParameterSet/level_idc = 40"/>
+
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

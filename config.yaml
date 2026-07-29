@@ -2,6 +2,12 @@
 # Each operation point defines a set of XSD schemas to validate against
 
 operation_points:
+  3GPP-AVC-HD:
+    description: "3GPP AVC HD Operation Point (High Progressive Profile, Level 4.0 with rate constraints)"
+    xsds:
+      - bitstream_rules/3gpp-avc-hd-op.xsd
+      - bitstream_rules/3gpp-avc_rate_constraints.xsd
+
   3GPP-HEVC-HD:
     description: "3GPP HEVC HD Operation Point (Main 10 Profile, Main Tier, Level 4.1 with SDR representation)"
     xsds:

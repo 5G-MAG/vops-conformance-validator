@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xs:schema
+  xmlns:xs="http://www.w3.org/2001/XMLSchema"
+  xmlns:vc="http://www.w3.org/2007/XMLSchema-versioning"
+  elementFormDefault="qualified"
+  attributeFormDefault="unqualified"
+  vc:minVersion="1.1">
+
+  <xs:include schemaLocation="avc_common.xsd"/>
+
+  <xs:element name="AVCBitstream">
+    <xs:complexType>
+      <xs:sequence>
+        <xs:element ref="NALUnit" maxOccurs="unbounded"/>
+      </xs:sequence>
+      <xs:attribute name="uri" type="xs:anyURI"/>
+
+      <!-- AVC Rate Constraints (clause 4.5.2) -->
+
+      <!-- Motion vector constraints (SHOULD - recommendation) -->
+      <!-- log2_max_mv_length_horizontal <= 11 -->
+      <xs:assert test="
+        not(string(NALUnit/SequenceParameterSet/vui_parameters_present_flag) = '1') or
+        not(string(NALUnit/SequenceParameterSet/VUIParameters/bitstream_restriction_flag) = '1') or
+        (NALUnit/SequenceParameterSet/VUIParameters/log2_max_mv_length_horizontal &lt;= 11)
+      " provision="recommendation"/>
+
+      <!-- log2_max_mv_length_vertical <= 9 -->
+      <xs:assert test="
+        not(string(NALUnit/SequenceParameterSet/vui_parameters_present_flag) = '1') or
+        not(string(NALUnit/SequenceParameterSet/VUIParameters/bitstream_restriction_flag) = '1') or
+        (NALUnit/SequenceParameterSet/VUIParameters/log2_max_mv_length_vertical &lt;= 9)
+      " provision="recommendation"/>
+
+      <!-- Max slices per picture <= 16 -->
+      <xs:assert test="
+        exists(NALUnit/SequenceParameterSet/InternalVariables/MaxPictureSliceCount) and
+        NALUnit/SequenceParameterSet/InternalVariables/MaxPictureSliceCount &lt;= 16
+      "/>
+
+    </xs:complexType>
+  </xs:element>
+
+</xs:schema>

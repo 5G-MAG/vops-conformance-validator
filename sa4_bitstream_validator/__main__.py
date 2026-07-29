@@ -10,6 +10,7 @@ import yaml
 
 from sa4_bitstream_validator import __version__
 from sa4_bitstream_validator.parsers.hevc_parser import HEVCParser
+from sa4_bitstream_validator.parsers.avc_parser import AVCParser
 from sa4_bitstream_validator.validators import XMLValidator
 
 
@@ -142,10 +143,16 @@ def cli(ctx):
 @click.argument("bitstream", type=click.File("rb"))
 @click.argument("description", type=click.File("w"))
 @click.option("--include-internal-vars", is_flag=True, help="Include internal variables in XML dump")
-def dump(bitstream, description, include_internal_vars):
+@click.option("--codec", type=click.Choice(["hevc", "avc"]), default="hevc", help="Codec type (hevc or avc)")
+def dump(bitstream, description, include_internal_vars, codec):
     """Dump BITSTREAM in XML format to DESCRIPTION."""
     click.echo(f"Start dumping {bitstream.name} in {description.name}")
-    parser = HEVCParser()
+    
+    if codec == "avc":
+        parser = AVCParser()
+    else:
+        parser = HEVCParser()
+    
     parser.bitstream_to_xml(bitstream, description, include_internal_vars=include_internal_vars)
 
 @cli.command()
@@ -200,10 +207,17 @@ def validate(bitstream, operation_point, config, report_path, include_internal_v
     click.echo(f"Validating bitstream {bitstream} against operation point '{operation_point}'")
     click.echo(f"Dumping to {xml_filename}")
     
+    # Determine codec type based on operation point name
+    if "AVC" in operation_point.upper() or operation_point.startswith("3GPP-AVC"):
+        parser = AVCParser()
+        click.echo("Using AVC parser")
+    else:
+        parser = HEVCParser()
+        click.echo("Using HEVC parser")
+    
     # Dump bitstream to XML
     with open(bitstream, 'rb') as bs_file:
         with open(xml_filename, 'w') as xml_file:
-            parser = HEVCParser()
             parser.bitstream_to_xml(bs_file, xml_file, include_internal_vars=include_internal_vars)
     
     # Validate against the operation point's XSDs

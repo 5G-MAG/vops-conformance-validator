@@ -80,8 +80,35 @@ class XMLValidator(BaseValidator):
             assertions = extract_assertions_from_xsd(schema_path)
             assertion_results['total_assertions'] = len(assertions)
 
-            schema = xmlschema.XMLSchema11(schema_path, validation="strict")
-            validation_errors = list(schema.iter_errors(description_path))
+            # Create a temporary XSD without the provision attribute for xmlschema validation
+            # The provision attribute is custom and not supported by xmlschema
+            import os
+            import tempfile
+            import xml.etree.ElementTree as ET
+            
+            # Parse the XSD and remove provision attributes
+            tree = ET.parse(schema_path)
+            root = tree.getroot()
+            ns = {'xs': 'http://www.w3.org/2001/XMLSchema'}
+            
+            # Remove provision attributes from all assert elements
+            for assert_elem in root.findall('.//xs:assert', ns):
+                if 'provision' in assert_elem.attrib:
+                    del assert_elem.attrib['provision']
+            
+            # Write to a temporary file in the same directory as the schema
+            # This ensures relative includes can be resolved
+            schema_dir = os.path.dirname(os.path.abspath(schema_path))
+            tmp_fd, tmp_schema_path = tempfile.mkstemp(suffix='.xsd', dir=schema_dir)
+            try:
+                with os.fdopen(tmp_fd, 'w', encoding='utf-8') as tmp:
+                    tree.write(tmp, xml_declaration=True, encoding='unicode')
+                
+                schema = xmlschema.XMLSchema11(tmp_schema_path, validation="strict")
+                validation_errors = list(schema.iter_errors(description_path))
+            finally:
+                # Clean up temporary file
+                os.unlink(tmp_schema_path)
 
             # If no errors, all assertions passed
             if len(validation_errors) == 0:
