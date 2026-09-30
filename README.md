@@ -1,18 +1,97 @@
-# sa4-bitstream-validator
+<p align="center">
+  <img src=".github/banner.svg" width="100%" alt="Testbeds · Video Capabilities and Operation Points: VOPS Conformance Validator">
+</p>
 
-## Name
-SA4 Bitstream Validator
+<p align="center">
+  Checks that an AVC or HEVC video bitstream conforms to an operation point defined in
+  3GPP TS 26.265.
+</p>
 
-## Description
-The SA4 bitstream validator verifies that an input video bitstream conforms to a given operation point defined in the VOPS specification. The tool supports HEVC and AVC bitstream validation with comprehensive assertion reporting.
+<p align="center">
+  <img alt="Status: under development"
+    src="https://img.shields.io/badge/Status-Under%20Development-e67e22">
+  <a href="https://github.com/5G-MAG/vops-conformance-validator/releases"><img alt="Version"
+    src="https://img.shields.io/github/v/release/5G-MAG/vops-conformance-validator?label=Version&sort=semver"></a>
+  <a href="LICENSE"><img alt="License: BSD 3-Clause Clear"
+    src="https://img.shields.io/badge/License-BSD%203--Clause%20Clear-blue"></a>
+</p>
 
-## Installation
+<p align="center">
+  <a href="https://www.5g-mag.com/testbeds">Testbeds</a> &nbsp;&middot;&nbsp;
+  <a href="https://github.com/5G-MAG/vops-conformance-validator/issues">Issues</a> &nbsp;&middot;&nbsp;
+  <a href="https://www.5g-mag.com/contributing">Contributing</a>
+</p>
+
+---
+
+## At a glance
+
+|  |  |
+|---|---|
+| **Validates against** | 3GPP TS 26.265 V19.2.0 (2026-03), *Media Delivery: Video Capabilities and Operation Points* (Release 19) |
+| **Codecs** | AVC, HEVC, MV-HEVC |
+| **Built with** | Python: bitstring, click, xmlschema, PyYAML (see `requirements.txt`) |
+| **Part of** | [Testbeds & Evaluation Frameworks](https://www.5g-mag.com/testbeds) |
+
+## Introduction
+
+The validator verifies that an input video bitstream conforms to a given operation point defined
+in the VOPS specification, 3GPP TS 26.265. It parses the bitstream into an XML description, then
+checks that description against XSD 1.1 schemas, one set per operation point, and reports every
+passing and failing assertion.
+
+TS 26.265 V19.2.0, clause B.2.3: "A conformance validator for testing bitstreams for conformance against the operation points defined in this specification is provided".
+
+It is a conformance tool, not an implementation of the specification: it tests bitstreams produced
+by encoders, and does not encode or decode video.
+
+### Features
+
+- **HEVC Bitstream Parsing**: Comprehensive parsing of HEVC bitstreams including VPS, SPS, PPS, and SEI messages
+- **AVC Bitstream Parsing**: Comprehensive parsing of AVC bitstreams including SPS, PPS, and slice headers
+- **SEI Support**: Parsing of Supplemental Enhancement Information, including three-dimensional reference displays info
+- **Assertion Reporting**: Detailed reporting of all passing and failing XSD assertions
+- **Multiple Schema Validation**: Validation against multiple XSD schemas in a single operation
+- **JSON Reports**: Comprehensive validation reports with assertion details
+- **Recommendation Support**: Distinguishes between "shall" (error) and "should" (warning) requirements
+
+## Specification
+
+Built against **3GPP TS 26.265 V19.2.0 (2026-03)**, the version recorded in the `REFERENCE` file.
+
+TS 26.265 V19.2.0, clause B.2.3: "The detailed semantics and the format of the report is for further study." The JSON report format used here is therefore this tool's own, not one the
+specification defines.
+
+### Supported operation points
+
+| Operation Point | Codec | Status | Tested |
+|-----------------|-------|--------|--------|
+| `3GPP-AVC-HD` | AVC | Implemented | Needs testing|
+| `3GPP-HEVC-HD` | HEVC | Implemented | Needs testing |
+| `3GPP-HEVC-HDR` | HEVC | Implemented | Needs testing |
+| `3GPP-HEVC-UHD` | HEVC | Implemented | Needs testing |
+| `3GPP-HEVC-UHD-HDR` | HEVC | Implemented | Needs testing |
+| `3GPP-HEVC-Stereo` | HEVC | Implemented | Needs testing |
+| `3GPP-MV-HEVC-Main-Stereo` | MV-HEVC | Implemented | Needs testing |
+| `3GPP-MV-HEVC-Ext-Stereo` | MV-HEVC | Implemented | Needs testing |
+
+> **Note**: All operation points need to be tested with their respective conformance bitstreams. "Implemented" means the XSD schemas and parser support exist, but validation against actual bitstreams may reveal issues.
+
+## Install dependencies
 
 ```shell
 python -m pip install -r requirements.txt
 ```
 
-## Usage
+## Downloading
+
+```bash
+cd ~
+git clone https://github.com/5G-MAG/vops-conformance-validator.git
+cd vops-conformance-validator
+```
+
+## Running
 
 ```shell
 # Dump bitstream to XML format
@@ -40,32 +119,7 @@ $ python -m sa4_bitstream_validator validate bitstream_path 3GPP-MV-HEVC-Main-St
 $ python -m sa4_bitstream_validator validate bitstream_path 3GPP-AVC-HD --report report.json
 ```
 
-## Features
-
-- **HEVC Bitstream Parsing**: Comprehensive parsing of HEVC bitstreams including VPS, SPS, PPS, and SEI messages
-- **AVC Bitstream Parsing**: Comprehensive parsing of AVC bitstreams including SPS, PPS, and slice headers
-- **SEI Support**: Parsing of Supplemental Enhancement Information, including three-dimensional reference displays info
-- **Assertion Reporting**: Detailed reporting of all passing and failing XSD assertions
-- **Multiple Schema Validation**: Validation against multiple XSD schemas in a single operation
-- **JSON Reports**: Comprehensive validation reports with assertion details
-- **Recommendation Support**: Distinguishes between "shall" (error) and "should" (warning) requirements
-
-## Supported Operation Points
-
-| Operation Point | Codec | Status | Tested |
-|-----------------|-------|--------|--------|
-| `3GPP-AVC-HD` | AVC | Implemented | Needs testing|
-| `3GPP-HEVC-HD` | HEVC | Implemented | Needs testing |
-| `3GPP-HEVC-HDR` | HEVC | Implemented | Needs testing |
-| `3GPP-HEVC-UHD` | HEVC | Implemented | Needs testing |
-| `3GPP-HEVC-UHD-HDR` | HEVC | Implemented | Needs testing |
-| `3GPP-HEVC-Stereo` | HEVC | Implemented | Needs testing |
-| `3GPP-MV-HEVC-Main-Stereo` | MV-HEVC | Implemented | Needs testing |
-| `3GPP-MV-HEVC-Ext-Stereo` | MV-HEVC | Implemented | Needs testing |
-
-> **Note**: All operation points need to be tested with their respective conformance bitstreams. "Implemented" means the XSD schemas and parser support exist, but validation against actual bitstreams may reveal issues.
-
-## Help
+### Command reference
 
 ```shell
 $ python -m sa4_bitstream_validator --help
@@ -106,15 +160,12 @@ Options:
   --help                   Show this message and exit.
 ```
 
-## License
-See `LICENSE` file.
+## Configuration
 
-## Project status
-In development as part of the VOPS Work Item.
+`config.yaml` maps each operation point to the XSD schemas in `bitstream_rules/` that a bitstream
+must pass. See [Adding a New Operation Point](#adding-a-new-operation-point) below.
 
----
-
-## For Maintainers
+## Development
 
 ### Design Principles
 
@@ -446,3 +497,21 @@ python -m sa4_bitstream_validator validate test_files/sample.newcodec 3GPP-NEWCO
 - **Recommendations**: Use `provision="recommendation"` for "should" requirements
 - **Value extraction**: `extract_parameter_value()` returns `(actual_value, is_inferred)` tuple
 - **Parameter processing**: `process_parameters()` is codec-specific (different handling for AVC vs HEVC)
+
+## Contributing
+
+Contributions are welcome. How to raise an issue, fork the repository and open a pull request, and
+the Contributor License Agreement required before code can be merged, are described at
+<https://www.5g-mag.com/contributing>.
+
+## License
+
+Distributed under the Clear BSD License, copyright 3GPP Organizational Partners (ARIB, ATIS, CCSA,
+ETSI, TSDSI, TTA, TTC). See [LICENSE](LICENSE).
+
+## Acknowledgements
+
+This repository is a mirror of work started in 3GPP SA4 in the context of the VOPS work item,
+3GPP TS 26.265, originally hosted at
+<https://forge.3gpp.org/rep/sa4/ts-26.265/conformance/bitstream-validator>. Thanks to the original
+author, listed in [AUTHORS](AUTHORS).
