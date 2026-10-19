@@ -1,5 +1,5 @@
 <p align="center">
-  <img src=".github/banner.svg" width="100%" alt="Testbeds · Video Capabilities and Operation Points: VOPS Conformance Validator">
+  <img src=".github/banner.svg" width="100%" alt="Validation Tools · VOPS Conformance Validator: VOPS Conformance Validator">
 </p>
 
 <p align="center">
@@ -8,8 +8,7 @@
 </p>
 
 <p align="center">
-  <img alt="Status: under development"
-    src="https://img.shields.io/badge/Status-Under%20Development-e67e22">
+  <img alt="Status" src="https://img.shields.io/endpoint?url=https%3A%2F%2Fwww.5g-mag.com%2Fbadges%2Fstatus%2Fvops-conformance-validator.json">
   <a href="https://github.com/5G-MAG/vops-conformance-validator/releases"><img alt="Version"
     src="https://img.shields.io/github/v/release/5G-MAG/vops-conformance-validator?label=Version&sort=semver"></a>
   <a href="LICENSE"><img alt="License: BSD 3-Clause Clear"
@@ -31,7 +30,7 @@
 | **Validates against** | 3GPP TS 26.265 V19.2.0 (2026-03), *Media Delivery: Video Capabilities and Operation Points* (Release 19) |
 | **Codecs** | AVC, HEVC, MV-HEVC |
 | **Built with** | Python: bitstring, click, xmlschema, PyYAML (see `requirements.txt`) |
-| **Part of** | [Testbeds & Evaluation Frameworks](https://www.5g-mag.com/testbeds) |
+| **Part of** | [VOPS Conformance Validator](https://www.5g-mag.com/validation/vops/) |
 
 ## Introduction
 
