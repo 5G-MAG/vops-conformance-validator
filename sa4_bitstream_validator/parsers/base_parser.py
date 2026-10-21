@@ -86,6 +86,12 @@ class BaseParser(abc.ABC):
                           nal_unit, include_internal_vars):
         """Dispatch to codec-specific parsers; populate nal_unit with parsed elements."""
     
+    def finalize_xml(self, root, include_internal_vars):
+        """Hook called once the whole bitstream is parsed, before the XML is serialised.
+
+        A parser overrides it to add what is known only after the last NAL unit (for example the AVC slice
+        counts per picture). The default does nothing."""
+
     def bitstream_to_xml(self, bitstream, description, include_internal_vars=False):
         """Shared bitstream-to-XML pipeline."""
         data = bitstream.read()
@@ -139,6 +145,8 @@ class BaseParser(abc.ABC):
             # Codec-specific payload parsing
             self.parse_nal_payload(parsed_header, data, payload_start, end_pos, 
                                    nal_unit, include_internal_vars)
+
+        self.finalize_xml(root, include_internal_vars)
 
         # Shared XML serialization
         xml_str = minidom.parseString(tostring(root)).toprettyxml(indent="  ")

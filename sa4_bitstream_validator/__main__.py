@@ -5,6 +5,7 @@
 """
 
 import os
+import sys
 import click
 import yaml
 
@@ -12,6 +13,25 @@ from sa4_bitstream_validator import __version__
 from sa4_bitstream_validator.parsers.hevc_parser import HEVCParser
 from sa4_bitstream_validator.parsers.avc_parser import AVCParser
 from sa4_bitstream_validator.validators import XMLValidator
+
+# Exit status: 0 when every schema passes, 1 when the bitstream or description does not conform, 2 when nothing
+# could be checked (a missing configuration, an unknown operation point, no schema given).
+EXIT_CONFORMANT = 0
+EXIT_NOT_CONFORMANT = 1
+EXIT_NOT_RUN = 2
+
+
+def _resolve_schemas(items, base_dir):
+    """Schema paths of a configuration, relative to the configuration file's folder; nested lists are OR groups."""
+    resolved = []
+    for item in items:
+        if isinstance(item, list):
+            resolved.append(_resolve_schemas(item, base_dir))
+        elif os.path.isabs(item):
+            resolved.append(item)
+        else:
+            resolved.append(os.path.join(base_dir, item))
+    return resolved
 
 
 def generate_validation_report(results, tested_bitstream, report_path, operation_point=None):
@@ -162,24 +182,26 @@ def check(description, xsds):
     """Check DESCRIPTION against one or more XSD schemas."""
     if not xsds:
         click.echo("Error: At least one XSD schema must be provided")
-        return
-        
+        sys.exit(EXIT_NOT_RUN)
+
     click.echo(f"Start validation of {description} against {len(xsds)} schema(s)")
-    
+
     validator = XMLValidator()
-    validator.validate_multiple(description, xsds)
+    results = validator.validate_multiple(description, xsds)
+    sys.exit(EXIT_CONFORMANT if results["overall_success"] else EXIT_NOT_CONFORMANT)
 
 @cli.command()
 @click.argument("bitstream", type=click.Path(exists=True))
 @click.argument("operation_point", type=click.STRING)
 @click.option("--config", default="config.yaml", help="Path to configuration file")
 @click.option("--report", "report_path", type=click.Path(), help="Path to JSON validation report file")
-@click.option("--include-internal-vars", is_flag=True, help="Include internal variables in XML dump")
+@click.option("--include-internal-vars", is_flag=True,
+              help="Kept for compatibility: validate always includes the internal variables the schemas use")
 def validate(bitstream, operation_point, config, report_path, include_internal_vars):
     """Validate BITSTREAM against a predefined operation point and generate report."""
     if not os.path.exists(config):
         click.echo(f"Error: Configuration file '{config}' not found")
-        return
+        sys.exit(EXIT_NOT_RUN)
     
     # Load configuration
     with open(config, 'r') as f:
@@ -187,18 +209,18 @@ def validate(bitstream, operation_point, config, report_path, include_internal_v
     
     if not config_data or 'operation_points' not in config_data:
         click.echo("Error: Invalid configuration file format")
-        return
+        sys.exit(EXIT_NOT_RUN)
     
     if operation_point not in config_data['operation_points']:
         click.echo(f"Error: Operation point '{operation_point}' not found in configuration")
         available_operation_points = list(config_data['operation_points'].keys())
         click.echo(f"Available operation points: {', '.join(available_operation_points)}")
-        return
+        sys.exit(EXIT_NOT_RUN)
     
     operation_point_config = config_data['operation_points'][operation_point]
     if 'xsds' not in operation_point_config or not operation_point_config['xsds']:
         click.echo(f"Error: Operation point '{operation_point}' has no XSD schemas defined")
-        return
+        sys.exit(EXIT_NOT_RUN)
     
     # Generate XML filename from bitstream basename
     bitstream_basename = os.path.splitext(os.path.basename(bitstream))[0]
@@ -218,13 +240,15 @@ def validate(bitstream, operation_point, config, report_path, include_internal_v
     # Dump bitstream to XML
     with open(bitstream, 'rb') as bs_file:
         with open(xml_filename, 'w') as xml_file:
-            parser.bitstream_to_xml(bs_file, xml_file, include_internal_vars=include_internal_vars)
+            # The schemas test internal variables (for example the AVC slice count per picture), and the
+            # intermediate file is deleted afterwards, so they are always included here.
+            parser.bitstream_to_xml(bs_file, xml_file, include_internal_vars=True)
     
     # Validate against the operation point's XSDs
     validator = XMLValidator()
 
     # Handle both simple schema lists and OR conditions (nested lists)
-    xsds_config = operation_point_config['xsds']
+    xsds_config = _resolve_schemas(operation_point_config['xsds'], os.path.dirname(os.path.abspath(config)))
 
     # Count total validation conditions (single schemas + OR groups)
     total_conditions = len(xsds_config)
@@ -250,6 +274,8 @@ def validate(bitstream, operation_point, config, report_path, include_internal_v
         click.echo(message)
     else:
         click.echo("No report file specified. Use --report to generate a validation report.")
+
+    sys.exit(EXIT_CONFORMANT if results["overall_success"] else EXIT_NOT_CONFORMANT)
 
 if __name__ == "__main__":
     cli()

@@ -79,6 +79,7 @@ specification defines.
 ## Install dependencies
 
 ```shell
+python -m venv .venv && . .venv/bin/activate    # recommended; a system Python may refuse pip
 python -m pip install -r requirements.txt
 ```
 
@@ -117,6 +118,14 @@ $ python -m sa4_bitstream_validator validate bitstream_path 3GPP-MV-HEVC-Main-St
 # Validate AVC bitstream against operation point (codec auto-detected)
 $ python -m sa4_bitstream_validator validate bitstream_path 3GPP-AVC-HD --report report.json
 ```
+
+### Exit status
+
+`check` and `validate` exit with 0 when every schema passes (recommendations, the "should" statements, do not
+change the status), 1 when the bitstream or description does not conform, and 2 when nothing could be checked
+(a missing configuration, an unknown operation point, no schema given), so they can run in continuous
+integration. Paths of the schemas in `config.yaml` are relative to the folder of that file, so `validate` can run
+from any folder with `--config`.
 
 ### Command reference
 
