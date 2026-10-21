@@ -9,6 +9,12 @@ import xml.etree.ElementTree as ET
 import xmlschema
 
 
+def _normalise(expression):
+    """An XPath expression with its whitespace collapsed, so that a multi-line assertion in the schema file
+    matches the same expression as the XSD processor reports it."""
+    return ' '.join(str(expression).split())
+
+
 def extract_assertions_from_xsd(schema_path):
     """Extract assertion information from an XSD file.
 
@@ -133,8 +139,10 @@ class XMLValidator(BaseValidator):
 
                 # Try to match the error with specific assertions
                 error_path = error_detail["path"] or ""
+                matched = False
                 for assertion in assertions:
-                    if error_path and assertion['test'] in error_path:
+                    if error_path and _normalise(assertion['test']) in _normalise(error_path):
+                        matched = True
                         # This assertion failed
                         failing_assertion = assertion.copy()
                         failing_assertion['error'] = error_detail["reason"]
@@ -146,6 +154,18 @@ class XMLValidator(BaseValidator):
                         else:
                             assertion_results['failing_assertions'].append(failing_assertion)
                     # Don't add to passing_assertions here - we'll handle that after processing all errors
+
+                if not matched:
+                    # An error no assertion explains (an element missing or out of order, a type that does not
+                    # fit): it is a failure of the description against the schema, never a pass.
+                    assertion_results['failing_assertions'].append({
+                        'test': error_path or error_detail["reason"],
+                        'description': error_detail["reason"],
+                        'schema_path': schema_path,
+                        'provision': 'requirement',
+                        'error': error_detail["reason"],
+                        'error_path': error_path,
+                    })
 
             # After processing all errors, determine which assertions passed
             # An assertion passes if it's not in the failing_assertions or warning_assertions lists

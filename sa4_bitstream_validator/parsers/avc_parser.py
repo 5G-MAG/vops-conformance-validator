@@ -129,11 +129,12 @@ class AVCParser(BaseParser):
         # Track slice counts per picture (grouped by frame_num)
         self.picture_slice_counts = {}  # frame_num -> slice_count
         self.last_sps_elem = None  # Track last SPS element for InternalVariables
-        
-        # Call parent template method
+
+        # Call parent template method; it calls finalize_xml before the XML is written
         super().bitstream_to_xml(bitstream, description, include_internal_vars)
-        
-        # Add parser variables as InternalVariables inside the last SPS
+
+    def finalize_xml(self, root, include_internal_vars):
+        """Add the parser variables as InternalVariables inside the last SPS, before the XML is serialised."""
         if include_internal_vars and self.last_sps_elem is not None:
             # Calculate slice count statistics
             if self.picture_slice_counts:
